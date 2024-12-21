@@ -17,7 +17,7 @@ class Curatore {
         return email;
     }
 
-    public void verificaProdotto(ComponenteProdotto prodotto) {
+    public void verificaProdotto(ProdottoSingolo prodotto) {
         if (prodotto.hasCertificato()) {
             System.out.println("Prodotto " + prodotto.getNome() + " verificato e approvato.");
         } else {

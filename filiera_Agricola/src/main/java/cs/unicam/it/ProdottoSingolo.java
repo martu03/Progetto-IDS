@@ -49,4 +49,9 @@ class ProdottoSingolo implements ComponenteProdotto {
                 ", certificato=" + certificato +
                 '}';
     }
+
+    // TODO: Implementare il metodo hasCertificato
+    public boolean hasCertificato() {
+        return false;
+    }
 }
