@@ -2,10 +2,13 @@ package cs.unicam.it;
 
 import java.util.List;
 
-public class ProdottoSingolo extends Prodotto {
+public class ProdottoPacchetto extends Prodotto {
 
-    public ProdottoSingolo(String name, double quantity, double price, Descrizione description, Categoria category, Certificazione certification) {
+    private List<ProdottoSingolo> products;
+
+    public ProdottoPacchetto(String name, double quantity, double price, Descrizione description, Categoria category, Certificazione certification, List<ProdottoSingolo> products) {
         super(name, quantity, price, description, category, certification);
+        this.products = products;
     }
 
     @Override

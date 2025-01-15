@@ -8,8 +8,8 @@ class Distributore extends BaseAttore {
     }
 
     public void creaPacchetto(String nomePacchetto, List<ComponenteProdotto> prodottiPacchetto) {
-        PacchettoProdotto pacchettoProdotto = new PacchettoProdotto(nomePacchetto);
-        prodottiPacchetto.forEach(pacchettoProdotto::aggiungiComponente);
+        ProdottoPacchetto prodottoPacchetto = new ProdottoPacchetto(nomePacchetto);
+        prodottiPacchetto.forEach(prodottoPacchetto::aggiungiComponente);
 
         System.out.println("Pacchetto " + nomePacchetto + " creato con i seguenti prodotti:");
         prodottiPacchetto.forEach(p -> System.out.println("- " + p.getNome()));
