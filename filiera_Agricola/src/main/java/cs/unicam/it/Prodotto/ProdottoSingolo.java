@@ -1,11 +1,11 @@
-package cs.unicam.it;
+package cs.unicam.it.Prodotto;
 
 import java.util.List;
 
 public class ProdottoSingolo extends Prodotto {
 
-    public ProdottoSingolo(String name, double quantity, double price, Descrizione description, Categoria category, Certificazione certification) {
-        super(name, quantity, price, description, category, certification);
+    public ProdottoSingolo(){
+        super();
     }
 
     @Override

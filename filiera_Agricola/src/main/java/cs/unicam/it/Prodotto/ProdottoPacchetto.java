@@ -1,4 +1,4 @@
-package cs.unicam.it;
+package cs.unicam.it.Prodotto;
 
 import java.util.List;
 
@@ -6,9 +6,8 @@ public class ProdottoPacchetto extends Prodotto {
 
     private List<ProdottoSingolo> products;
 
-    public ProdottoPacchetto(String name, double quantity, double price, Descrizione description, Categoria category, Certificazione certification, List<ProdottoSingolo> products) {
-        super(name, quantity, price, description, category, certification);
-        this.products = products;
+    public ProdottoPacchetto() {
+        super();
     }
 
     @Override
@@ -29,5 +28,9 @@ public class ProdottoPacchetto extends Prodotto {
     @Override
     public List<ProdottoSingolo> getChild() {
         return List.of();
+    }
+
+    public void setProducts(List<ProdottoSingolo> products) {
+        this.products = products;
     }
 }

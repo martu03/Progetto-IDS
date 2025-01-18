@@ -1,4 +1,6 @@
-package cs.unicam.it;
+package cs.unicam.it.Utenti;
+
+import cs.unicam.it.Prodotto.ProdottoSingolo;
 
 class Curatore {
     private String nome;

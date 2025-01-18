@@ -1,4 +1,4 @@
-package cs.unicam.it;
+package cs.unicam.it.Prodotto;
 
 public class Descrizione {
 
