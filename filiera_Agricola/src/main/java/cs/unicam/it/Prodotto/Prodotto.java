@@ -8,7 +8,8 @@ public abstract class Prodotto {
     private int id;
     private static int nextID = 1;
     private String name;
-    private double quantity;
+    // Ho modificato solo questo
+    private int quantity;
     private double price;
     private Descrizione description;
     private Categoria category;
@@ -28,7 +29,8 @@ public abstract class Prodotto {
         return name;
     }
 
-    public double getQuantity() {
+    // Ho modificato solo questo
+    public int getQuantity() {
         return quantity;
     }
 
@@ -64,7 +66,8 @@ public abstract class Prodotto {
         this.name = name;
     }
 
-    public void setQuantity(double quantity) {
+    // Ho modificato solo questo
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -94,7 +97,7 @@ public abstract class Prodotto {
 
     @Override
     public String toString() {
-        return "Prodotto{" +
+        return "Prodotto {" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", quantity=" + quantity +
@@ -104,7 +107,7 @@ public abstract class Prodotto {
                 ", certification=" + (certification != null ? certification.toString() : "null") +
                 ", reviews=" + (reviews != null ? reviews.toString() : "null") +
                 ", scadenza=" + (scadenza != null ? scadenza.toString() : "null") +
-                '}';
+                " }";
     }
 
     //@Override
