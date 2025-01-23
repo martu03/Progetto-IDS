@@ -8,7 +8,6 @@ public abstract class Prodotto {
     private int id;
     private static int nextID = 1;
     private String name;
-    // Ho modificato solo questo
     private int quantity;
     private double price;
     private Descrizione description;
@@ -16,9 +15,11 @@ public abstract class Prodotto {
     private Certificazione certification;
     private List<Recensione> reviews;
     private Date scadenza;
+    private boolean validato;
 
     public Prodotto() {
         this.id = nextID++;
+        reviews = List.of();
     }
 
     public int getId() {
@@ -94,6 +95,11 @@ public abstract class Prodotto {
     public void setScadenza(Date scadenza) {
         this.scadenza = scadenza;
     }
+
+    public void setValidato(boolean validato) {this.validato = validato; }
+
+
+
 
     @Override
     public String toString() {

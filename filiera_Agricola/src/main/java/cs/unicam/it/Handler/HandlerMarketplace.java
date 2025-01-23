@@ -1,58 +1,74 @@
 package cs.unicam.it.Handler;
 
+
+import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Prodotto;
 
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.HashMap;
-//import java.util.Map;
 
 public class HandlerMarketplace {
-    // TODO: Implementazione con la Lista.
+    private Marketplace marketplace;
     private List<Prodotto> prodottiMarketplace;
 
-    public HandlerMarketplace() {
+    public void aggiungiProdottiAlMarketplace(List<Prodotto> prodotti) {
+        for (Prodotto prodotto : prodotti) {
+            if (prodottiMarketplace.stream().noneMatch(p -> p.getId()==(prodotto.getId()))) {
+                prodottiMarketplace.add(prodotto);
+                System.out.println("Prodotto aggiunto al marketplace: " + prodotto);
+            } else {
+                System.out.println("Prodotto già presente nel marketplace: " + prodotto.getId());
+            }
+        }
         this.prodottiMarketplace = new ArrayList<>();
     }
 
-    public boolean isDisponibile(Prodotto prodotto, int quantita) {
-        for (Prodotto p : prodottiMarketplace) {
-            if (p.getId() == prodotto.getId() && p.getQuantity() >= quantita) {
-                return true;
+
+    public boolean rimuoviProdottoDalMarketplace(String id) {
+        Prodotto prodottoDaRimuovere = null;
+
+        // Cerca il prodotto con un ciclo for
+        for (Prodotto prodotto : prodottiMarketplace) {
+            if (String.valueOf(prodotto.getId()).equals(id)) { // Confronta id convertito in stringa
+                prodottoDaRimuovere = prodotto;
+                break;
             }
         }
-        return false;
-    }
 
-    public void aggiornaProdottiMarketplace(Prodotto prodotto, int quantita) {
-        for (Prodotto p : prodottiMarketplace) {
-            if (p.getId() == prodotto.getId()) {
-                p.setQuantity(quantita);
-                return;
-            }
+        if (prodottoDaRimuovere != null) {
+            prodottiMarketplace.remove(prodottoDaRimuovere);
+            System.out.println("Prodotto rimosso dal marketplace: " + prodottoDaRimuovere.getName());
+            return true;
+        } else {
+            System.out.println("Prodotto con ID " + id + " non trovato nel marketplace.");
+            return false;
         }
-        // Se il prodotto non esiste, lo aggiunge al marketplace
-        prodotto.setQuantity(quantita);
-        prodottiMarketplace.add(prodotto);
     }
 
-    // TODO: Implementazione con la Mappa.
-//    private Map<Prodotto, Integer> prodottiMarketplace;
-//
-//    public HandlerMarketplace() {
-//        this.prodottiMarketplace = new HashMap<>();
-//    }
-//
-//    public boolean isDisponibile(Prodotto prodotto) {
-//        return prodottiMarketplace.containsKey(prodotto) && prodottiMarketplace.get(prodotto) > 0;
-//    }
-//
-//    public boolean isDispobibile(Prodotto prodotto, int quantita) {
-//        return prodottiMarketplace.containsKey(prodotto) && prodottiMarketplace.get(prodotto) >= quantita;
-//    }
-//
-//    public void aggiornaProdottiMarketplace(Prodotto prodotto, int quantita) {
-//        prodottiMarketplace.put(prodotto, quantita);
-//    }
 
+
+    public void visualizzaProdottiMarketplace() {
+        if (prodottiMarketplace.isEmpty()) {
+            System.out.println("Nessun prodotto disponibile nel marketplace.");
+        } else {
+            System.out.println("Lista prodotti del marketplace:");
+            prodottiMarketplace.forEach(System.out::println);
+        }
+    }
+
+    public boolean isDisponibile(Prodotto prodotto, int quantitaRichiesta) {
+        Prodotto prodottoEsistente = prodottiMarketplace.stream()
+                .filter(p -> p.getId() == prodotto.getId())
+                .findFirst()
+                .orElse(null);
+
+        if (prodottoEsistente != null && prodottoEsistente.getQuantity() >= quantitaRichiesta) {
+            return true; // Prodotto disponibile
+        }
+        return false; // Prodotto non disponibile o quantità insufficiente
+    }
+
+    public List<Prodotto> getProdottiMarketplace() {
+        return prodottiMarketplace;
+    }
 }

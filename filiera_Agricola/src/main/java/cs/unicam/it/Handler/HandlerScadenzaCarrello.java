@@ -1,5 +1,6 @@
 package cs.unicam.it.Handler;
 
+
 import cs.unicam.it.Prodotto.Prodotto;
 
 import java.time.LocalDateTime;
@@ -10,16 +11,9 @@ public class HandlerScadenzaCarrello {
 
     public void aggiornaScadenza(List<Prodotto> prodotti) {
         if (!prodotti.isEmpty()) {
-            this.scadenza = LocalDateTime.now().plusMinutes(10);
+            this.scadenza = LocalDateTime.now().plusMinutes(20);
         } else {
             this.scadenza = null;
-        }
-    }
-
-    public void verificaScadenzaCarrello() {
-        if (isScaduto()) {
-            carrello.svuotaCarrello();
-            System.out.println("Carrello scaduto");
         }
     }
 

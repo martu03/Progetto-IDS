@@ -19,7 +19,7 @@ public class Carrello {
     public Carrello(Acquirente acquirente) {
         this.prodotti = new ArrayList<>();
         this.acquirente = acquirente;
-        this.handlerScadenzaCarrello = new handlerScadenzaCarrello();
+        this.handlerScadenzaCarrello = new HandlerScadenzaCarrello();
         resetScadenza();
     }
 
@@ -34,7 +34,7 @@ public class Carrello {
     public double calcolaTotale() {
         return prodotti.stream()
                 .filter(Objects::nonNull)
-                .mapToDouble(Prodotto::getPrice)
+                .mapToDouble(prodotto -> prodotto.getPrice() * prodotto.getQuantity())
                 .sum();
     }
 

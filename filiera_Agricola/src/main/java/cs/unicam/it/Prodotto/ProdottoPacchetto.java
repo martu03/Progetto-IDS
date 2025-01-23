@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ProdottoPacchetto extends Prodotto {
 
-    private List<ProdottoSingolo> products;
+    private List<Prodotto> products;
 
     public ProdottoPacchetto() {
         super();
@@ -30,7 +30,7 @@ public class ProdottoPacchetto extends Prodotto {
         return List.of();
     }
 
-    public void setProducts(List<ProdottoSingolo> products) {
+    public void setProducts(List<Prodotto> products) {
         this.products = products;
     }
 }

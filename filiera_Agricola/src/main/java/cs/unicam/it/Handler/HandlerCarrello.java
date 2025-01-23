@@ -6,10 +6,13 @@ import cs.unicam.it.Prodotto.Prodotto;
 public class HandlerCarrello {
     private Carrello carrello;
     private final HandlerMarketplace handlerMarketplace;
+    private final HandlerScadenzaCarrello handlerScadenzaCarrello;
 
-    public HandlerCarrello(Carrello carrello, HandlerMarketplace handlerMarketplace) {
+
+    public HandlerCarrello(Carrello carrello, HandlerMarketplace handlerMarketplace, HandlerScadenzaCarrello handlerScadenzaCarrello) {
         this.carrello = carrello;
         this.handlerMarketplace = handlerMarketplace;
+        this.handlerScadenzaCarrello = handlerScadenzaCarrello;
     }
 
     // TODO: come salviamo la quantità del prodotto?
@@ -72,8 +75,8 @@ public class HandlerCarrello {
         return true;
     }
 
-    public void verificaScadenzaCarrello() {
-        if (carrello.isScaduto()) {
+    public void svuotaCarrello() {
+        if (handlerScadenzaCarrello.isScaduto()) {
             carrello.svuotaCarrello();
             System.out.println("Carrello scaduto");
         }

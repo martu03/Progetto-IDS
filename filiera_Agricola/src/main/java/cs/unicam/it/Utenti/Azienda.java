@@ -5,9 +5,10 @@ import cs.unicam.it.Prodotto.Prodotto;
 
 import java.util.List;
 
+//Classe astratta per la definizione degli attori che possono vendere prodotti
 public abstract class Azienda extends UtenteLog {
 
-    //prodotti in vendita dall'azienda
+    // Prodotti in vendita dall'azienda
     private List<Prodotto> products;
     private static HandlerCreazioneProdottoSingolo handlerCreazioneProdottoSingolo;
 
@@ -16,22 +17,26 @@ public abstract class Azienda extends UtenteLog {
         this.products = null;
     }
 
+    // Crea un prodotto singolo
     public void CreaProdotto() {
-        Prodotto prodottoInCreazione = handlerCreazioneProdottoSingolo.avviaCreazioneProdotto();
+        Prodotto prodottoInCreazione = handlerCreazioneProdottoSingolo.avviaCreazione();
         products.add(prodottoInCreazione);
     }
 
+    // Restituisce la lista di prodotti
     public List<Prodotto> getProducts(){
         return products;
     }
 
+    // Elimina un prodotto dalla lista
     public void EliminaProdotto(Prodotto product){
-        products.remove(product);
-        //ripercussione sul marketplace
+        // Ripercussioni sul marketplace
     }
 
+    // Modifica la quantità di un prodotto
     public void ModificaQuantità(Prodotto product, int qtà){
-        //verifica se la quantità rispetta la disponibilità del prodotto nel marketplace
-        //se va bene, modifica la quantità del prodotto
+        // Verifica se la quantità rispetta la disponibilità del prodotto nel marketplace
+        // Se va bene, modifica la quantità del prodotto
     }
+
 }

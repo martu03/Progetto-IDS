@@ -1,19 +1,22 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
-import cs.unicam.it.Esterni.PagoPA;
+import cs.unicam.it.Marketplace.GestoreMarketplace;
+import cs.unicam.it.Prodotto.Prodotto;
 
+import java.util.Scanner;
+
+//Questa classe si occupa di gestire l'acquisto dei prodotti presenti nel carrello
 public class HandlerAcquisti {
-    // TODO: Va messo il Pending da qualche parte?
-    // TODO: Da capire bene come gestire le informazioni (costo e indirizzo) nel caso d'uso "Acquistare prodotti".
     private final Carrello carrello;
-    private final HandlerMarketplace handlerMarketplace;
-    private final HandlerAreaPersonale handlerAreaPersonale;
+    private final GestoreMarketplace handlerMarketplace;
+    private final PagoPa paymentSystem;
 
-    public HandlerAcquisti(Carrello carrello, HandlerMarketplace handlerMarketplace, HandlerAreaPersonale handlerAreaPersonale) {
+
+    public HandlerAcquisti(Carrello carrello, GestoreMarketplace handlerMarketplace, PagoPa paymentSystem) {
         this.carrello = carrello;
         this.handlerMarketplace = handlerMarketplace;
-        this.handlerAreaPersonale = handlerAreaPersonale;
+        this.paymentSystem = paymentSystem;
     }
 
     public void acquistaCarrello() {
@@ -26,30 +29,37 @@ public class HandlerAcquisti {
         }
 
         double totale = carrello.calcolaTotale();
-        boolean pagamentoRiuscito = PagoPA.eseguiPagamento(totale);
+        boolean pagamentoRiuscito = paymentSystem.executePayment(totale);
 
         if (!pagamentoRiuscito) {
             System.out.println("Pagamento non riuscito.");
             return;
         }
 
-        carrello.getProdotti().forEach(prodotto ->
-                handlerMarketplace.aggiornaProdottiMarketplace(prodotto, -prodotto.getQuantity())
-        );
+        aggiornaMarketplace();
         carrello.svuotaCarrello();
-
-        String indirizzo = handlerAreaPersonale.getIndirizzo();
-        inviaAlCorriere(indirizzo);
 
         System.out.println("Acquisto completato con successo!");
     }
 
     private boolean richiediConfermaAcquisto() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Confermi l'acquisto? (s/n)");
-        return true;
+
+        // Legge la risposta dell'utente
+        String risposta = scanner.nextLine().trim().toLowerCase();
+
+        if (risposta.equals("s")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    private void inviaAlCorriere(String indirizzo) {
-        System.out.println("Ordine inviato al corriere all'indirizzo: " + indirizzo);
+    private void aggiornaMarketplace() {
+        for (Prodotto prodotto : carrello.getProdotti()) {
+            handlerMarketplace.aggiungiProdotto(prodotto);
+            //TODO: come gestiamo la quantità dei prodotti?
+        }
     }
 }

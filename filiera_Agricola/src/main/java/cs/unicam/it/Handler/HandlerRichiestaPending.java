@@ -1,16 +1,24 @@
 package cs.unicam.it.Handler;
 
+
 import cs.unicam.it.Prodotto.Prodotto;
 
-import java.util.ArrayList;
-import java.util.List;
 
+// Classe che gestisce le richieste pendenti per l'inserimento dei prodotti nella lista del curatore
 public class HandlerRichiestaPending {
-
-    private List<Prodotto> prodottiPending = new ArrayList<>();
-
-    public void aggiungiProdotto(Prodotto prodotto) {
-        prodottiPending.add(prodotto);
-        System.out.println("Prodotto aggiunto alla lista pending: " + prodotto);
+    public void inviaRichiestaPerApprovazione(Prodotto pacchettoInCreazione) {
     }
-}
+
+    //perchè creiamo un curatore il tupo che verifica non è sempre lo stesso?
+    // Curatore, che approva i prodotti (potrebbe essere un singleton o un oggetto condiviso)
+    //private static Curatore curatore = new Curatore("Bho", "email");
+
+    //public HandlerRichiestaPending() {
+      //  this.curatore = curatore;
+    }
+//
+    // Metodo per aggiungere un prodotto alla lista del curatore (in attesa di approvazione)
+    //public void inviaRichiestaPerApprovazione(Prodotto prodotto) {
+        //metodo per aggiungere il prodotto alla lista del curatore
+   // }
+//}
