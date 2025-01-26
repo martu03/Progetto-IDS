@@ -57,6 +57,8 @@ public abstract class Prodotto {
         return scadenza;
     }
 
+    public boolean isValidato() { return validato; }
+
     public abstract ProdottoSingolo addProduct(ProdottoSingolo singleProduct);
 
     public abstract ProdottoSingolo removeProduct(ProdottoSingolo singleProduct);

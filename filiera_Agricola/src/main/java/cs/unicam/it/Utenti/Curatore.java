@@ -1,7 +1,6 @@
 package cs.unicam.it.Utenti;
 
 import cs.unicam.it.Prodotto.Prodotto;
-import cs.unicam.it.Prodotto.ProdottoSingolo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +12,6 @@ public class Curatore {
     public Curatore(String nome) {
         this.nome = nome;
         this.listaProdotti = new ArrayList<>();
-    }
-
-    // TODO DA CAPIRE
-    public void aggiungiProdotto(Prodotto prodotto) {
-        if (listaProdotti.stream().noneMatch(p -> p.getId() == prodotto.getId())) {
-            listaProdotti.add(prodotto);
-            System.out.println("Prodotto aggiunto: " + prodotto.getName());
-        } else {
-            System.out.println("Prodotto con ID " + prodotto.getId() + " già presente.");
-        }
     }
 
     public List<Prodotto> getListaProdotti() {
@@ -38,7 +27,6 @@ public class Curatore {
         }
     }
 
-    //TODO DA CAPIRE
     public void rimuoviProdotti(List<Prodotto> prodotti) {
         for (Prodotto prodotto : prodotti) {
             rimuoviProdotto(prodotto);
@@ -53,14 +41,4 @@ public class Curatore {
             listaProdotti.forEach(System.out::println);
         }
     }
-
-
-//    public void modificaProdotto (Prodotto prodotto){
-//        //da implementare
-//    }
-//
-//    public void visualizzaProdotti(){
-//        for (Prodotto prodotto : listaProdotti){
-//            System.out.println(prodotto);
-//        }}
 }

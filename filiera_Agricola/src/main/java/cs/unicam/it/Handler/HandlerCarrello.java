@@ -2,84 +2,58 @@ package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
 import cs.unicam.it.Prodotto.Prodotto;
+import cs.unicam.it.Utenti.Acquirente;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HandlerCarrello {
-    private Carrello carrello;
+    private final Map<Acquirente, Carrello> carrelli;
+    //private final HandlerScadenzaCarrello handlerScadenzaCarrello;
     private final HandlerMarketplace handlerMarketplace;
-    private final HandlerScadenzaCarrello handlerScadenzaCarrello;
+    private final HandlerCalcolaTotale handlerCalcoloTotale;
 
 
-    public HandlerCarrello(Carrello carrello, HandlerMarketplace handlerMarketplace, HandlerScadenzaCarrello handlerScadenzaCarrello) {
-        this.carrello = carrello;
+    public HandlerCarrello(Carrello carrello, Map<Acquirente, Carrello> carrelli,
+                           HandlerMarketplace handlerMarketplace,
+                           //HandlerScadenzaCarrello handlerScadenzaCarrello,
+                           HandlerCalcolaTotale handlerCalcoloTotale) {
+        this.carrelli = new HashMap<>();
         this.handlerMarketplace = handlerMarketplace;
-        this.handlerScadenzaCarrello = handlerScadenzaCarrello;
+        //this.handlerScadenzaCarrello = handlerScadenzaCarrello;
+        this.handlerCalcoloTotale = handlerCalcoloTotale;
     }
 
-    // TODO: come salviamo la quantità del prodotto?
-    public boolean aggiungiProdotto(Prodotto prodotto, int quantita) {
-        Prodotto prodottoEsistente = carrello.getProdotti().stream()
-                .filter(p -> p.equals(prodotto))
-                .findFirst()
-                .orElse(null);
-
-        if (prodottoEsistente != null) {
-            int nuovaQuantita = prodottoEsistente.getQuantity() + quantita;
-            return modificaQuantitaProdotto(prodottoEsistente, nuovaQuantita);
-        }
-
-        if (handlerMarketplace.isDisponibile(prodotto, quantita)) {
-            prodotto.setQuantity(quantita);
-            carrello.getProdotti().add(prodotto);
-            carrello.resetScadenza();
-            return true;
-        }
-
-        System.out.println("Prodotto non disponibile");
-        return false;
+    public Carrello getCarrello(Acquirente acquirente) {
+        Carrello carrello = carrelli.computeIfAbsent(acquirente, Carrello::new);
+        //handlerScadenzaCarrello.aggiornaScadenza(carrello);
+        return carrello;
     }
 
+//    public boolean isScaduto(Acquirente acquirente) {
+//        Carrello carrello = carrelli.get(acquirente);
+//        return carrello != null && handlerScadenzaCarrello.isScaduto(carrello);
+//    }
 
-    public boolean rimuoviProdotto(Prodotto prodotto) {
-        if (carrello.getProdotti().contains(prodotto)) {
-            carrello.getProdotti().remove(prodotto);
-            carrello.resetScadenza();
-            return true;
-        } else {
-            System.out.println("Prodotto non presente nel carrello");
-            return false;
-        }
+    public void svuotaCarrelloScaduto(Acquirente acquirente) {
+        //if (isScaduto(acquirente)) {
+            Carrello carrello = carrelli.get(acquirente);
+            if (carrello != null) {
+                carrello.svuotaCarrello();
+                //handlerScadenzaCarrello.resetScadenza(carrello);
+                System.out.println("Carrello scaduto per l'acquirente: " + acquirente.getNome());
+            }
+        //}
     }
 
-    // TODO: Il nuovo valore viene aggiunto o sottratto a quello attuale?
-    public boolean modificaQuantitaProdotto(Prodotto prodotto, int nuovaQuantita) {
-        if (!carrello.getProdotti().contains(prodotto)) {
-            System.out.println("Prodotto non presente nel carrello");
-            return false;
+    public double calcolaTotale(Acquirente acquirente) {
+        Carrello carrello = carrelli.get(acquirente);
+        if (carrello == null) {
+            System.out.println("Carrello non trovato per l'acquirente: " + acquirente.getNome());
+            return 0.0;
         }
-
-        if (nuovaQuantita < 0) {
-            System.out.println("Quantità non valida");
-            return false;
-        }
-
-        int variazioneQuantita = nuovaQuantita - prodotto.getQuantity();
-
-        if (variazioneQuantita > 0 && !handlerMarketplace.isDisponibile(prodotto, variazioneQuantita)) {
-            System.out.println("Quantità richiesta non disponibile");
-            return false;
-        }
-
-        prodotto.setQuantity(nuovaQuantita);
-        carrello.resetScadenza();
-        System.out.println("Quantità modificata");
-        return true;
+        return handlerCalcoloTotale.calcolaTotale(carrello);
     }
 
-    public void svuotaCarrello() {
-        if (handlerScadenzaCarrello.isScaduto()) {
-            carrello.svuotaCarrello();
-            System.out.println("Carrello scaduto");
-        }
-    }
 
 }

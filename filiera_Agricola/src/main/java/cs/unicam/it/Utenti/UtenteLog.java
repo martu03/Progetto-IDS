@@ -1,5 +1,6 @@
 package cs.unicam.it.Utenti;
 
+// Classe astratta che rapp
 abstract class UtenteLog {
 
     private int ID;
@@ -15,6 +16,7 @@ abstract class UtenteLog {
         this.password = password;
     }
 
+    //Metodi get per ottenere i valori delle variabili
     public String getNome() {
         return nome;
     }
@@ -23,18 +25,7 @@ abstract class UtenteLog {
         return email;
     }
 
-    //@Override non tutti gli utenti possono creare prodotti
-    //public void crea(String nome, double prezzo, boolean certificato) {
-    //    ComponenteProdotto prodotto = new ProdottoSingolo(nome, prezzo, certificato);
-    //    aggiungiProdotto(prodotto);
-    //}
-
-    //private void aggiungiProdotto(ComponenteProdotto prodotto) {
-    //    prodotti.add(prodotto);
-    //    System.out.println("Prodotto aggiunto da " + nome + ": " + prodotto.getNome());
-    //}
-
-    //public List<ComponenteProdotto> getProdotti() {
-    //    return prodotti;
-    //}
+    public String getPassword() {
+        return password;
+    }
 }

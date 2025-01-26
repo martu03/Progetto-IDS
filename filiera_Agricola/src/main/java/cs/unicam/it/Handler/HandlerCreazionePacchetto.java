@@ -1,7 +1,6 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Prodotto.*;
-import cs.unicam.it.Utenti.Curatore;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +11,7 @@ public class HandlerCreazionePacchetto implements IHandlerCreazione{
     private PacchettoInputHandler pacchettoInputHandler;
     private static HandlerRichiestaPending handlerRichiestaPending;
 
-    public HandlerCreazionePacchetto(Curatore curatore) {
+    public HandlerCreazionePacchetto() {
         pacchettoInputHandler = new PacchettoInputHandler();
     }
 
