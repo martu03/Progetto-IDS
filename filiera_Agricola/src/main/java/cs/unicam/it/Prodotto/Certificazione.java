@@ -1,5 +1,6 @@
 package cs.unicam.it.Prodotto;
 
+// Enumerazione delle possibili certificazioni di un prodotto
 public enum Certificazione {
 
     DOP("DOP"),
@@ -7,14 +8,14 @@ public enum Certificazione {
     BIO("BIO"),
     KM_ZERO("Km zero");
 
-    private final String displayCertification;
+    private final String displayCertificazione;
 
-    Certificazione(String displayCertification) {
-        this.displayCertification = displayCertification;
+    Certificazione(String displayCertificazione) {
+        this.displayCertificazione = displayCertificazione;
     }
 
     public String getCertificationName() {
-        return displayCertification;
+        return displayCertificazione;
     }
 
 }

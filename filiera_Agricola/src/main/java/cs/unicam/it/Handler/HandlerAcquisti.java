@@ -1,45 +1,39 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
-import cs.unicam.it.Marketplace.GestoreMarketplace;
-import cs.unicam.it.Prodotto.Prodotto;
 
+import java.util.List;
 import java.util.Scanner;
 
 //Questa classe si occupa di gestire l'acquisto dei prodotti presenti nel carrello
 public class HandlerAcquisti {
-    private final Carrello carrello;
-    private final GestoreMarketplace handlerMarketplace;
+    private static final List<Carrello> carrelli = List.of();
+    private static final HandlerMarketplace handlerMarketplace = new HandlerMarketplace();
     private final PagoPa paymentSystem;
 
 
-    public HandlerAcquisti(Carrello carrello, GestoreMarketplace handlerMarketplace, PagoPa paymentSystem) {
-        this.carrello = carrello;
-        this.handlerMarketplace = handlerMarketplace;
+    public HandlerAcquisti(PagoPa paymentSystem) {
         this.paymentSystem = paymentSystem;
     }
 
-    public void acquistaCarrello() {
+    public boolean acquistaCarrello(Carrello carrello, double totale) {
         System.out.println("Contenuti del carrello:");
         carrello.mostraProdotti();
 
         if (!richiediConfermaAcquisto()) {
             System.out.println("Acquisto annullato.");
-            return;
+            return false;
         }
 
-        double totale = carrello.calcolaTotale();
         boolean pagamentoRiuscito = paymentSystem.executePayment(totale);
 
         if (!pagamentoRiuscito) {
             System.out.println("Pagamento non riuscito.");
-            return;
+            return false;
         }
 
-        aggiornaMarketplace();
-        carrello.svuotaCarrello();
-
         System.out.println("Acquisto completato con successo!");
+        return true;
     }
 
     private boolean richiediConfermaAcquisto() {
@@ -53,13 +47,6 @@ public class HandlerAcquisti {
             return true;
         } else {
             return false;
-        }
-    }
-
-    private void aggiornaMarketplace() {
-        for (Prodotto prodotto : carrello.getProdotti()) {
-            handlerMarketplace.aggiungiProdotto(prodotto);
-            //TODO: come gestiamo la quantità dei prodotti?
         }
     }
 }

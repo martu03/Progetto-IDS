@@ -1,30 +1,27 @@
 package cs.unicam.it.Prodotto;
 
-import java.util.List;
-
 public class ProdottoSingolo extends Prodotto {
 
-    public ProdottoSingolo(){
+    private double prezzo;
+
+    public ProdottoSingolo(double prezzo) {
         super();
+        this.prezzo = prezzo;
+    }
+
+    public ProdottoSingolo(Prodotto prodottoClonazione) {
+        super(prodottoClonazione);
+        this.prezzo = ((ProdottoSingolo) prodottoClonazione).getPrezzo();
     }
 
     @Override
-    public double getPrice() {
-        return 0;
+    public ProdottoSingolo clone(Prodotto prodottoClonazione) {
+        return new ProdottoSingolo(this);
     }
 
-    @Override
-    public ProdottoSingolo addProduct(ProdottoSingolo singleProduct) {
-        return null;
-    }
 
     @Override
-    public ProdottoSingolo removeProduct(ProdottoSingolo singleProduct) {
-        return null;
-    }
-
-    @Override
-    public List<ProdottoSingolo> getChild() {
-        return List.of();
+    public double getPrezzo() {
+        return prezzo * getQuantita();
     }
 }

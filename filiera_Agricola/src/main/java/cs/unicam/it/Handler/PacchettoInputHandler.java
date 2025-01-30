@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // InputHandler specifico per il pacchetto
-public class PacchettoInputHandler extends ProdottoInputHandler {
+public class PacchettoInputHandler extends InputHandler {
     private static HandlerCreazioneProdottoSingolo handlerCreazioneProdottoSingolo
             = new HandlerCreazioneProdottoSingolo();
 

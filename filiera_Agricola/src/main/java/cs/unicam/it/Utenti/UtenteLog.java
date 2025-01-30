@@ -1,10 +1,10 @@
 package cs.unicam.it.Utenti;
 
-// Classe astratta che rapp
+//definisce la struttura base di un utente loggato
 abstract class UtenteLog {
 
     private int ID;
-    private static int nextID = 1; //variabile statica per l'ID
+    private static int nextID = 0; //variabile statica per l'ID
     private String nome;
     private String email;
     private String password;
@@ -16,16 +16,15 @@ abstract class UtenteLog {
         this.password = password;
     }
 
-    //Metodi get per ottenere i valori delle variabili
+    public int getID() {
+        return ID;
+    }
+
     public String getNome() {
         return nome;
     }
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

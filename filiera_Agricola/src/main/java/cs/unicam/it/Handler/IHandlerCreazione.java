@@ -14,5 +14,5 @@ public interface IHandlerCreazione {
     void mostraResoconto();
 
     // Metodo per confermare la creazione del prodotto
-    void confermaCreazione();
+    boolean confermaCreazione();
 }

@@ -1,6 +1,7 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Prodotto.Categoria;
+import cs.unicam.it.Prodotto.Certificazione;
 
 import java.util.Scanner;
 
@@ -32,7 +33,7 @@ public abstract class InputHandler {
         for (Categoria categoria : Categoria.values()) {
             System.out.println("- " + categoria.name());
         }
-        scanner.nextLine(); // Pulire il buffer
+        scanner.nextLine();
         String input = scanner.nextLine().trim().toUpperCase();
         return Categoria.valueOf(input);
     }
@@ -41,6 +42,23 @@ public abstract class InputHandler {
     public String chiediScadenza() {
         System.out.print("Inserisci la scadenza (YYYY-MM-DD): ");
         return scanner.nextLine().trim();
+    }
+
+    //chiedi certificazione
+    public Certificazione chiediCertificazione() {
+        System.out.println("Inserisci certificazione, scegliendo tra queste disponibili:");
+        for (Certificazione cert : Certificazione.values()) {
+            System.out.println("- " + cert.getCertificationName());
+        }
+        System.out.print("Certificazione: ");
+        scanner.nextLine();
+        String input = scanner.nextLine().trim().toUpperCase();
+        for (Certificazione cert : Certificazione.values()) {
+            if (cert.getCertificationName().equalsIgnoreCase(input)) {
+                return cert;
+            }
+        }
+        return null;
     }
 
     // Metodo astratto per il comportamento specifico (come quantità o lista di prodotti)

@@ -19,8 +19,11 @@ public class HandlerCreazionePacchetto implements IHandlerCreazione{
     public Prodotto avviaCreazione() {
         form();
         mostraResoconto();
-        confermaCreazione();
-        return pacchettoInCreazione;
+        //controllo se l'utente conferma la creazione del pacchetto
+        if(confermaCreazione()){
+            return pacchettoInCreazione;
+        }
+        return null;
     }
 
     @Override
@@ -28,20 +31,20 @@ public class HandlerCreazionePacchetto implements IHandlerCreazione{
         System.out.println("=== Creazione Pacchetto ===");
 
         // Creazione di un pacchetto vuoto
-        pacchettoInCreazione = new ProdottoPacchetto();
+        pacchettoInCreazione = new ProdottoPacchetto(0);
 
         // Inserimento nome del pacchetto
         String nomePacchetto = pacchettoInputHandler.chiediNome();
-        pacchettoInCreazione.setName(nomePacchetto);
+        pacchettoInCreazione.setNome(nomePacchetto);
 
         // Inserimento descrizione del pacchetto
         String descrizionePacchetto = pacchettoInputHandler.chiediDescrizione();
         Descrizione descrizione = new Descrizione(descrizionePacchetto);
-        pacchettoInCreazione.setDescription(descrizione);
+        pacchettoInCreazione.setDescrizione(descrizione);
 
         // Inserimento dei prodotti per il pacchetto
         List<Prodotto> prodotti = pacchettoInputHandler.chiediListaProdotti();
-        pacchettoInCreazione.setProducts(prodotti);
+        pacchettoInCreazione.addProdotti(prodotti);
 
         // Inserimento prezzo del pacchetto
         double prezzoPacchetto = pacchettoInputHandler.chiediPrezzo();
@@ -53,15 +56,15 @@ public class HandlerCreazionePacchetto implements IHandlerCreazione{
 
         // Scelta della categoria
         Categoria categoriaProdotto = pacchettoInputHandler.chiediCategoria();
-        pacchettoInCreazione.setCategory(categoriaProdotto);
+        pacchettoInCreazione.setCategoria(categoriaProdotto);
     }
 
     // Calcolo della data minima di scadenza tra i prodotti nel pacchetto
     private Date getMinScadenzaPacchetto() {
         Date minDate = null;
-        for (ProdottoSingolo product : pacchettoInCreazione.getChild()) {
-            if (minDate == null || product.getScadenza().before(minDate)) {
-                minDate = product.getScadenza();
+        for (Prodotto prodotto : pacchettoInCreazione.getChild()) {
+            if (minDate == null || prodotto.getScadenza().before(minDate)) {
+                minDate = prodotto.getScadenza();
             }
         }
         return minDate;
@@ -74,15 +77,17 @@ public class HandlerCreazionePacchetto implements IHandlerCreazione{
     }
 
     @Override
-    public void confermaCreazione() {
+    public boolean confermaCreazione() {
         System.out.println("Vuoi confermare la creazione del pacchetto? (S/N)");
         String conferma = pacchettoInputHandler.scanner.nextLine().trim().toUpperCase();
         if (conferma.equals("S")) {
             // Aggiungi il pacchetto ai prodotti del distributore
             System.out.println("Pacchetto creato e aggiunto ai prodotti del distributore.");
-            handlerRichiestaPending.inviaRichiestaPerApprovazione(pacchettoInCreazione);
+            handlerRichiestaPending.inviaRichiestaPerValidazione(pacchettoInCreazione);
+            return true;
         } else {
             System.out.println("Creazione del pacchetto annullata.");
+            return false;
         }
     }
 }

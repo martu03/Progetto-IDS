@@ -4,33 +4,43 @@ import java.util.List;
 
 public class ProdottoPacchetto extends Prodotto {
 
-    private List<Prodotto> products;
+    private double prezzo;
+    private List<Prodotto> prodotti;
 
-    public ProdottoPacchetto() {
+    public ProdottoPacchetto(double prezzo) {
         super();
+        this.prezzo = prezzo;
+    }
+
+    public ProdottoPacchetto(Prodotto prodottoClonazione) {
+        super(prodottoClonazione);
+        this.prezzo = ((ProdottoSingolo) prodottoClonazione).getPrezzo();
+        this.prodotti = ((ProdottoPacchetto) prodottoClonazione).prodotti;
+    }
+
+    //metodo per calcolare il prezzo totale del pacchetto
+    @Override
+    public double getPrezzo() {
+        double totale = 0;
+        for (Prodotto prodotto : prodotti) {
+            totale += prodotto.getPrezzo(); // Ricorsione sul Composite
+        }
+        return totale;
     }
 
     @Override
-    public double getPrice() {
-        return 0;
+    public Prodotto clone(Prodotto prodottoClonazione) {
+        return new ProdottoPacchetto(this);
     }
 
-    @Override
-    public ProdottoSingolo addProduct(ProdottoSingolo singleProduct) {
-        return null;
+    //metodo per aggiungere prodotti al pacchetto
+    public void addProdotti(List<Prodotto> prodotti) {
+        for (Prodotto prodotto : prodotti) {
+            prodotti.add(prodotto);
+        }
     }
 
-    @Override
-    public ProdottoSingolo removeProduct(ProdottoSingolo singleProduct) {
-        return null;
-    }
-
-    @Override
-    public List<ProdottoSingolo> getChild() {
+    public List<Prodotto> getChild() {
         return List.of();
-    }
-
-    public void setProducts(List<Prodotto> products) {
-        this.products = products;
     }
 }

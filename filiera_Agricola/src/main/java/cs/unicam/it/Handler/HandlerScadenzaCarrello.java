@@ -2,12 +2,12 @@ package cs.unicam.it.Handler;
 
 
 import cs.unicam.it.Carrello.Carrello;
-import cs.unicam.it.Prodotto.Prodotto;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+// Classe che si occupa di gestire la scadenza del carrello
 public class HandlerScadenzaCarrello {
     private final Map<Carrello, LocalDateTime> scadenze;
 
@@ -15,7 +15,7 @@ public class HandlerScadenzaCarrello {
         this.scadenze = new HashMap<>();
     }
 
-    public void aggiornaScadenza(Carrello carrello) {
+    public void resetScadenza(Carrello carrello) {
         if (!carrello.getProdotti().isEmpty()) {
             scadenze.put(carrello, LocalDateTime.now().plusMinutes(20));
         } else {
@@ -27,7 +27,7 @@ public class HandlerScadenzaCarrello {
         return scadenze.containsKey(carrello) && LocalDateTime.now().isAfter(scadenze.get(carrello));
     }
 
-    public void resetScadenza(Carrello carrello) {
+    public void eliminaTimer(Carrello carrello) {
         scadenze.remove(carrello);
     }
 }

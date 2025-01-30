@@ -19,10 +19,8 @@ public class Distributore extends Azienda implements ICreaPacchetto {
     }
 
     public void creaPacchetto() {
-        PacchettoInputHandler pacchettoInputHandler = new PacchettoInputHandler();
-        System.out.println("Creazione pacchetto da parte del Distributore...");
-        Prodotto pacchetto = handlerCreazionePacchetto.avviaCreazione();
+        System.out.println("Creazione pacchetto");
+        Prodotto pacchettoCreato = handlerCreazionePacchetto.avviaCreazione();
+        this.setProdottiInVendita(pacchettoCreato);
     }
-
-    // Altri metodi relativi al distributore (se necessari)
 }

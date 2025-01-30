@@ -19,8 +19,25 @@ public class Marketplace {
     public void mostraProdotti() {
         System.out.println("Prodotti nel marketplace:");
         for (Prodotto prodotto : inventarioProdotti) {
-            System.out.println("- " + prodotto.getName() + ", Prezzo: " + prodotto.getPrice());
+            System.out.println("- " + prodotto.getNome() + ", Prezzo: " + prodotto.getPrezzo());
         }
+    }
+
+    public Prodotto getProdottoById(int id) {
+        for (Prodotto prodotto : inventarioProdotti) {
+            if (prodotto.getId() == id) {
+                return prodotto;
+            }
+        }
+        return null;
+    }
+
+    public void aggiungiProdotto(Prodotto prodotto) {
+        inventarioProdotti.add(prodotto);
+    }
+
+    public void rimuoviProdotto(Prodotto prodotto) {
+        inventarioProdotti.remove(prodotto);
     }
 
     // Metodo base per ottenere i prodotti
@@ -29,7 +46,7 @@ public class Marketplace {
     }
 
     // Metodo base per verificare se un prodotto esiste nel marketplace
-    public boolean contieneProdotto(Prodotto prodotto) {
-        return inventarioProdotti.contains(prodotto);
+    public boolean contieneProdotto(int IDProdotto) {
+        return inventarioProdotti.contains(getProdottoById(IDProdotto));
     }
 }

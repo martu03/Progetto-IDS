@@ -3,54 +3,65 @@ package cs.unicam.it.Prodotto;
 import java.util.Date;
 import java.util.List;
 
+//classe che rappresenta un prodotto generico
 public abstract class Prodotto {
 
     private int id;
     private static int nextID = 1;
-    private String name;
-    private int quantity;
+    private String nome;
+    private int quantita;
+    private Descrizione descrizione;
+    private Categoria categoria;
     private double price;
-    private Descrizione description;
-    private Categoria category;
-    private Certificazione certification;
-    private List<Recensione> reviews;
+    private Certificazione certificazione;
+    private List<Recensione> recensioni;
     private Date scadenza;
     private boolean validato;
 
     public Prodotto() {
         this.id = nextID++;
-        reviews = List.of();
+        recensioni = List.of();
+        validato = false;
     }
 
-    public int getId() {
-        return id;
+    public Prodotto(Prodotto prodottoClonazione) {
+        this.id = prodottoClonazione.getId();
+        this.nome = prodottoClonazione.getNome();
+        this.quantita = prodottoClonazione.getQuantita();
+        this.descrizione = prodottoClonazione.getDescrizione();
+        this.categoria = prodottoClonazione.getCategoria();
+        this.certificazione = prodottoClonazione.getCertificazione();
+        this.recensioni = prodottoClonazione.getRecensioni();
+        this.scadenza = prodottoClonazione.getScadenza();
+        this.validato = prodottoClonazione.isValidato();
     }
 
-    public String getName() {
-        return name;
+    public int getId() {return id;}
+
+    public String getNome() {
+        return nome;
     }
 
-    // Ho modificato solo questo
-    public int getQuantity() {
-        return quantity;
+    public int getQuantita() {
+        return quantita;
     }
 
-    public abstract double getPrice();
+    public abstract double getPrezzo();
 
-    public Descrizione getDescription() {
-        return description;
+    public Descrizione getDescrizione() {
+        return descrizione;
     }
 
-    public Categoria getCategory() {
-        return category;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public Certificazione getCertification() {
-        return certification;
+    public Certificazione getCertificazione() {
+        return certificazione;
     }
 
-    public List<Recensione> getReviews() {
-        return reviews;
+    public List<Recensione> getRecensioni() {
+        return recensioni;
     }
 
     public Date getScadenza() {
@@ -59,39 +70,34 @@ public abstract class Prodotto {
 
     public boolean isValidato() { return validato; }
 
-    public abstract ProdottoSingolo addProduct(ProdottoSingolo singleProduct);
 
-    public abstract ProdottoSingolo removeProduct(ProdottoSingolo singleProduct);
 
-    public abstract List<ProdottoSingolo> getChild();
+    public void setId(int id) {this.id = id;}
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    // Ho modificato solo questo
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setQuantita(int quantita) {
+        this.quantita = quantita;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setDescrizione(Descrizione descrizione) {
+        this.descrizione = descrizione;
     }
 
-    public void setDescription(Descrizione description) {
-        this.description = description;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
-    public void setCategory(Categoria category) {
-        this.category = category;
+    public void setPrice(double price) {this.price = price;}
+
+    public void setCertificazione(Certificazione certificazione) {
+        this.certificazione = certificazione;
     }
 
-    public void setCertification(Certificazione certification) {
-        this.certification = certification;
-    }
-
-    public void setReviews(List<Recensione> reviews) {
-        this.reviews = reviews;
+    public void setRecensioni(List<Recensione> reviews) {
+        this.recensioni = reviews;
     }
 
     public void setScadenza(Date scadenza) {
@@ -100,34 +106,20 @@ public abstract class Prodotto {
 
     public void setValidato(boolean validato) {this.validato = validato; }
 
-
-
+    public abstract Prodotto clone(Prodotto prodottoClonazione);
 
     @Override
     public String toString() {
         return "Prodotto {" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", quantity=" + quantity +
+                ", name='" + nome + '\'' +
+                ", quantity=" + quantita +
+                ", description=" + (descrizione != null ? descrizione.getDettaglio() : "null") +
+                ", category=" + (categoria != null ? categoria.name() : "null") +
                 ", price=" + price +
-                ", description=" + (description != null ? description.getDetails() : "null") +
-                ", category=" + (category != null ? category.name() : "null") +
-                ", certification=" + (certification != null ? certification.toString() : "null") +
-                ", reviews=" + (reviews != null ? reviews.toString() : "null") +
+                ", certification=" + (certificazione != null ? certificazione.toString() : "null") +
+                ", reviews=" + (recensioni != null ? recensioni.toString() : "null") +
                 ", scadenza=" + (scadenza != null ? scadenza.toString() : "null") +
                 " }";
     }
-
-    //@Override
-//    public boolean equals(Object obj) {
-//        if (this == obj) return true;
-//        if (obj == null || getClass() != obj.getClass()) return false;
-//        Prodotto product = (Prodotto) obj;
-//        return id.equals(product.id);
-//    }
-
-//    @Override
-//    public int hashCode() {
-//        return id.hashCode();
-//    }
 }

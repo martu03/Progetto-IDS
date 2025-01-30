@@ -51,7 +51,7 @@ public class Recensione {
     public String toString() {
         return "Review {" +
                 "user=" + user.getNome() +
-                ", product=" + product.getName() +
+                ", product=" + product.getNome() +
                 ", rating=" + rating +
                 ", date=" + date +
                 ", content='" + description + '\'' +

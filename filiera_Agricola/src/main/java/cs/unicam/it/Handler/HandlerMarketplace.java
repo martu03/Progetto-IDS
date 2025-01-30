@@ -9,35 +9,38 @@ import java.util.List;
 
 public class HandlerMarketplace {
     private Marketplace marketplace;
-    private List<Prodotto> prodottiMarketplace;
 
+    //vedo se il prodotto è presente nel marketplace, se si aumento qta, altrimenti lo aggiungo
     public void aggiungiProdottiAlMarketplace(List<Prodotto> prodotti) {
         for (Prodotto prodotto : prodotti) {
-            if (prodottiMarketplace.stream().noneMatch(p -> p.getId()==(prodotto.getId()))) {
-                prodottiMarketplace.add(prodotto);
-                System.out.println("Prodotto aggiunto al marketplace: " + prodotto);
+            if (!marketplace.contieneProdotto(prodotto.getId())) {
+                marketplace.aggiungiProdotto(prodotto);
+                System.out.println("Prodotto aggiunto al marketplace");
             } else {
-                System.out.println("Prodotto già presente nel marketplace: " + prodotto.getId());
+                System.out.println("Prodotto già presente nel marketplace");
+                modificaQuantitaMarketplace(prodotto.getId(), prodotto.getQuantita());
             }
         }
-        this.prodottiMarketplace = new ArrayList<>();
+    }
+
+    //modifica la quantità di un prodotto presente nel marketplace
+    public void modificaQuantitaMarketplace(int IDProdotto, int nuovaQuantita) {
+        Prodotto prodotto = marketplace.getProdottoById(IDProdotto);
+        if (marketplace.contieneProdotto(IDProdotto)) {
+            prodotto.setQuantita(nuovaQuantita);
+            System.out.println("Quantità prodotto modificata con successo.");
+        } else {
+            System.out.println("Prodotto non presente nel marketplace.");
+        }
     }
 
 
-    public boolean rimuoviProdottoDalMarketplace(String id) {
-        Prodotto prodottoDaRimuovere = null;
-
-        // Cerca il prodotto con un ciclo for
-        for (Prodotto prodotto : prodottiMarketplace) {
-            if (String.valueOf(prodotto.getId()).equals(id)) { // Confronta id convertito in stringa
-                prodottoDaRimuovere = prodotto;
-                break;
-            }
-        }
+    public boolean rimuoviProdottoDalMarketplace(int id) {
+        Prodotto prodottoDaRimuovere = marketplace.getProdottoById(id);
 
         if (prodottoDaRimuovere != null) {
-            prodottiMarketplace.remove(prodottoDaRimuovere);
-            System.out.println("Prodotto rimosso dal marketplace: " + prodottoDaRimuovere.getName());
+            marketplace.rimuoviProdotto(prodottoDaRimuovere);
+            System.out.println("Prodotto rimosso dal marketplace: " + prodottoDaRimuovere.getNome());
             return true;
         } else {
             System.out.println("Prodotto con ID " + id + " non trovato nel marketplace.");
@@ -45,30 +48,21 @@ public class HandlerMarketplace {
         }
     }
 
-
-
     public void visualizzaProdottiMarketplace() {
-        if (prodottiMarketplace.isEmpty()) {
-            System.out.println("Nessun prodotto disponibile nel marketplace.");
+        if(marketplace.getInventarioProdotti().isEmpty()) {
+            System.out.println("Nessun prodotto presente nel marketplace.");
+            return;
         } else {
-            System.out.println("Lista prodotti del marketplace:");
-            prodottiMarketplace.forEach(System.out::println);
+            marketplace.mostraProdotti();
         }
     }
 
-    public boolean isDisponibile(Prodotto prodotto, int quantitaRichiesta) {
-        Prodotto prodottoEsistente = prodottiMarketplace.stream()
-                .filter(p -> p.getId() == prodotto.getId())
-                .findFirst()
-                .orElse(null);
-
-        if (prodottoEsistente != null && prodottoEsistente.getQuantity() >= quantitaRichiesta) {
-            return true; // Prodotto disponibile
+    public boolean isDisponibile(int id, int quantita) {
+        Prodotto prodotto = marketplace.getProdottoById(id);
+        if (prodotto != null) {
+            return prodotto.getQuantita() >= quantita;
         }
-        return false; // Prodotto non disponibile o quantità insufficiente
+        return false;
     }
 
-    public List<Prodotto> getProdottiMarketplace() {
-        return prodottiMarketplace;
-    }
 }

@@ -18,41 +18,43 @@ public class HandlerCreazioneProdottoSingolo implements IHandlerCreazione {
     public Prodotto avviaCreazione() {
         form();
         mostraResoconto();
-        confermaCreazione();
-        return prodottoInCreazione;
+        if(confermaCreazione()){
+            return prodottoInCreazione;
+        }
+        return null;
     }
 
     @Override
     public void form() {
         System.out.println("=== Creazione Prodotto ===");
 
-        // Creazione di un pacchetto vuoto
-        prodottoInCreazione = new ProdottoSingolo();
+        // Creazione di un prodotto vuoto
+        prodottoInCreazione = new ProdottoSingolo(0);
 
         // Utilizzo dei metodi di input per raccogliere le informazioni
         //MANCA PER OGNI CAMPO IL CONTROLLO SULL INSERIMENTO VUOTO
         String nomeprodotto = inputHandler.chiediNome();
-        prodottoInCreazione.setName(nomeprodotto);
+        prodottoInCreazione.setNome(nomeprodotto);
 
         String descrizioneProdotto = inputHandler.chiediDescrizione();
         Descrizione descrizione = new Descrizione(descrizioneProdotto);
-        prodottoInCreazione.setDescription(descrizione);
+        prodottoInCreazione.setDescrizione(descrizione);
 
         double prezzoProdotto = inputHandler.chiediPrezzo();
         prodottoInCreazione.setPrice(prezzoProdotto);
 
         int quantitaProdotto = inputHandler.chiediQuantita();
-        prodottoInCreazione.setQuantity(quantitaProdotto);
+        prodottoInCreazione.setQuantita(quantitaProdotto);
 
         Categoria categoriaProdotto = inputHandler.chiediCategoria();
-        prodottoInCreazione.setCategory(categoriaProdotto);
+        prodottoInCreazione.setCategoria(categoriaProdotto);
 
         String scadenzaProdotto = inputHandler.chiediScadenza();
         Date scadenza = new Date(scadenzaProdotto);
         prodottoInCreazione.setScadenza(scadenza);
 
         Certificazione certificazioneProdotto = inputHandler.chiediCertificazione();
-        prodottoInCreazione.setCertification(certificazioneProdotto);
+        prodottoInCreazione.setCertificazione(certificazioneProdotto);
 
     }
 
@@ -63,13 +65,15 @@ public class HandlerCreazioneProdottoSingolo implements IHandlerCreazione {
     }
 
     @Override
-    public void confermaCreazione() {
+    public boolean confermaCreazione() {
         System.out.println("Vuoi confermare la creazione del prodotto? (S/N)");
         String conferma = inputHandler.scanner.nextLine().trim().toUpperCase();
         if (conferma.equals("S")) {
-            handlerRichiestaPending.inviaRichiestaPerApprovazione(prodottoInCreazione);
+            handlerRichiestaPending.inviaRichiestaPerValidazione(prodottoInCreazione);
+            return true;
         } else {
             System.out.println("Creazione del prodotto annullata.");
+            return false;
         }
     }
 }
