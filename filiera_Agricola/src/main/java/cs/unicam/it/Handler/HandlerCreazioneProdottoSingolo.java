@@ -2,16 +2,17 @@ package cs.unicam.it.Handler;
 
 import cs.unicam.it.Prodotto.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 // Classe per la creazione di un prodotto singolo
 public class HandlerCreazioneProdottoSingolo implements IHandlerCreazione {
     private static HandlerRichiestaPending handlerRichiestaPending;
     private ProdottoSingolo prodottoInCreazione;
-    private ProdottoInputHandler inputHandler;
+    private ProdottoSingoloInputHandler inputHandler;
 
     public HandlerCreazioneProdottoSingolo() {
-        inputHandler = new ProdottoInputHandler();
+        inputHandler = new ProdottoSingoloInputHandler();
     }
 
     @Override
@@ -50,7 +51,7 @@ public class HandlerCreazioneProdottoSingolo implements IHandlerCreazione {
         prodottoInCreazione.setCategoria(categoriaProdotto);
 
         String scadenzaProdotto = inputHandler.chiediScadenza();
-        Date scadenza = new Date(scadenzaProdotto);
+        LocalDate scadenza = LocalDate.parse(scadenzaProdotto);
         prodottoInCreazione.setScadenza(scadenza);
 
         Certificazione certificazioneProdotto = inputHandler.chiediCertificazione();

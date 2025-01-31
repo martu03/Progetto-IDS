@@ -1,13 +1,7 @@
 package cs.unicam.it.Utenti;
 
 import cs.unicam.it.Handler.HandlerCreazionePacchetto;
-import cs.unicam.it.Handler.PacchettoInputHandler;
-import cs.unicam.it.Prodotto.Categoria;
-import cs.unicam.it.Prodotto.Certificazione;
-import cs.unicam.it.Prodotto.Descrizione;
-import cs.unicam.it.Prodotto.Prodotto;
-
-import java.util.List;
+import cs.unicam.it.Prodotto.*;
 
 // Classe per il distributore
 //il distributore può creare pacchetti di prodotti

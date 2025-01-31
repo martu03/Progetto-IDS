@@ -1,5 +1,6 @@
 package cs.unicam.it.Marketplace;
 
+import cs.unicam.it.Prodotto.Categoria;
 import cs.unicam.it.Prodotto.Prodotto;
 
 import java.util.ArrayList;
@@ -49,4 +50,16 @@ public class Marketplace {
     public boolean contieneProdotto(int IDProdotto) {
         return inventarioProdotti.contains(getProdottoById(IDProdotto));
     }
+
+    // Metodo per filtrare i prodotti in base alla categoria
+    public List<Prodotto> filtraProdottiPerCategoria(Categoria categoria) {
+        List<Prodotto> prodottiFiltrati = new ArrayList<>();
+        for (Prodotto prodotto : inventarioProdotti) {
+            if (prodotto.getCategoria().equals(categoria)) {
+                prodottiFiltrati.add(prodotto);
+            }
+        }
+        return prodottiFiltrati;
+    }
+
 }

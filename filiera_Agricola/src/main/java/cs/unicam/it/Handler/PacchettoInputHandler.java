@@ -1,16 +1,14 @@
 package cs.unicam.it.Handler;
 
-
 import cs.unicam.it.Prodotto.Prodotto;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
-// InputHandler specifico per il pacchetto
-public class PacchettoInputHandler extends InputHandler {
-    private static HandlerCreazioneProdottoSingolo handlerCreazioneProdottoSingolo
-            = new HandlerCreazioneProdottoSingolo();
+// Classe per la gestione dell'input di un pacchetto
+public class PacchettoInputHandler extends ProdottoInputHandler {
+
+    private static HandlerCreazioneProdottoSingolo handlerCreazioneProdottoSingolo = new HandlerCreazioneProdottoSingolo();
 
     // Chiedi la lista di prodotti (specifico per il pacchetto)
     public List<Prodotto> chiediListaProdotti() {
@@ -32,8 +30,7 @@ public class PacchettoInputHandler extends InputHandler {
     }
 
     @Override
-    public void gestisciSpecifico() {
-        // Gestisci la lista dei prodotti per il pacchetto
-        chiediListaProdotti();
+    public void gestisciInput() {
+        System.out.println("Gestione input per pacchetto");
     }
 }

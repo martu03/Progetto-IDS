@@ -1,13 +1,15 @@
 package cs.unicam.it.Utenti;
 
 import cs.unicam.it.Handler.HandlerListaProdotti;
+import cs.unicam.it.Handler.HandlerScadenzaProdotto;
 import cs.unicam.it.Prodotto.Prodotto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // Classe per il curatore che è unico per tutto il marketplace
-public class Curatore extends UtenteLog{
+public class Curatore extends UtenteLog {
+
     private List<Prodotto> listaProdotti;
     private static final HandlerListaProdotti handlerListaProdotti = new HandlerListaProdotti();
 
@@ -43,12 +45,13 @@ public class Curatore extends UtenteLog{
         }
     }
 
-    public void validaProdotto(){
-        if(!handlerListaProdotti.mostraProdottiDaValidare(listaProdotti))
+    public void validaProdotto() {
+        if (!handlerListaProdotti.mostraProdottiDaValidare(listaProdotti)) {
             return; //non ci sono prodotti da validare
+        }
 
         List<Prodotto> prodottiValidati = handlerListaProdotti.validaProdotti(listaProdotti);
-        //una volta che il curatore ha preso visione dei prodotti da validare, li rimuove dalla lista
+        //una volta che il curatore ha preso visione dei prodotti da validare, li rimuove dalla lista.
         rimuoviProdotti(prodottiValidati);
     }
 }

@@ -1,7 +1,7 @@
 package cs.unicam.it.Utenti;
 
 //definisce la struttura base di un utente loggato
-abstract class UtenteLog {
+public abstract class UtenteLog {
 
     private int ID;
     private static int nextID = 0; //variabile statica per l'ID

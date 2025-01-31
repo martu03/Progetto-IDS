@@ -1,13 +1,20 @@
 package cs.unicam.it.Utenti;
 
 import cs.unicam.it.Carrello.Carrello;
+import cs.unicam.it.Handler.HandlerAcquisti;
+import cs.unicam.it.Handler.HandlerCarrello;
+import cs.unicam.it.Observer.Observer;
 import cs.unicam.it.Prodotto.Prodotto;
 
 import java.util.List;
 
 // Acquirente che può acquistare prodotti
-public class Acquirente extends UtenteLog {
+public class Acquirente extends UtenteLog implements Observer {
+
+    HandlerAcquisti handlerAcquisti = new HandlerAcquisti();
+
     private Carrello carrello;
+//    private Geolocalizzazione geolocalizzazione;
     private List<Prodotto> prodottiAcquistati; // Prodotti acquistati dall'acquirente
 
     public Acquirente(String nome, String email, String password) {
@@ -20,6 +27,12 @@ public class Acquirente extends UtenteLog {
     }
 
     public void acquista(){
-        // TODO implementare
+        handlerAcquisti.acquistaCarrello(carrello);
+    }
+
+    @Override
+    public void update(Prodotto prodotto) {
+        System.out.println("Acquirente " + getNome() + " notificato della scadenza del prodotto: " + prodotto.getNome());
+        carrello.rimuoviProdotto(prodotto);
     }
 }

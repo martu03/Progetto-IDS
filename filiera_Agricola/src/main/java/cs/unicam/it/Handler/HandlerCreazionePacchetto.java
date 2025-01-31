@@ -2,7 +2,7 @@ package cs.unicam.it.Handler;
 
 import cs.unicam.it.Prodotto.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 // Classe per la creazione di un pacchetto
@@ -51,7 +51,7 @@ public class HandlerCreazionePacchetto implements IHandlerCreazione{
         pacchettoInCreazione.setPrice(prezzoPacchetto);
 
         // Calcolare la scadenza minima dei prodotti nel pacchetto
-        Date dataScadenza = getMinScadenzaPacchetto();
+        LocalDate dataScadenza = getMinScadenzaPacchetto();
         pacchettoInCreazione.setScadenza(dataScadenza);
 
         // Scelta della categoria
@@ -60,10 +60,10 @@ public class HandlerCreazionePacchetto implements IHandlerCreazione{
     }
 
     // Calcolo della data minima di scadenza tra i prodotti nel pacchetto
-    private Date getMinScadenzaPacchetto() {
-        Date minDate = null;
+    private LocalDate getMinScadenzaPacchetto() {
+        LocalDate minDate = null;
         for (Prodotto prodotto : pacchettoInCreazione.getChild()) {
-            if (minDate == null || prodotto.getScadenza().before(minDate)) {
+            if (minDate == null || prodotto.getScadenza().isBefore(minDate)) {
                 minDate = prodotto.getScadenza();
             }
         }

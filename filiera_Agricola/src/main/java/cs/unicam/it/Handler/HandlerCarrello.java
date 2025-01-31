@@ -9,11 +9,13 @@ import java.util.Map;
 
 //handler che gestisce tutti i carrelli degli acquirenti
 public class HandlerCarrello {
+
     private static final Map<Acquirente, Carrello> carrelli = new HashMap<>();
     private static final HandlerScadenzaCarrello handlerScadenzaCarrello = new HandlerScadenzaCarrello();
     private static final HandlerMarketplace handlerMarketplace = new HandlerMarketplace();
     private static final HandlerCalcolaTotale handlerCalcoloTotale = new HandlerCalcolaTotale();
-    private static final HandlerAcquisti handlerAcquisto = new HandlerAcquisti(new PagoPa());
+    private static final HandlerAcquisti handlerAcquisto = new HandlerAcquisti();
+    private static final HandlerScadenzaProdotto handlerScadenzaProdotto = new HandlerScadenzaProdotto();
 
     public void creaCarrello(Acquirente acquirente) {
         carrelli.put(acquirente, acquirente.getCarrello());
@@ -23,12 +25,12 @@ public class HandlerCarrello {
         return carrelli.get(acquirente);
     }
 
-    public boolean isScaduto(Acquirente acquirente) {
-        if(handlerScadenzaCarrello.isScaduto(carrelli.get(acquirente))) {
-            svuotaCarrello(acquirente);
+    public boolean isScaduto(Carrello carrello) {
+        if(handlerScadenzaCarrello.isScaduto(carrello)) {
+            svuotaCarrello(carrello);
             return true;
         }
-        handlerScadenzaCarrello.eliminaTimer(carrelli.get(acquirente));
+        handlerScadenzaCarrello.eliminaTimer(carrello);
         return false;
     }
 
@@ -39,6 +41,8 @@ public class HandlerCarrello {
         //aggiornare i prodotti presenti nel carrello nel marketplace
         handlerMarketplace.modificaQuantitaMarketplace(prodotto.getId(), -quantita);
         handlerScadenzaCarrello.resetScadenza(carrelloAcquirente);
+
+        handlerScadenzaProdotto.aggiungiOsservatore(prodotto, acquirente);
     }
 
     public void rimuoviProdotto(Acquirente acquirente, Prodotto prodotto) {
@@ -48,6 +52,8 @@ public class HandlerCarrello {
         //aggiornare i prodotti presenti nel carrello nel marketplace
         handlerMarketplace.modificaQuantitaMarketplace(prodotto.getId(), +prodotto.getQuantita());
         handlerScadenzaCarrello.resetScadenza(carrelloAcquirente);
+
+        handlerScadenzaProdotto.rimuoviOsservatore(prodotto, acquirente);
     }
 
     //nuova quantità corrisponde alla quantità desiderata dall'utente finale
@@ -79,30 +85,17 @@ public class HandlerCarrello {
         handlerScadenzaCarrello.resetScadenza(carrelloAcquirente);
     }
 
-    public void svuotaCarrello(Acquirente acquirente) {
-        Carrello carrelloAcquirente = this.getCarrello(acquirente);
-        carrelloAcquirente.svuotaCarrello();
-
-        //aggiornare i prodotti presenti nel carrello nel marketplace
-        handlerMarketplace.aggiungiProdottiAlMarketplace(carrelloAcquirente.getProdotti());
-        handlerScadenzaCarrello.eliminaTimer(carrelloAcquirente);
-    }
-
-
-    public double calcolaTotale(Acquirente acquirente) {
-        Carrello carrelloAcquirente = this.getCarrello(acquirente);
-
-        //chiamo il metodo per calcolare il totale
-        return handlerCalcoloTotale.calcolaTotale(carrelloAcquirente);
-    }
-
-    //metodo per acquistare i prodotti presenti nel carrello
-    public void acquista (Acquirente acquirente) {
-        Carrello carrello = this.getCarrello(acquirente);
-        handlerAcquisto.acquistaCarrello(carrello, calcolaTotale(acquirente));
+    public void svuotaCarrello(Carrello carrello) {
         carrello.svuotaCarrello();
 
+        //aggiornare i prodotti presenti nel carrello nel marketplace
+        handlerMarketplace.aggiungiProdottiAlMarketplace(carrello.getProdotti());
+        handlerScadenzaCarrello.eliminaTimer(carrello);
     }
 
+    public double calcolaTotale(Carrello carrello) {
+        //chiamo il metodo per calcolare il totale
+        return handlerCalcoloTotale.calcolaTotale(carrello);
+    }
 
 }

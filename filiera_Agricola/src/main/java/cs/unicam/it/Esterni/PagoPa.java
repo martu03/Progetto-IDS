@@ -1,4 +1,4 @@
-package cs.unicam.it.Handler;
+package cs.unicam.it.Esterni;
 
 // Classe per la gestione del sistema di pagamento
 public class PagoPa {

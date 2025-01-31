@@ -1,4 +1,4 @@
-package cs.unicam.it.Utenti;
+package cs.unicam.it.Prodotto;
 
 public interface ICreaPacchetto {
     // Metodo per creare un pacchetto di prodotti

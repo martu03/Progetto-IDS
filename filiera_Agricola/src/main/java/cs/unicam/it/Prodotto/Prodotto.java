@@ -1,6 +1,6 @@
 package cs.unicam.it.Prodotto;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 //classe che rappresenta un prodotto generico
@@ -15,7 +15,7 @@ public abstract class Prodotto {
     private double price;
     private Certificazione certificazione;
     private List<Recensione> recensioni;
-    private Date scadenza;
+    private LocalDate scadenza;
     private boolean validato;
 
     public Prodotto() {
@@ -64,15 +64,11 @@ public abstract class Prodotto {
         return recensioni;
     }
 
-    public Date getScadenza() {
+    public LocalDate getScadenza() {
         return scadenza;
     }
 
     public boolean isValidato() { return validato; }
-
-
-
-    public void setId(int id) {this.id = id;}
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -100,7 +96,7 @@ public abstract class Prodotto {
         this.recensioni = reviews;
     }
 
-    public void setScadenza(Date scadenza) {
+    public void setScadenza(LocalDate scadenza) {
         this.scadenza = scadenza;
     }
 

@@ -1,6 +1,5 @@
 package cs.unicam.it.Handler;
 
-
 import cs.unicam.it.Carrello.Carrello;
 
 import java.time.LocalDateTime;
@@ -9,6 +8,7 @@ import java.util.Map;
 
 // Classe che si occupa di gestire la scadenza del carrello
 public class HandlerScadenzaCarrello {
+
     private final Map<Carrello, LocalDateTime> scadenze;
 
     public HandlerScadenzaCarrello() {
