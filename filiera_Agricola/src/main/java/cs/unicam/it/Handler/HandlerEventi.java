@@ -2,11 +2,13 @@ package cs.unicam.it.Handler;
 
 import cs.unicam.it.Eventi.EventoFiliera;
 import cs.unicam.it.Mappa.Geolocalizzazione;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class HandlerEventi {
 
     private List<EventoFiliera> eventi = new ArrayList<>();

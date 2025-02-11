@@ -1,10 +1,11 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Prodotto.Descrizione;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
-// Classe astratta per la gestione dell'input
+@Component
 public abstract class InputHandler {
 
     private static InputHandler instance;

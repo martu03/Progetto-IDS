@@ -1,11 +1,13 @@
 package cs.unicam.it.Prodotto;
 
 import cs.unicam.it.Utenti.Azienda;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class PacchettoBuilder {
 
     private static PacchettoBuilder instance;

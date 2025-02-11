@@ -1,10 +1,11 @@
 package cs.unicam.it.Prodotto;
 
 import cs.unicam.it.Utenti.Azienda;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-
+@Component
 public class ProdottoSingoloBuilder {
 
     private static ProdottoSingoloBuilder instance;

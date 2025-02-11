@@ -3,6 +3,7 @@ package cs.unicam.it.Handler;
 import cs.unicam.it.Eventi.TipologiaEvento;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Utenti.Azienda;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// Classe per la gestione dell'input degli eventi
+@Component
 public class EventoInputHandler extends InputHandler {
 
     private static EventoInputHandler instance;

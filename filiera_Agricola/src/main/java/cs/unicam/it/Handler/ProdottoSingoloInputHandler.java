@@ -1,10 +1,10 @@
 package cs.unicam.it.Handler;
 
-import cs.unicam.it.Prodotto.Certificazione;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-// Classe per la gestione dell'input di un prodotto singolo
+@Component
 public class ProdottoSingoloInputHandler extends ProdottoInputHandler {
 
     private static ProdottoSingoloInputHandler instance = null;

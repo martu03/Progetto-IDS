@@ -3,10 +3,12 @@ package cs.unicam.it.Handler;
 import cs.unicam.it.Mappa.Mappa;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Prodotto;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.ArrayList;
 
+@Component
 public class HandlerProdottiInVendita {
 
     private List<Prodotto> prodottiInVendita = new ArrayList<>();

@@ -1,10 +1,14 @@
 package cs.unicam.it.Utenti;
 
-//definisce la struttura base di un utente loggato
+import jakarta.persistence.*;
+
+@MappedSuperclass
 public abstract class UtenteLog {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ID;
-    private static int nextID = 0; //variabile statica per l'ID
+    private static int nextID = 0;
     private String nome;
     private String email;
     private String password;

@@ -1,5 +1,8 @@
 package cs.unicam.it.Prodotto;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class ProdottoSingolo extends Prodotto {
 
     private double prezzo;

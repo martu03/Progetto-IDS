@@ -2,10 +2,12 @@ package cs.unicam.it.Eventi;
 
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Prodotto.Descrizione;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class EventoBuilder {
 
     private static EventoBuilder instance;

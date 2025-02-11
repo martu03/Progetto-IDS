@@ -12,39 +12,60 @@ import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.PacchettoBuilder;
 import cs.unicam.it.Prodotto.ProdottoSingoloBuilder;
 import cs.unicam.it.Utenti.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Scanner;
 
+@Service
 public class SistemaFacade {
 
     //GESTORE
+    @Autowired
     private GestorePiattaforma gestorePiattaforma;
+    @Autowired
     private HandlerGestorePiattoforma handlerGestorePiattoforma;
     //ANIMATORE
+    @Autowired
     private Animatore animatore;
+    @Autowired
     private EventoBuilder eventoBuilder;
+    @Autowired
     private EventoInputHandler eventoInputHandler;
+    @Autowired
     private HandlerEventi handlerEventi;
     //CURATORE
+    @Autowired
     private Curatore curatore;
     //AZIENDE
+    @Autowired
     private PacchettoInputHandler pacchettoInputHandler;
+    @Autowired
     private ProdottoSingoloInputHandler prodottoSingoloInputHandler;
+    @Autowired
     private PacchettoBuilder pacchettoBuilder;
+    @Autowired
     private ProdottoSingoloBuilder prodottoSingoloBuilder;
     //ACQUIRENTE
+    @Autowired
     private HandlerAcquisti handlerAcquisti;
+    @Autowired
     private HandlerCalcolaTotale handlerCalcolaTotale;
+    @Autowired
     private PagoPa pagoPa;
     //CARRELLI
+    @Autowired
     private HandlerCarrelli handlerCarrelli;
+    @Autowired
     private HandlerScadenzaCarrello handlerScadenzaCarrello;
     //PRODOTTI
+    @Autowired
     private HandlerScadenzaProdotto handlerScadenzaProdotto;
+    @Autowired
     private Marketplace marketplace;
     //MAPPA
+    @Autowired
     private Mappa mappa;
-
 
     // Costruttore
     public SistemaFacade() {

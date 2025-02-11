@@ -3,16 +3,24 @@ package cs.unicam.it.Carrello;
 import cs.unicam.it.Handler.HandlerCarrelli;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Prodotto;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "Carrelli")
 // Carrello dell'acquirente
 public class Carrello {
-
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp timestamp;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "carrello_id")
     private final List<ItemCarrello> prodottiCarrello = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     public Carrello() {
         this.timestamp = new Timestamp(System.currentTimeMillis());
@@ -48,6 +56,7 @@ public class Carrello {
         }
     }
 
+    //TODO: rivedere il metodo
     public void rimuoviProdotto(int IDProdotto) {
         Prodotto prodotto = getProdottoByID(IDProdotto);
         ItemCarrello item = getItemCarrello(prodotto);
@@ -60,6 +69,7 @@ public class Carrello {
         }
     }
 
+    //TODO: rivedere il metodo
     public void modificaQuantita(int IDProdotto, int nuovaQuantita) {
         Prodotto prodotto = getProdottoByID(IDProdotto);
         ItemCarrello item = getItemCarrello(prodotto);
@@ -125,4 +135,11 @@ public class Carrello {
         return Marketplace.getInstance().getProdottoById(id);
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
 }

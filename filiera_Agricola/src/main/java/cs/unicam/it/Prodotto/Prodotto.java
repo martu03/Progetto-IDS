@@ -1,22 +1,30 @@
 package cs.unicam.it.Prodotto;
 
 import cs.unicam.it.Utenti.Azienda;
+import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
 
-//classe che rappresenta un prodotto generico
+@MappedSuperclass
 public abstract class Prodotto {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private static int nextID = 1;
     private String nome;
     private int quantita;
+    @Embedded
     private Descrizione descrizione;
+    @Enumerated(EnumType.STRING)
     private Categoria categoria;
+    @Enumerated(EnumType.STRING)
     private Certificazione certificazione;
     private List<Recensione> recensioni;
+    @Temporal(TemporalType.DATE)
     private Date scadenza;
+    @ManyToOne
     private Azienda azienda;
     private double prezzo;
 

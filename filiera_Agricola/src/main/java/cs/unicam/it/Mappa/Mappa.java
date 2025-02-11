@@ -1,11 +1,11 @@
 package cs.unicam.it.Mappa;
 
-import cs.unicam.it.Eventi.EventoFiliera;
-import cs.unicam.it.Prodotto.ProdottoSingolo;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class Mappa {
 
     private static Mappa instance;
@@ -35,5 +35,9 @@ public class Mappa {
             System.out.println("Punto sulla mappa: " + punti.getLatitudine() + ", " + punti.getLongitudine());
         }
 
+    }
+
+    public List<Geolocalizzazione> getPuntiSullaMappa() {
+        return new ArrayList<>(puntiSullaMappa);
     }
 }

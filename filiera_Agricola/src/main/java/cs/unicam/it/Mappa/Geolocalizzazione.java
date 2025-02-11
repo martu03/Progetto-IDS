@@ -1,9 +1,14 @@
 package cs.unicam.it.Mappa;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Geolocalizzazione {
 
     private double latitudine;
     private double longitudine;
+    @Id
     private String indirizzo;
 
     public Geolocalizzazione(double latitudine, double longitudine, String indirizzo) {

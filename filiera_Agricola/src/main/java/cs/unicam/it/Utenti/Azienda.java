@@ -4,11 +4,15 @@ import cs.unicam.it.Gestori.GestorePiattaforma;
 import cs.unicam.it.Handler.*;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Prodotto.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
 
 import java.util.Date;
 
+@Entity
 public abstract class Azienda extends UtenteLog {
 
+    @Embedded
     private Geolocalizzazione sede;
     protected HandlerProdottiInVendita handlerProdottiInVendita;
 
@@ -110,4 +114,7 @@ public abstract class Azienda extends UtenteLog {
         handlerProdottiInVendita.visualizzaProdottiConSocial();
     }
 
+    public HandlerProdottiInVendita getHandlerProdottiInVendita() {
+        return handlerProdottiInVendita;
+    }
 }

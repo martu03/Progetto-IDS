@@ -4,11 +4,12 @@ import cs.unicam.it.Carrello.Carrello;
 import cs.unicam.it.Carrello.ItemCarrello;
 import cs.unicam.it.Esterni.PagoPa;
 import cs.unicam.it.Prodotto.Prodotto;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
 
-//Questa classe si occupa di gestire l'acquisto dei prodotti presenti nel carrello
+@Component
 public class HandlerAcquisti {
 
     private static HandlerAcquisti instance;

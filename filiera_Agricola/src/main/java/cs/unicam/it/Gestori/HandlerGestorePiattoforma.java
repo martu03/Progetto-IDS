@@ -1,10 +1,12 @@
 package cs.unicam.it.Gestori;
 
 import cs.unicam.it.Utenti.UtenteLog;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class HandlerGestorePiattoforma {
     private List<UtenteLog> utentiRegistrati; // Lista di utenti registrati
     private List<UtenteLog> utentiInAttesa;// Lista di utenti in attesa di approvazione

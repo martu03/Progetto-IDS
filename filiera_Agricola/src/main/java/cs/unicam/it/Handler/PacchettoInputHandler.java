@@ -3,11 +3,12 @@ package cs.unicam.it.Handler;
 import cs.unicam.it.Prodotto.Prodotto;
 import cs.unicam.it.Prodotto.ProdottoSingolo;
 import cs.unicam.it.Prodotto.ProdottoSingoloBuilder;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// Classe per la gestione dell'input di un pacchetto
+@Component
 public class PacchettoInputHandler extends ProdottoInputHandler {
 
     private static PacchettoInputHandler instance = null;

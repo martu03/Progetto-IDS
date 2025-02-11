@@ -2,8 +2,9 @@ package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
 import cs.unicam.it.Carrello.ItemCarrello;
+import org.springframework.stereotype.Component;
 
-// Classe che si occupa di calcolare il totale del carrello
+@Component
 public class HandlerCalcolaTotale {
 
     private static HandlerCalcolaTotale instance;
