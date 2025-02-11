@@ -1,68 +1,113 @@
 package cs.unicam.it.Utenti;
 
-import cs.unicam.it.Handler.HandlerCreazioneProdottoSingolo;
-import cs.unicam.it.Handler.HandlerMarketplace;
-import cs.unicam.it.Handler.HandlerScadenzaProdotto;
-import cs.unicam.it.Observer.Observer;
-import cs.unicam.it.Prodotto.Prodotto;
+import cs.unicam.it.Gestori.GestorePiattaforma;
+import cs.unicam.it.Handler.*;
+import cs.unicam.it.Mappa.Geolocalizzazione;
+import cs.unicam.it.Prodotto.*;
 
-import java.util.List;
+import java.util.Date;
 
-//Classe astratta per la definizione degli attori che possono vendere prodotti
-public abstract class Azienda extends UtenteLog implements Observer {
+public abstract class Azienda extends UtenteLog {
 
-    // Prodotti in vendita dall'azienda
-    private List<Prodotto> prodottiInVendita;
-    // private Geolocalizzazione geolocalizzazione;
-    private static HandlerCreazioneProdottoSingolo handlerCreazioneProdottoSingolo;
-    private static HandlerMarketplace handlerMarketplace;
-    private static final HandlerScadenzaProdotto handlerScadenzaProdotto = new HandlerScadenzaProdotto();
+    private Geolocalizzazione sede;
+    protected HandlerProdottiInVendita handlerProdottiInVendita;
 
-    public Azienda(String nome, String email, String password) {
+    public Azienda(String nome, String email, String password, Geolocalizzazione sede) {
         super(nome, email, password);
-        this.prodottiInVendita = null;
+        this.sede = sede;
+        this.handlerProdottiInVendita = new HandlerProdottiInVendita();
     }
 
-    // Crea un prodotto singolo
-    public void creaProdottoSingolo() {
-        System.out.println("Creazione prodotto singolo");
-        Prodotto prodottoCreato = handlerCreazioneProdottoSingolo.avviaCreazione();
-        prodottiInVendita.add(prodottoCreato);
-
-        handlerScadenzaProdotto.aggiungiOsservatore(prodottoCreato, this);
+    public Geolocalizzazione getSede() {
+        return sede;
     }
 
-    // Restituisce la lista di prodotti
-    public List<Prodotto> getProdottiInVendita(){
-        return prodottiInVendita;
+    public void visualizzaProdottiInVendita() {
+        handlerProdottiInVendita.visualizzaProdottiInVendita();
     }
 
-    public void setProdottiInVendita(Prodotto prodotto){
-        prodottiInVendita.add(prodotto);
+    public void creaProdotto() {
+        ProdottoSingoloInputHandler inputHandler = ProdottoSingoloInputHandler.getInstance();
+        ProdottoSingolo prodotto = creaProdottoBase(inputHandler); // Crea il prodotto base
+
+        handlerProdottiInVendita.aggiungiProdotto(prodotto);
+        HandlerProdottiCuratore.getInstance().aggiungiProdotto(prodotto);
+        System.out.println("Prodotto " + prodotto.getNome() + " creato con successo.");
     }
 
-    // Elimina un prodotto dalla lista
-    public void eliminaProdotto(Prodotto prodotto){
-        prodottiInVendita.remove(prodotto);
-        handlerMarketplace.rimuoviProdottoDalMarketplace(prodotto.getId());
+    private ProdottoSingolo creaProdottoBase(ProdottoSingoloInputHandler inputHandler) {
+        String nome = inputHandler.chiediNome(); // Chiedi il nome del prodotto
+        int quantita = inputHandler.chiediQuantita(); // Chiedi la quantità
+        double prezzo = inputHandler.chiediPrezzo(); // Chiedi il prezzo
+        Descrizione descrizione = inputHandler.chiediDescrizione(); // Chiedi la descrizione
+        Categoria categoria = inputHandler.chiediCategoria(); // Chiedi la categoria
+        Certificazione certificazione = inputHandler.chiediCertificazione(); // Chiedi la certificazione
+        Date scadenza = inputHandler.chiediScadenza(); // Chiedi la data di scadenza
 
-        handlerScadenzaProdotto.rimuoviOsservatore(prodotto, this);
+        return buildProdottoSingolo(nome, quantita, prezzo, descrizione, categoria, certificazione, scadenza);
     }
 
-    //Modifico la disponibilità di un prodotto già in vendita
-    public void modificaQuantita(Prodotto prodotto, int qta){
-        int newQuantita = prodotto.getQuantita() + qta;
-        if (newQuantita >= 0) {
-            prodotto.setQuantita(newQuantita);
-        }else{
-            prodotto.setQuantita(0);
+    private ProdottoSingolo buildProdottoSingolo(String nome, int quantita, double prezzo, Descrizione descrizione, Categoria categoria, Certificazione certificazione, Date scadenza) {
+        ProdottoSingoloBuilder builder = ProdottoSingoloBuilder.getInstance();
+        return builder.setNome(nome)
+                .setQuantita(quantita)
+                .setDescrizione(descrizione)
+                .setCategoria(categoria)
+                .setPrezzo(prezzo)
+                .setCertificazione(certificazione)
+                .setScadenza(scadenza)
+                .setAzienda(this)
+                .build();
+    }
+
+    public void rimuoviProdotto(int prodottoId) {
+        handlerProdottiInVendita.rimuoviProdotto(prodottoId);
+        System.out.println("Il prodotto " + prodottoId + " è stato rimosso dal marketplace.");
+    }
+
+    public void modificaQuantita(int IDProdotto, int nuovaQuantita) {
+        Prodotto prodotto = handlerProdottiInVendita.getProdottoById(IDProdotto);
+        if(prodotto == null) {
+            System.out.println("Prodotto non trovato nella lista dei prodotti creati.");
+            return;
         }
+
+        if(nuovaQuantita < 0 || nuovaQuantita == 0) {
+            rimuoviProdotto(IDProdotto);
+            System.out.println("Quantita' uguale a 0 -> Prodotto rimosso dal marketplace.");
+            return;
+        }
+        prodotto.setQuantita(nuovaQuantita);
+        System.out.println("Quantità del prodotto modificata.");
     }
 
-    @Override
-    public void update(Prodotto prodotto) {
-        System.out.println("Azienda " + getNome() + " notificata della scadenza del prodotto: " + prodotto.getNome());
-        eliminaProdotto(prodotto);
+    public void eliminaAccount() {
+        System.out.println("Richiesta di eliminazione account da parte dell'azienda: " + this.getNome());
+        GestorePiattaforma.getInstance().rimuoviUtente(this);
+    }
+
+    public void pubblicaSuSocial(int IDProdotto) {
+        Prodotto prodotto = handlerProdottiInVendita.getProdottoById(IDProdotto);
+
+        // Controllo se il prodotto esiste
+        if (prodotto == null) {
+            System.out.println("Prodotto non trovato.");
+            return;
+        }
+
+        // Controllo se il prodotto è già stato pubblicato sui social
+        if (handlerProdottiInVendita.isProdottoPubblicato(IDProdotto)) {
+            System.out.println("Il prodotto è già stato pubblicato sui social.");
+            return;
+        }
+
+        // Pubblica il prodotto sui social
+        handlerProdottiInVendita.aggiungiProdottoConSocial(prodotto);
+        System.out.println("Il prodotto " + prodotto.getNome() + " è stato pubblicato sui social.");
+    }
+
+    public void visualizzaProdottiConSocial() {
+        handlerProdottiInVendita.visualizzaProdottiConSocial();
     }
 
 }

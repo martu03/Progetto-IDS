@@ -1,33 +1,61 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
+import cs.unicam.it.Carrello.ItemCarrello;
+import cs.unicam.it.Prodotto.Prodotto;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 // Classe che si occupa di gestire la scadenza del carrello
 public class HandlerScadenzaCarrello {
 
-    private final Map<Carrello, LocalDateTime> scadenze;
+    private static HandlerScadenzaCarrello instance;
+    private Timer timer;
 
-    public HandlerScadenzaCarrello() {
-        this.scadenze = new HashMap<>();
+    private HandlerScadenzaCarrello() {
+        timer = new Timer();
     }
 
-    public void resetScadenza(Carrello carrello) {
-        if (!carrello.getProdotti().isEmpty()) {
-            scadenze.put(carrello, LocalDateTime.now().plusMinutes(20));
-        } else {
-            scadenze.remove(carrello);
+    public static HandlerScadenzaCarrello getInstance() {
+        if (instance == null) {
+            instance = new HandlerScadenzaCarrello();
+        }
+        return instance;
+    }
+
+    public void avviaMonitoraggioScadenze(int timeoutMinuti) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                List<Carrello> carrelliAttivi = HandlerCarrelli.getInstance().getCarrelliAttivi();
+                long now = System.currentTimeMillis();
+
+                for (Carrello carrello : carrelliAttivi) {
+                    long carrelloTimestamp = carrello.getTimestamp().getTime();
+                    long elapsedTime = now - carrelloTimestamp;
+
+                    // Controlla se il carrello è scaduto
+                    if (elapsedTime >= TimeUnit.MINUTES.toMillis(timeoutMinuti)) {
+                        //CARRELLO SCADUTO
+                        carrello.svuota();
+                        HandlerCarrelli.getInstance().getCarrelliAttivi().remove(carrello);
+                        System.out.println("Carrello scaduto!");
+                    }
+                }
+            }
+        }, 0, 1000 * 60); // Esegue ogni minuto
+    }
+
+    public void stopMonitoraggioScadenze() {
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
         }
     }
 
-    public boolean isScaduto(Carrello carrello) {
-        return scadenze.containsKey(carrello) && LocalDateTime.now().isAfter(scadenze.get(carrello));
-    }
-
-    public void eliminaTimer(Carrello carrello) {
-        scadenze.remove(carrello);
-    }
 }

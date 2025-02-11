@@ -1,97 +1,128 @@
 package cs.unicam.it.Carrello;
 
+import cs.unicam.it.Handler.HandlerCarrelli;
+import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Prodotto;
-import cs.unicam.it.Prodotto.ProdottoPacchetto;
-import cs.unicam.it.Prodotto.ProdottoSingolo;
-import cs.unicam.it.Utenti.Acquirente;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 // Carrello dell'acquirente
 public class Carrello {
-    private final List<Prodotto> prodotti;
+
+    private Timestamp timestamp;
+    private final List<ItemCarrello> prodottiCarrello = new ArrayList<>();
 
     public Carrello() {
-        this.prodotti = new ArrayList<>();
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
-    public List<Prodotto> getProdotti() {
-        return prodotti;
-    }
-
-    // Aggiunge un prodotto al carrello
-    public void aggiungiProdotto(Prodotto prodotto, int quantita) {
-        if (isProdottoPresente(prodotto)) {
-            Prodotto prodottoPresente = this.getProdottoByID(prodotto.getId());
-            int nuovaQuantita = prodottoPresente.getQuantita() + quantita;
-            prodottoPresente.setQuantita(nuovaQuantita);
-        } else {
-            Prodotto prodottoDaAggiungere = prodotto.clone(prodotto);
-            prodottoDaAggiungere.setQuantita(quantita);
-            prodotti.add(prodottoDaAggiungere);
+    public void visualizzaCarrello() {
+        for (ItemCarrello item : prodottiCarrello) {
+            Prodotto prodotto = item.getProdotto();
+            System.out.println(
+                    prodotto.getNome() + " - Quantità: " + item.getQuantita() +
+                            " - Prezzo Unitario: " + prodotto.getPrezzo()
+            );
         }
     }
 
-    //verifica se il prodotto è già presente nel carrello
-    private boolean isProdottoPresente(Prodotto prodotto) {
-        return prodotti.stream().anyMatch(p -> p.getId() == prodotto.getId());
+    // Aggiunge un prodotto al carrello
+    public void aggiungiProdotto(int IDProdotto, int quantita) {
+        Prodotto prodotto = getProdottoByID(IDProdotto);
+        if (prodotto.verificaDisponibilita(quantita)) {
+            if(prodottiCarrello.isEmpty())
+                HandlerCarrelli.getInstance().aggiungiCarrello(this);
+            else
+                resetTimestamp();
+            if(getItemCarrello(prodotto) != null) {
+                modificaQuantita(IDProdotto, getItemCarrello(prodotto).getQuantita() + quantita);
+            }else{
+                ItemCarrello item = new ItemCarrello(prodotto, quantita);
+                prodottiCarrello.add(item);
+                prodotto.modificaQuantita(-quantita);
+            }
+        } else {
+            System.out.println("Quantità richiesta non disponibile.");
+        }
     }
 
-    public Prodotto getProdottoByID(int id) {
-        for (Prodotto p : prodotti) {
-            if (p.getId() == id) {
-                return p;
+    public void rimuoviProdotto(int IDProdotto) {
+        Prodotto prodotto = getProdottoByID(IDProdotto);
+        ItemCarrello item = getItemCarrello(prodotto);
+        if(item != null) {
+            prodotto.modificaQuantita(item.getQuantita());
+            prodottiCarrello.remove(item);
+            resetTimestamp();
+        }else{
+            System.out.println("Il prodotto non è presente nel carrello.");
+        }
+    }
+
+    public void modificaQuantita(int IDProdotto, int nuovaQuantita) {
+        Prodotto prodotto = getProdottoByID(IDProdotto);
+        ItemCarrello item = getItemCarrello(prodotto);
+        if (item == null) {
+            System.out.println("Il prodotto non è presente nel carrello.");
+            return;
+        }
+
+        if (nuovaQuantita == 0 || nuovaQuantita < 0) {
+            rimuoviProdotto(IDProdotto);
+            return;
+        }
+
+        int vecchiaQuantita = item.getQuantita();
+        int delta = nuovaQuantita - vecchiaQuantita;
+
+        if (delta < 0) {
+            prodotto.modificaQuantita(Math.abs(delta));
+            item.setQuantita(nuovaQuantita);
+        } else if (delta > 0) {
+            if (!prodotto.verificaDisponibilita(delta)) {
+                System.out.println("Errore: La nuova quantità richiesta non è disponibile.");
+                return;
+            }
+            prodotto.modificaQuantita(-delta);
+            item.setQuantita(nuovaQuantita);
+        }
+
+        resetTimestamp();
+    }
+
+    public void svuota() {
+        for (ItemCarrello item : prodottiCarrello) {
+            Prodotto prodotto = item.getProdotto();
+            rimuoviProdotto(prodotto.getId());
+        }
+        this.timestamp = null;
+        HandlerCarrelli.getInstance().rimuoviCarrello(this);
+    }
+
+    public ItemCarrello getItemCarrello(Prodotto prodotto) {
+        for (ItemCarrello item : prodottiCarrello) {
+            if (item.getProdotto().equals(prodotto)) {
+                return item;
             }
         }
         return null;
     }
 
-    public void rimuoviProdotto(Prodotto prodotto) {
-        if(!isProdottoPresente(prodotto)) {
-            System.out.println("Prodotto non presente nel carrello.");
-        }
-        prodotti.remove(prodotto);
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public boolean modificaQuantitaProdotto(Prodotto prodotto, int nuovaQuantita) {
-        if(!isProdottoPresente(prodotto)) {
-            System.out.println("Prodotto non presente nel carrello.");
-            return false;
-        }
-
-        this.getProdottoByID(prodotto.getId()).setQuantita(nuovaQuantita);
-        return true;
+    public void resetTimestamp() {
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
-    public void svuotaCarrello() {
-        this.prodotti.clear();
-        System.out.println("Carrello svuotato");
+    public List<ItemCarrello> getProdottiCarrello() {
+        return prodottiCarrello;
     }
 
-    public void mostraProdotti() {
-        if (prodotti.isEmpty()) {
-            System.out.println("Il carrello è vuoto.");
-            return;
-        }
-
-        for (Prodotto prodotto : prodotti) {
-            mostraDettagliProdotto(prodotto, "");
-        }
+    private Prodotto getProdottoByID(int id) {
+        return Marketplace.getInstance().getProdottoById(id);
     }
 
-    private void mostraDettagliProdotto(Prodotto prodotto, String indent) {
-        if (prodotto instanceof ProdottoPacchetto) {
-            System.out.println(indent + "Pacchetto: " + prodotto.getNome() +
-                    " - Prezzo totale: " + prodotto.getPrezzo());
-            for (Prodotto p : ((ProdottoPacchetto) prodotto).getChild()) {
-                mostraDettagliProdotto(p, indent + "  > ");
-            }
-        } else {
-            System.out.println(indent + "Prodotto: " + prodotto.getNome() +
-                    " - Quantità: " + prodotto.getQuantita() +
-                    " - Prezzo unitario: " + prodotto.getPrezzo() +
-                    " - Prezzo totale: " + prodotto.getPrezzo() * prodotto.getQuantita());
-        }
-    }
 }

@@ -1,10 +1,10 @@
 package cs.unicam.it.Utenti;
 
-// Classe per il produttore
-// Il produttore non può creare pacchetti di prodotti
+import cs.unicam.it.Mappa.Geolocalizzazione;
+
 public class Produttore extends Azienda {
 
-    public Produttore(String nome, String email, String password) {
-        super(nome, email, password);
+    public Produttore(String nome, String email, String password, Geolocalizzazione sede) {
+        super(nome, email, password, sede);
     }
 }

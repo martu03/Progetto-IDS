@@ -5,61 +5,50 @@ import cs.unicam.it.Prodotto.Prodotto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-// Classe per il marketplace
 public class Marketplace {
 
-    // Lista dei prodotti approvati
-    private List<Prodotto> inventarioProdotti;
+    private static Marketplace instance;
+    private List<Prodotto> inventarioMarketplace;
 
-    public Marketplace() {
-        this.inventarioProdotti = new ArrayList<>();
+    private Marketplace() {
+        this.inventarioMarketplace = new ArrayList<>();
     }
 
-    // Metodo per mostrare i prodotti nel marketplace
-    public void mostraProdotti() {
-        System.out.println("Prodotti nel marketplace:");
-        for (Prodotto prodotto : inventarioProdotti) {
-            System.out.println("- " + prodotto.getNome() + ", Prezzo: " + prodotto.getPrezzo());
+    public static Marketplace getInstance() {
+        if (instance == null) {
+            instance = new Marketplace();
         }
-    }
-
-    public Prodotto getProdottoById(int id) {
-        for (Prodotto prodotto : inventarioProdotti) {
-            if (prodotto.getId() == id) {
-                return prodotto;
-            }
-        }
-        return null;
+        return instance;
     }
 
     public void aggiungiProdotto(Prodotto prodotto) {
-        inventarioProdotti.add(prodotto);
+        inventarioMarketplace.add(prodotto);
+        System.out.println("Prodotto " + prodotto.getNome() + " aggiunto al marketplace.");
     }
 
-    public void rimuoviProdotto(Prodotto prodotto) {
-        inventarioProdotti.remove(prodotto);
+    public void rimuoviProdotto(int id) {
+        inventarioMarketplace.remove(getProdottoById(id));
     }
 
-    // Metodo base per ottenere i prodotti
-    public List<Prodotto> getInventarioProdotti() {
-        return inventarioProdotti;
+    public List<Prodotto> filtraPerCategoria(Categoria categoria) {
+        return inventarioMarketplace.stream()
+                .filter(prodotto -> prodotto.getCategoria() == categoria)
+                .collect(Collectors.toList());
     }
 
-    // Metodo base per verificare se un prodotto esiste nel marketplace
-    public boolean contieneProdotto(int IDProdotto) {
-        return inventarioProdotti.contains(getProdottoById(IDProdotto));
+    public List<Prodotto> getProdotti() {
+        return inventarioMarketplace;
     }
 
-    // Metodo per filtrare i prodotti in base alla categoria
-    public List<Prodotto> filtraProdottiPerCategoria(Categoria categoria) {
-        List<Prodotto> prodottiFiltrati = new ArrayList<>();
-        for (Prodotto prodotto : inventarioProdotti) {
-            if (prodotto.getCategoria().equals(categoria)) {
-                prodottiFiltrati.add(prodotto);
-            }
-        }
-        return prodottiFiltrati;
+    public Prodotto getProdottoById(int id) {
+        return inventarioMarketplace.get(id);
+    }
+
+    public void visualizzaProdottiMarketplace() {
+        inventarioMarketplace.forEach(prodotto ->
+                System.out.println("Nome prodotto: " + prodotto.getNome() + " - Prezzo: " + prodotto.getPrezzo()));
     }
 
 }

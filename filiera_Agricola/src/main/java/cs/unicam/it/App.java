@@ -1,6 +1,8 @@
 package cs.unicam.it;
 
-import cs.unicam.it.Handler.HandlerCreazioneProdottoSingolo;
+import cs.unicam.it.Facade.SistemaFacade;
+import cs.unicam.it.Mappa.Geolocalizzazione;
+import cs.unicam.it.Utenti.*;
 
 /**
  * Hello world!
@@ -8,8 +10,9 @@ import cs.unicam.it.Handler.HandlerCreazioneProdottoSingolo;
  */
 public class App {
     public static void main(String[] args) {
-        HandlerCreazioneProdottoSingolo handler = new HandlerCreazioneProdottoSingolo();
-        handler.avviaCreazioneProdotto();
+        SistemaFacade sistemaFacade = new SistemaFacade();
+        UtenteGenerico utente = new UtenteGenerico(sistemaFacade);
+        UtenteLog acquirente = utente.creaAccount();
     }
 
 }

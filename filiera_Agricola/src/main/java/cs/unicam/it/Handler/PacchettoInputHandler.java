@@ -1,6 +1,8 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Prodotto.Prodotto;
+import cs.unicam.it.Prodotto.ProdottoSingolo;
+import cs.unicam.it.Prodotto.ProdottoSingoloBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +10,18 @@ import java.util.List;
 // Classe per la gestione dell'input di un pacchetto
 public class PacchettoInputHandler extends ProdottoInputHandler {
 
-    private static HandlerCreazioneProdottoSingolo handlerCreazioneProdottoSingolo = new HandlerCreazioneProdottoSingolo();
+    private static PacchettoInputHandler instance = null;
+
+    private PacchettoInputHandler() {
+        super();
+    }
+
+    public static PacchettoInputHandler getInstance() {
+        if (instance == null) {
+            instance = new PacchettoInputHandler();
+        }
+        return instance;
+    }
 
     // Chiedi la lista di prodotti (specifico per il pacchetto)
     public List<Prodotto> chiediListaProdotti() {
@@ -16,7 +29,7 @@ public class PacchettoInputHandler extends ProdottoInputHandler {
         boolean continua = true;
         while (continua) {
             System.out.println("Aggiungi un prodotto al pacchetto:");
-            Prodotto prodotto = handlerCreazioneProdottoSingolo.avviaCreazione();
+            Prodotto prodotto = ProdottoSingoloBuilder.getInstance().build();
             listaProdotti.add(prodotto);
 
             // Chiedi se continuare ad aggiungere altri prodotti

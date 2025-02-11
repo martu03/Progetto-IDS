@@ -7,15 +7,9 @@ public class ProdottoPacchetto extends Prodotto {
     private double prezzo;
     private List<Prodotto> prodotti;
 
-    public ProdottoPacchetto(double prezzo) {
+    public ProdottoPacchetto() {
         super();
-        this.prezzo = prezzo;
-    }
-
-    public ProdottoPacchetto(Prodotto prodottoClonazione) {
-        super(prodottoClonazione);
-        this.prezzo = ((ProdottoSingolo) prodottoClonazione).getPrezzo();
-        this.prodotti = ((ProdottoPacchetto) prodottoClonazione).prodotti;
+        this.prezzo = 0;
     }
 
     //metodo per calcolare il prezzo totale del pacchetto
@@ -23,24 +17,23 @@ public class ProdottoPacchetto extends Prodotto {
     public double getPrezzo() {
         double totale = 0;
         for (Prodotto prodotto : prodotti) {
-            totale += prodotto.getPrezzo(); // Ricorsione sul Composite
+            totale += prodotto.getPrezzo();
         }
         return totale;
     }
 
-    @Override
-    public Prodotto clone(Prodotto prodottoClonazione) {
-        return new ProdottoPacchetto(this);
+    public void setPrezzo(double prezzo) {
+        this.prezzo = prezzo;
     }
 
     //metodo per aggiungere prodotti al pacchetto
-    public void addProdotti(List<Prodotto> prodotti) {
+    public void setProdotti(List<Prodotto> prodotti) {
         for (Prodotto prodotto : prodotti) {
             prodotti.add(prodotto);
         }
     }
 
     public List<Prodotto> getChild() {
-        return List.of();
+        return prodotti;
     }
 }

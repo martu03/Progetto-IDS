@@ -1,7 +1,9 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
+import cs.unicam.it.Carrello.ItemCarrello;
 import cs.unicam.it.Esterni.PagoPa;
+import cs.unicam.it.Prodotto.Prodotto;
 
 import java.util.List;
 import java.util.Scanner;
@@ -9,32 +11,37 @@ import java.util.Scanner;
 //Questa classe si occupa di gestire l'acquisto dei prodotti presenti nel carrello
 public class HandlerAcquisti {
 
-    private static final List<Carrello> carrelli = List.of();
-    private static final HandlerMarketplace handlerMarketplace = new HandlerMarketplace();
-    private static final PagoPa paymentSystem = new PagoPa();
-    private final HandlerCarrello handlerCarrello = new HandlerCarrello();
+    private static HandlerAcquisti instance;
 
-    public HandlerAcquisti() {
+    private HandlerAcquisti() {
     }
 
-    public void acquistaCarrello(Carrello carrello) {
-        System.out.println("Contenuti del carrello:");
-        carrello.mostraProdotti();
+    public static HandlerAcquisti getInstance() {
+        if (instance == null) {
+            instance = new HandlerAcquisti();
+        }
+        return instance;
+    }
+
+    public boolean confermaAcquisto(Carrello carrello) {
+        // Calcola il totale dell'ordine
+        double totale = HandlerCalcolaTotale.getInstance().calcolaTotale(carrello);
 
         if (!richiediConfermaAcquisto()) {
             System.out.println("Acquisto annullato.");
-            return;
+            return false;
         }
 
-        boolean pagamentoRiuscito = paymentSystem.executePayment(handlerCarrello.calcolaTotale(carrello));
-
-        if (!pagamentoRiuscito) {
-            System.out.println("Pagamento non riuscito.");
-            return;
+        // Effettua il pagamento tramite Pagopa
+        if (PagoPa.getInstance().effettuaPagamento(carrello, totale)) {
+            // Svuota il carrello dopo la conferma
+            carrello.svuota();
+            System.out.println("Acquisto completato con successo.");
+            return true;
+        } else {
+            System.out.println("Errore durante il pagamento.");
+            return false;
         }
-
-        System.out.println("Acquisto completato con successo!");
-        handlerCarrello.svuotaCarrello(carrello);
     }
 
     private boolean richiediConfermaAcquisto() {
@@ -46,4 +53,5 @@ public class HandlerAcquisti {
 
         return risposta.equals("s");
     }
+
 }

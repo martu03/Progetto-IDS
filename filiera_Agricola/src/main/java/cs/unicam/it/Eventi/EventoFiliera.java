@@ -1,67 +1,62 @@
 package cs.unicam.it.Eventi;
 
-import cs.unicam.it.Geolocalizzazione.Geolocalizzazione;
+import cs.unicam.it.Mappa.Geolocalizzazione;
+import cs.unicam.it.Prodotto.Descrizione;
+import cs.unicam.it.Utenti.Azienda;
 
 import java.util.Date;
 import java.util.List;
 
 public class EventoFiliera {
 
+    private int id;
+    private static int nextID = 1;
     private String nome;
-    private String descrizione;
-    private List<String> partecipanti;
+    private Descrizione descrizione;
+    private List<String> aziendePartecipanti;
     private TipologiaEvento tipologia;
     private Date data;
-    private Geolocalizzazione geolocalizzazione;
+    private Geolocalizzazione luogoEvento;
 
-    public EventoFiliera() {
+    public EventoFiliera(String nome, Descrizione descrizione, TipologiaEvento tipologia, Date data,
+                         Geolocalizzazione luogoEvento, List<String> aziendePartecipanti) {
+        this.id = nextID++;
+        this.nome = nome;
+        this.descrizione = descrizione;
+        this.tipologia = tipologia;
+        this.data = data;
+        this.luogoEvento = luogoEvento;
+        this.aziendePartecipanti = aziendePartecipanti;
     }
+
+    public int getId() { return id; }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDescrizione() {
+    public Descrizione getDescrizione() {
         return descrizione;
     }
 
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
-
     public List<String> getPartecipanti() {
-        return partecipanti;
-    }
-
-    public void setPartecipanti(List<String> partecipanti) {
-        this.partecipanti = partecipanti;
+        return aziendePartecipanti;
     }
 
     public TipologiaEvento getTipologia() {
         return tipologia;
     }
 
-    public void setTipologia(TipologiaEvento tipologia) {
-        this.tipologia = tipologia;
-    }
-
     public Date getData() {
         return data;
     }
 
-    public void setData(Date data) {
-        this.data = data;
+    public Geolocalizzazione getLuogoEvento() {
+        return luogoEvento;
     }
 
-    public Geolocalizzazione getGeolocalizzazione() {
-        return geolocalizzazione;
+    public void aggiungiAziendaPartecipante(String azienda) {
+        aziendePartecipanti.add(azienda);
     }
 
-    public void setGeolocalizzazione(Geolocalizzazione geolocalizzazione) {
-        this.geolocalizzazione = geolocalizzazione;
-    }
 }

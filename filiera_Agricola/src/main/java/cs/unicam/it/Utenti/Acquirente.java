@@ -1,24 +1,21 @@
 package cs.unicam.it.Utenti;
 
 import cs.unicam.it.Carrello.Carrello;
+import cs.unicam.it.Gestori.GestorePiattaforma;
+import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Handler.HandlerAcquisti;
-import cs.unicam.it.Handler.HandlerCarrello;
-import cs.unicam.it.Observer.Observer;
-import cs.unicam.it.Prodotto.Prodotto;
+import cs.unicam.it.Handler.HandlerCarrelli;
+import cs.unicam.it.Marketplace.Marketplace;
+import cs.unicam.it.Prodotto.Recensione;
 
-import java.util.List;
-
-// Acquirente che può acquistare prodotti
-public class Acquirente extends UtenteLog implements Observer {
-
-    HandlerAcquisti handlerAcquisti = new HandlerAcquisti();
+public class Acquirente extends UtenteLog {
 
     private Carrello carrello;
-//    private Geolocalizzazione geolocalizzazione;
-    private List<Prodotto> prodottiAcquistati; // Prodotti acquistati dall'acquirente
+    private Geolocalizzazione indirizzoSpedizione;
 
-    public Acquirente(String nome, String email, String password) {
+    public Acquirente(String nome, String email, String password, Geolocalizzazione indirizzoSpedizione) {
         super(nome, email, password);
+        this.indirizzoSpedizione = indirizzoSpedizione;
         this.carrello = new Carrello();
     }
 
@@ -26,13 +23,39 @@ public class Acquirente extends UtenteLog implements Observer {
         return carrello;
     }
 
-    public void acquista(){
-        handlerAcquisti.acquistaCarrello(carrello);
+    public Geolocalizzazione getIndirizzoSpedizione() {
+        return indirizzoSpedizione;
     }
 
-    @Override
-    public void update(Prodotto prodotto) {
-        System.out.println("Acquirente " + getNome() + " notificato della scadenza del prodotto: " + prodotto.getNome());
-        carrello.rimuoviProdotto(prodotto);
+    public void aggiungiProdottoAlCarrello(int IDProdotto, int quantita) {
+        if (carrello.getProdottiCarrello().isEmpty()) {
+            HandlerCarrelli.getInstance().aggiungiCarrello(carrello);
+        }
+        carrello.aggiungiProdotto(IDProdotto, quantita);
     }
+
+    public void rimuoviProdottoDalCarrello(int IDProdotto) {
+        carrello.rimuoviProdotto(IDProdotto);
+    }
+
+    public void modificaQuantitaProdotto(int IDProdotto, int quantita) {
+        carrello.modificaQuantita(IDProdotto, quantita);
+    }
+
+    public void confermaAcquisto() {
+        if (HandlerAcquisti.getInstance().confermaAcquisto(carrello)) {
+            HandlerCarrelli.getInstance().rimuoviCarrello(carrello);
+        }
+    }
+
+    public void aggiungiRecensioneAProdotto(int IDProdotto, String titolo, String descrizione, int voto) {
+        Recensione recensione = new Recensione(titolo, descrizione, voto, this);
+        Marketplace.getInstance().getProdottoById(IDProdotto).aggiungiRecensione(recensione);
+    }
+
+    public void eliminaAccount() {
+        System.out.println("Richiesta di eliminazione account da parte dell'acquirente: " + this.getNome());
+        GestorePiattaforma.getInstance().rimuoviUtente(this);
+    }
+
 }

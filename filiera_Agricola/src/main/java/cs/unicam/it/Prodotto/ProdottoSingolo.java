@@ -4,21 +4,10 @@ public class ProdottoSingolo extends Prodotto {
 
     private double prezzo;
 
-    public ProdottoSingolo(double prezzo) {
+    public ProdottoSingolo() {
         super();
-        this.prezzo = prezzo;
+        this.prezzo = 0;
     }
-
-    public ProdottoSingolo(Prodotto prodottoClonazione) {
-        super(prodottoClonazione);
-        this.prezzo = ((ProdottoSingolo) prodottoClonazione).getPrezzo();
-    }
-
-    @Override
-    public ProdottoSingolo clone(Prodotto prodottoClonazione) {
-        return new ProdottoSingolo(this);
-    }
-
 
     @Override
     public double getPrezzo() {

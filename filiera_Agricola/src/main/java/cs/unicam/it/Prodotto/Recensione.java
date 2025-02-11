@@ -2,60 +2,34 @@ package cs.unicam.it.Prodotto;
 
 import cs.unicam.it.Utenti.Acquirente;
 
-import java.util.Date;
-
 public class Recensione {
 
-    private String title;
-    private Prodotto product;
-    private Acquirente user;
-    private String description;
-    private int rating; // Valutazione da 1 a 5
-    private Date date;
+    private String titolo;
+    private String descrizione;
+    private int voto;
+    private Acquirente acquirente;
 
-    public Recensione(String title, Prodotto product, Acquirente user, String description, int rating, Date date) {
-        this.title = title;
-        this.product = product;
-        this.user = user;
-        this.description = description;
-        this.rating = rating;
-        this.date = date;
+    public Recensione(String titolo, String descrizione, int voto, Acquirente acquirente) {
+        this.titolo = titolo;
+        this.descrizione = descrizione;
+        this.voto = voto;
+        this.acquirente = acquirente;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTitolo() {
+        return titolo;
     }
 
-    public Prodotto getProduct() {
-        return product;
+    public String getDescrizione() {
+        return descrizione;
     }
 
-    public Acquirente getUser() {
-        return user;
+    public int getVoto() {
+        return voto;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Review {" +
-                "user=" + user.getNome() +
-                ", product=" + product.getNome() +
-                ", rating=" + rating +
-                ", date=" + date +
-                ", content='" + description + '\'' +
-                '}';
+    public Acquirente getAcquirente() {
+        return acquirente;
     }
 
 }

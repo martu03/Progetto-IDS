@@ -3,13 +3,10 @@ package cs.unicam.it.Handler;
 import cs.unicam.it.Prodotto.Categoria;
 import cs.unicam.it.Prodotto.Certificazione;
 
-// Classe per la gestione dell'input dei prodotti
-public class ProdottoInputHandler extends InputHandler {
+import java.util.Date;
 
-    public double chiediPrezzo() {
-        System.out.print("Inserisci il prezzo: ");
-        return scanner.nextDouble();
-    }
+// Classe per la gestione dell'input dei prodotti
+public abstract class ProdottoInputHandler extends InputHandler {
 
     public Categoria chiediCategoria() {
         System.out.println("Inserisci la categoria:");
@@ -49,11 +46,6 @@ public class ProdottoInputHandler extends InputHandler {
         }
     }
 
-    public String chiediScadenza() {
-        System.out.print("Inserisci la scadenza (YYYY-MM-DD): ");
-        return scanner.nextLine().trim();
-    }
-
     public Certificazione chiediCertificazione() {
         System.out.println("Inserisci certificazione, scegliendo tra queste disponibili:");
         Certificazione[] certificazioni = Certificazione.values();
@@ -82,8 +74,11 @@ public class ProdottoInputHandler extends InputHandler {
         }
     }
 
-    @Override
-    public void gestisciInput() {
-        System.out.println("Gestione input per prodotto");
+    public int chiediQuantita() {
+        System.out.print("Inserisci la quantità: ");
+        return scanner.nextInt();
     }
+
+    @Override
+    public abstract void gestisciInput();
 }

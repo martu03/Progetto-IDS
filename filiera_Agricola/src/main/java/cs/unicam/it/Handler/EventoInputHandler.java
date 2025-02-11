@@ -1,7 +1,8 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Eventi.TipologiaEvento;
-import cs.unicam.it.Geolocalizzazione.Geolocalizzazione;
+import cs.unicam.it.Mappa.Geolocalizzazione;
+import cs.unicam.it.Utenti.Azienda;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,6 +12,18 @@ import java.util.List;
 
 // Classe per la gestione dell'input degli eventi
 public class EventoInputHandler extends InputHandler {
+
+    private static EventoInputHandler instance;
+
+    private EventoInputHandler() {
+    }
+
+    public static EventoInputHandler getInstance() {
+        if (instance == null) {
+            instance = new EventoInputHandler();
+        }
+        return instance;
+    }
 
     public Date chiediData() {
         System.out.print("Inserisci la data (YYYY-MM-DD): ");

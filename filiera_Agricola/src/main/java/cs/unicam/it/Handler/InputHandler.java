@@ -1,26 +1,37 @@
 package cs.unicam.it.Handler;
 
+import cs.unicam.it.Prodotto.Descrizione;
+
 import java.util.Scanner;
 
 // Classe astratta per la gestione dell'input
 public abstract class InputHandler {
 
-    // Scanner per la lettura dell'input da console
+    private static InputHandler instance;
     protected final Scanner scanner = new Scanner(System.in);
 
-    // Metodo per chiedere il nome
+    public static InputHandler getInstance() {
+        if (instance == null) {
+            instance = new InputHandler() {
+                @Override
+                public void gestisciInput() {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+            };
+        }
+        return instance;
+    }
+
     public String chiediNome() {
         System.out.print("Inserisci il nome: ");
         return scanner.nextLine().trim();
     }
 
-    // Metodo per chiedere la descrizione
-    public String chiediDescrizione() {
+    public Descrizione chiediDescrizione() {
         System.out.print("Inserisci la descrizione: ");
-        return scanner.nextLine().trim();
+        return new Descrizione(scanner.nextLine().trim());
     }
 
-    // Metodo astratto per gestire l'input specifico
     public abstract void gestisciInput();
 }
 

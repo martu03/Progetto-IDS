@@ -1,27 +1,25 @@
 package cs.unicam.it.Esterni;
 
+import cs.unicam.it.Carrello.Carrello;
+
 // Classe per la gestione del sistema di pagamento
 public class PagoPa {
 
-    // Metodo per eseguire il pagamento tramite PagoPA
-    public boolean executePayment(double totale) {
-        // Simulazione di invio del pagamento a PagoPA
-        System.out.println("Invio pagamento di " + totale + "€ a PagoPA...");
+    private static PagoPa instance;
 
-        //ricevo la risposta da PagoPA
-        boolean pagamentoRiuscito = inviaPagamentoAPagoPA(totale);
+    private PagoPa() {
+    }
 
-        if (pagamentoRiuscito) {
-            System.out.println("Pagamento eseguito con successo tramite PagoPA.");
-            return true;
-        } else {
-            System.out.println("Errore nel pagamento tramite PagoPA.");
-            return false;
+    public static PagoPa getInstance() {
+        if (instance == null) {
+            instance = new PagoPa();
         }
+        return instance;
     }
 
-    // Metodo di simulazione per l'invio del pagamento a PagoPA
-    private boolean inviaPagamentoAPagoPA(double totale) {
-        return Math.random() > 0.5;
+    public boolean effettuaPagamento(Carrello carrello, double totale) {
+        System.out.println("Pagamento in corso... Totale: " + totale);
+        return true;
     }
+
 }

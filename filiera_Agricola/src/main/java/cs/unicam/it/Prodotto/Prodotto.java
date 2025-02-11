@@ -1,6 +1,8 @@
 package cs.unicam.it.Prodotto;
 
-import java.time.LocalDate;
+import cs.unicam.it.Utenti.Azienda;
+
+import java.util.Date;
 import java.util.List;
 
 //classe che rappresenta un prodotto generico
@@ -12,31 +14,20 @@ public abstract class Prodotto {
     private int quantita;
     private Descrizione descrizione;
     private Categoria categoria;
-    private double price;
     private Certificazione certificazione;
     private List<Recensione> recensioni;
-    private LocalDate scadenza;
-    private boolean validato;
+    private Date scadenza;
+    private Azienda azienda;
+    private double prezzo;
 
     public Prodotto() {
         this.id = nextID++;
         recensioni = List.of();
-        validato = false;
     }
 
-    public Prodotto(Prodotto prodottoClonazione) {
-        this.id = prodottoClonazione.getId();
-        this.nome = prodottoClonazione.getNome();
-        this.quantita = prodottoClonazione.getQuantita();
-        this.descrizione = prodottoClonazione.getDescrizione();
-        this.categoria = prodottoClonazione.getCategoria();
-        this.certificazione = prodottoClonazione.getCertificazione();
-        this.recensioni = prodottoClonazione.getRecensioni();
-        this.scadenza = prodottoClonazione.getScadenza();
-        this.validato = prodottoClonazione.isValidato();
+    public int getId() {
+        return id;
     }
-
-    public int getId() {return id;}
 
     public String getNome() {
         return nome;
@@ -45,8 +36,6 @@ public abstract class Prodotto {
     public int getQuantita() {
         return quantita;
     }
-
-    public abstract double getPrezzo();
 
     public Descrizione getDescrizione() {
         return descrizione;
@@ -60,15 +49,13 @@ public abstract class Prodotto {
         return certificazione;
     }
 
-    public List<Recensione> getRecensioni() {
-        return recensioni;
-    }
-
-    public LocalDate getScadenza() {
+    public Date getScadenza() {
         return scadenza;
     }
 
-    public boolean isValidato() { return validato; }
+    public Azienda getAzienda() {
+        return azienda;
+    }
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -86,36 +73,35 @@ public abstract class Prodotto {
         this.categoria = categoria;
     }
 
-    public void setPrice(double price) {this.price = price;}
-
     public void setCertificazione(Certificazione certificazione) {
         this.certificazione = certificazione;
     }
 
-    public void setRecensioni(List<Recensione> reviews) {
-        this.recensioni = reviews;
-    }
-
-    public void setScadenza(LocalDate scadenza) {
+    public void setScadenza(Date scadenza) {
         this.scadenza = scadenza;
     }
 
-    public void setValidato(boolean validato) {this.validato = validato; }
+    public void setAzienda(Azienda azienda) { this.azienda = azienda;}
 
-    public abstract Prodotto clone(Prodotto prodottoClonazione);
+    public void setPrezzo(double prezzo) { this.prezzo = prezzo; }
 
-    @Override
-    public String toString() {
-        return "Prodotto {" +
-                "id=" + id +
-                ", name='" + nome + '\'' +
-                ", quantity=" + quantita +
-                ", description=" + (descrizione != null ? descrizione.getDettaglio() : "null") +
-                ", category=" + (categoria != null ? categoria.name() : "null") +
-                ", price=" + price +
-                ", certification=" + (certificazione != null ? certificazione.toString() : "null") +
-                ", reviews=" + (recensioni != null ? recensioni.toString() : "null") +
-                ", scadenza=" + (scadenza != null ? scadenza.toString() : "null") +
-                " }";
+
+
+    public boolean verificaDisponibilita(int quantitaRichiesta) {
+        return quantitaRichiesta <= quantita;
     }
+
+    public void modificaQuantita(int qt) {
+        quantita += qt;
+    }
+
+    public void pubblicaSuSocial() {
+        System.out.println("Pubblicazione del prodotto " + nome + " sui social.");
+    }
+
+    public void aggiungiRecensione(Recensione recensione) {
+        recensioni.add(recensione);
+    }
+
+    public abstract double getPrezzo();
 }
