@@ -1,19 +1,16 @@
 package cs.unicam.it.Carrello;
 
 import cs.unicam.it.Prodotto.Prodotto;
-import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
-@Entity
-@Table(name = "ItemCarrello")
+@Component
 public class ItemCarrello {
 
-    @ManyToOne
-    @JoinColumn(name = "prodotto_id")
     private Prodotto prodotto;
     private int quantita;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+
+    public ItemCarrello() {
+    }
 
     public ItemCarrello(Prodotto prodotto, int quantita) {
         this.prodotto = prodotto;
@@ -32,11 +29,4 @@ public class ItemCarrello {
         this.quantita = quantita;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
 }

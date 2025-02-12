@@ -2,31 +2,26 @@ package cs.unicam.it.Eventi;
 
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Prodotto.Descrizione;
-import cs.unicam.it.Utenti.Azienda;
-import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "EventiFiliera")
+@Component
 public class EventoFiliera {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private static int nextID = 1;
     private String nome;
-    @Embedded
     private Descrizione descrizione;
-    @ElementCollection
     private List<String> aziendePartecipanti;
-    @Enumerated(EnumType.STRING)
     private TipologiaEvento tipologia;
-    @Temporal(TemporalType.DATE)
     private Date data;
-    @Embedded
     private Geolocalizzazione luogoEvento;
+
+    public EventoFiliera() {
+        this.id = nextID++;
+    }
 
     public EventoFiliera(String nome, Descrizione descrizione, TipologiaEvento tipologia, Date data,
                          Geolocalizzazione luogoEvento, List<String> aziendePartecipanti) {

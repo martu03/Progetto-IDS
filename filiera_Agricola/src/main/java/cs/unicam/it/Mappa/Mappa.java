@@ -36,8 +36,4 @@ public class Mappa {
         }
 
     }
-
-    public List<Geolocalizzazione> getPuntiSullaMappa() {
-        return new ArrayList<>(puntiSullaMappa);
-    }
 }

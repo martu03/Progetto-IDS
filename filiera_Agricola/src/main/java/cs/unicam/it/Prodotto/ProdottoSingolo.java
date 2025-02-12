@@ -1,8 +1,8 @@
 package cs.unicam.it.Prodotto;
 
-import jakarta.persistence.Entity;
+import org.springframework.stereotype.Component;
 
-@Entity
+@Component
 public class ProdottoSingolo extends Prodotto {
 
     private double prezzo;

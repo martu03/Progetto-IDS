@@ -12,7 +12,6 @@ import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.PacchettoBuilder;
 import cs.unicam.it.Prodotto.ProdottoSingoloBuilder;
 import cs.unicam.it.Utenti.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Scanner;
@@ -20,102 +19,106 @@ import java.util.Scanner;
 @Service
 public class SistemaFacade {
 
-    //GESTORE
-    @Autowired
-    private GestorePiattaforma gestorePiattaforma;
-    @Autowired
-    private HandlerGestorePiattoforma handlerGestorePiattoforma;
-    //ANIMATORE
-    @Autowired
-    private Animatore animatore;
-    @Autowired
-    private EventoBuilder eventoBuilder;
-    @Autowired
-    private EventoInputHandler eventoInputHandler;
-    @Autowired
-    private HandlerEventi handlerEventi;
-    //CURATORE
-    @Autowired
-    private Curatore curatore;
-    //AZIENDE
-    @Autowired
-    private PacchettoInputHandler pacchettoInputHandler;
-    @Autowired
-    private ProdottoSingoloInputHandler prodottoSingoloInputHandler;
-    @Autowired
-    private PacchettoBuilder pacchettoBuilder;
-    @Autowired
-    private ProdottoSingoloBuilder prodottoSingoloBuilder;
-    //ACQUIRENTE
-    @Autowired
-    private HandlerAcquisti handlerAcquisti;
-    @Autowired
-    private HandlerCalcolaTotale handlerCalcolaTotale;
-    @Autowired
-    private PagoPa pagoPa;
-    //CARRELLI
-    @Autowired
-    private HandlerCarrelli handlerCarrelli;
-    @Autowired
-    private HandlerScadenzaCarrello handlerScadenzaCarrello;
-    //PRODOTTI
-    @Autowired
-    private HandlerScadenzaProdotto handlerScadenzaProdotto;
-    @Autowired
-    private Marketplace marketplace;
-    //MAPPA
-    @Autowired
-    private Mappa mappa;
+    // GESTORE
+    private final GestorePiattaforma gestorePiattaforma;
+    private final HandlerGestorePiattoforma handlerGestorePiattoforma;
 
-    // Costruttore
-    public SistemaFacade() {
+    // ANIMATORE
+    private final Animatore animatore;
+    private final EventoBuilder eventoBuilder;
+    private final EventoInputHandler eventoInputHandler;
+    private final HandlerEventi handlerEventi;
 
-        this.gestorePiattaforma = GestorePiattaforma.getInstance();
-        this.handlerGestorePiattoforma = new HandlerGestorePiattoforma();
+    // CURATORE
+    private final Curatore curatore;
+
+    // AZIENDE
+    private final PacchettoInputHandler pacchettoInputHandler;
+    private final ProdottoSingoloInputHandler prodottoSingoloInputHandler;
+    private final PacchettoBuilder pacchettoBuilder;
+    private final ProdottoSingoloBuilder prodottoSingoloBuilder;
+
+    // ACQUIRENTE
+    private final HandlerAcquisti handlerAcquisti;
+    private final HandlerCalcolaTotale handlerCalcolaTotale;
+    private final PagoPa pagoPa;
+
+    // CARRELLI
+    private final HandlerCarrelli handlerCarrelli;
+    private final HandlerScadenzaCarrello handlerScadenzaCarrello;
+
+    // PRODOTTI
+    private final HandlerScadenzaProdotto handlerScadenzaProdotto;
+    private final Marketplace marketplace;
+
+    // MAPPA
+    private final Mappa mappa;
+
+    // Costruttore con Autowired per l'iniezione delle dipendenze
+    public SistemaFacade(
+            GestorePiattaforma gestorePiattaforma,
+            HandlerGestorePiattoforma handlerGestorePiattoforma,
+            EventoBuilder eventoBuilder,
+            EventoInputHandler eventoInputHandler,
+            HandlerEventi handlerEventi,
+            PacchettoInputHandler pacchettoInputHandler,
+            ProdottoSingoloInputHandler prodottoSingoloInputHandler,
+            PacchettoBuilder pacchettoBuilder,
+            ProdottoSingoloBuilder prodottoSingoloBuilder,
+            HandlerAcquisti handlerAcquisti,
+            HandlerCalcolaTotale handlerCalcolaTotale,
+            PagoPa pagoPa,
+            HandlerCarrelli handlerCarrelli,
+            HandlerScadenzaCarrello handlerScadenzaCarrello,
+            HandlerScadenzaProdotto handlerScadenzaProdotto,
+            Marketplace marketplace,
+            Mappa mappa
+    ) {
+        this.gestorePiattaforma = gestorePiattaforma;
+        this.handlerGestorePiattoforma = handlerGestorePiattoforma;
 
         this.animatore = new Animatore("Animatore", "animatore@example.com", "password123");
-        this.eventoBuilder = EventoBuilder.getInstance();
-        this.eventoInputHandler = EventoInputHandler.getInstance();
-        this.handlerEventi = new HandlerEventi();
+        this.eventoBuilder = eventoBuilder;
+        this.eventoInputHandler = eventoInputHandler;
+        this.handlerEventi = handlerEventi;
 
         this.curatore = new Curatore("Curatore", "curatore@example.com", "password123");
 
-        this.pacchettoInputHandler = PacchettoInputHandler.getInstance();
-        this.prodottoSingoloInputHandler = ProdottoSingoloInputHandler.getInstance();
-        this.pacchettoBuilder = PacchettoBuilder.getInstance();
-        this.prodottoSingoloBuilder = ProdottoSingoloBuilder.getInstance();
+        this.pacchettoInputHandler = pacchettoInputHandler;
+        this.prodottoSingoloInputHandler = prodottoSingoloInputHandler;
+        this.pacchettoBuilder = pacchettoBuilder;
+        this.prodottoSingoloBuilder = prodottoSingoloBuilder;
 
-        this.handlerAcquisti = HandlerAcquisti.getInstance();
-        this.handlerCalcolaTotale = HandlerCalcolaTotale.getInstance();
-        this.pagoPa = PagoPa.getInstance();
+        this.handlerAcquisti = handlerAcquisti;
+        this.handlerCalcolaTotale = handlerCalcolaTotale;
+        this.pagoPa = pagoPa;
 
-        this.handlerCarrelli = HandlerCarrelli.getInstance();
-        this.handlerScadenzaCarrello = HandlerScadenzaCarrello.getInstance();
+        this.handlerCarrelli = handlerCarrelli;
+        this.handlerScadenzaCarrello = handlerScadenzaCarrello;
 
-        this.handlerScadenzaProdotto = new HandlerScadenzaProdotto();
-        this.marketplace = Marketplace.getInstance();
+        this.handlerScadenzaProdotto = handlerScadenzaProdotto;
+        this.marketplace = marketplace;
 
-        this.mappa = Mappa.getInstance();
+        this.mappa = mappa;
     }
 
-    public GestorePiattaforma getGestorePiattaforma(){
+    public GestorePiattaforma getGestorePiattaforma() {
         return gestorePiattaforma;
     }
 
-    public Curatore getCuratore(){
+    public Curatore getCuratore() {
         return curatore;
     }
 
-    public Animatore getAnimatore(){
+    public Animatore getAnimatore() {
         return animatore;
     }
 
-    public Marketplace getMarketplace(){
+    public Marketplace getMarketplace() {
         return marketplace;
     }
 
     public boolean login(String email, String password) {
-        // Delega la verifica delle credenziali al GestorePiattaforma
         if (gestorePiattaforma.verificaCredenziali(email, password)) {
             System.out.println("Login avvenuto con successo!");
             return true;
@@ -141,7 +144,6 @@ public class SistemaFacade {
             System.out.println("Registrazione completata! L'account è in attesa di approvazione.");
         } else {
             System.out.println("Errore durante la registrazione.");
-
         }
 
         scanner.close();
@@ -196,20 +198,18 @@ public class SistemaFacade {
         return new Geolocalizzazione(latitudine, longitudine, "Indirizzo di prova");
     }
 
-    // Metodo ausiliario per creare l'utente in base al ruolo
     private UtenteLog creaUtente(String nome, String email, String password, Ruolo ruolo, Geolocalizzazione geolocalizzazione) {
         switch (ruolo) {
             case ACQUIRENTE:
-                return new Acquirente(nome, email, password,geolocalizzazione); // Classe Acquirente deve essere implementata
+                return new Acquirente(nome, email, password, geolocalizzazione);
             case PRODUTTORE:
-                return new Produttore(nome, email, password,geolocalizzazione); // Classe Produttore deve essere implementata
+                return new Produttore(nome, email, password, geolocalizzazione);
             case TRASFORMATORE:
-                return new Trasformatore(nome, email, password,geolocalizzazione); // Classe Trasformatore deve essere implementata
+                return new Trasformatore(nome, email, password, geolocalizzazione);
             case DISTRIBUTORE:
-                return new Distributore(nome, email, password,geolocalizzazione); // Classe Distributore deve essere implementata
+                return new Distributore(nome, email, password, geolocalizzazione);
             default:
                 return null;
         }
     }
-
 }

@@ -1,17 +1,21 @@
 package cs.unicam.it.Gestori;
 
 import cs.unicam.it.Utenti.UtenteLog;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-@Component
+@Service
 public class GestorePiattaforma extends UtenteLog {
 
     private HandlerGestorePiattoforma handlerGestorePiattaforma;
     private static GestorePiattaforma instance;
+
+    public GestorePiattaforma() {
+        super();
+    }
 
     private GestorePiattaforma(String nome, String email, String password) {
         super(nome, email, password);
@@ -107,10 +111,6 @@ public class GestorePiattaforma extends UtenteLog {
     // Verifica le credenziali di un utente tra gli utenti registrati
     public boolean verificaCredenziali(String email, String password) {
         return handlerGestorePiattaforma.verificaCredenziali(email, password);
-    }
-
-    public HandlerGestorePiattoforma getHandlerGestorePiattaforma() {
-        return handlerGestorePiattaforma;
     }
 
 }

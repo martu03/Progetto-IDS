@@ -8,16 +8,23 @@ import cs.unicam.it.Handler.EventoInputHandler;
 import cs.unicam.it.Handler.HandlerEventi;
 import cs.unicam.it.Mappa.Mappa;
 import cs.unicam.it.Prodotto.Descrizione;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
+@Service
 public class Animatore extends UtenteLog {
 
     private HandlerEventi handlerEventi;
 
     public Animatore(String nome, String email, String password) {
         super(nome, email, password);
+        handlerEventi = new HandlerEventi();
+    }
+
+    public Animatore() {
+        super();
         handlerEventi = new HandlerEventi();
     }
 

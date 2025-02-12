@@ -1,14 +1,13 @@
 package cs.unicam.it.Prodotto;
 
-import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Entity
+@Component
 public class ProdottoPacchetto extends Prodotto {
 
     private double prezzo;
-    @OneToMany(cascade = CascadeType.ALL)
     private List<Prodotto> prodotti;
 
     public ProdottoPacchetto() {

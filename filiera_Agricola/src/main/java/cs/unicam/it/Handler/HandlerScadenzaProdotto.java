@@ -3,14 +3,14 @@ package cs.unicam.it.Handler;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Prodotto;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Service
 public class HandlerScadenzaProdotto {
 
     private Timer timer;
@@ -19,27 +19,35 @@ public class HandlerScadenzaProdotto {
         this.timer = new Timer();
     }
 
-    @Scheduled(fixedRate = 60000)
-    public void monitoraScadenze() {
-        List<Prodotto> prodotti = Marketplace.getInstance().getProdotti();
-        long now = System.currentTimeMillis();
-        for (Prodotto prodotto : prodotti) {
-            if (prodotto.getScadenza() != null) {
-                long dataScadenzaProdotto = prodotto.getScadenza().getTime();
-                long differenza = now - dataScadenzaProdotto;
+    @Scheduled(fixedRate = 1000 * 60)
+    public void avviaMonitoraggioScadenze(int timeoutMinuti) {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                List<Prodotto> prodotti = Marketplace.getInstance().getProdotti();
+                long now = System.currentTimeMillis();
 
-                if (differenza >= 0) {
-                    notificaAzienda(prodotto, "scaduto");
-                    prodotto.getAzienda().rimuoviProdotto(prodotto.getId());
-                } else {
-                    long giorniRimanenti = Math.abs(TimeUnit.MILLISECONDS.toDays(differenza));
-                    if (giorniRimanenti <= 4) {
-                        applicaOfferta(prodotto);
-                        notificaAzienda(prodotto, "in offerta");
+                for (Prodotto prodotto : prodotti) {
+                    if (prodotto.getScadenza() != null) {
+                        long dataScadenzaProdotto = prodotto.getScadenza().getTime();
+                        long differenza = now - dataScadenzaProdotto;
+
+                        // Controlla se il prodotto è scaduto
+                        if (differenza >= 0) {
+                            notificaAzienda(prodotto, "scaduto");
+                            prodotto.getAzienda().rimuoviProdotto(prodotto.getId());
+                        } else {
+                            // Calcola i giorni rimanenti alla scadenza
+                            long giorniRimanenti = TimeUnit.MILLISECONDS.toDays(Math.abs(differenza));
+                            if (giorniRimanenti <= 7) {
+                                applicaOfferta(prodotto);
+                                notificaAzienda(prodotto, "in offerta");
+                            }
+                        }
                     }
                 }
             }
-        }
+        }, 0, 1000 * 60);
     }
 
     private void notificaAzienda(Prodotto prodotto, String stato) {

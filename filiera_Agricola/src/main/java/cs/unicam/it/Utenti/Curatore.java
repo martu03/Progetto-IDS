@@ -4,14 +4,20 @@ import cs.unicam.it.Handler.HandlerProdottiCuratore;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Certificazione;
 import cs.unicam.it.Prodotto.Prodotto;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Scanner;
 
+@Component
 public class Curatore extends UtenteLog {
 
     public Curatore(String nome, String email, String password) {
         super(nome, email, password);
+    }
+
+    public Curatore() {
+        super();
     }
 
     public void valida() {

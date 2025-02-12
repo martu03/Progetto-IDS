@@ -7,21 +7,22 @@ import cs.unicam.it.Handler.HandlerAcquisti;
 import cs.unicam.it.Handler.HandlerCarrelli;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Recensione;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import org.springframework.stereotype.Service;
 
-@Entity
+@Service
 public class Acquirente extends UtenteLog {
 
-    @OneToOne
     private Carrello carrello;
-    @Embedded
     private Geolocalizzazione indirizzoSpedizione;
 
     public Acquirente(String nome, String email, String password, Geolocalizzazione indirizzoSpedizione) {
         super(nome, email, password);
         this.indirizzoSpedizione = indirizzoSpedizione;
+        this.carrello = new Carrello();
+    }
+
+    public Acquirente() {
+        super();
         this.carrello = new Carrello();
     }
 

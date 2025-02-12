@@ -1,20 +1,21 @@
 package cs.unicam.it.Mappa;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import org.springframework.stereotype.Component;
 
-@Entity
+@Component
 public class Geolocalizzazione {
 
     private double latitudine;
     private double longitudine;
-    @Id
     private String indirizzo;
 
     public Geolocalizzazione(double latitudine, double longitudine, String indirizzo) {
         this.latitudine = latitudine;
         this.longitudine = longitudine;
         this.indirizzo = indirizzo;
+    }
+
+    public Geolocalizzazione() {
     }
 
     public double getLatitudine() {

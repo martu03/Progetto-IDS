@@ -4,21 +4,24 @@ import cs.unicam.it.Gestori.GestorePiattaforma;
 import cs.unicam.it.Handler.*;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Prodotto.*;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-@Entity
+@Service
 public abstract class Azienda extends UtenteLog {
 
-    @Embedded
     private Geolocalizzazione sede;
     protected HandlerProdottiInVendita handlerProdottiInVendita;
 
     public Azienda(String nome, String email, String password, Geolocalizzazione sede) {
         super(nome, email, password);
         this.sede = sede;
+        this.handlerProdottiInVendita = new HandlerProdottiInVendita();
+    }
+
+    public Azienda() {
+        super();
         this.handlerProdottiInVendita = new HandlerProdottiInVendita();
     }
 
@@ -114,7 +117,4 @@ public abstract class Azienda extends UtenteLog {
         handlerProdottiInVendita.visualizzaProdottiConSocial();
     }
 
-    public HandlerProdottiInVendita getHandlerProdottiInVendita() {
-        return handlerProdottiInVendita;
-    }
 }

@@ -3,6 +3,7 @@ package cs.unicam.it.Esterni;
 import cs.unicam.it.Carrello.Carrello;
 import org.springframework.stereotype.Component;
 
+// Classe per la gestione del sistema di pagamento
 @Component
 public class PagoPa {
 

@@ -4,16 +4,20 @@ import cs.unicam.it.Handler.HandlerProdottiCuratore;
 import cs.unicam.it.Handler.PacchettoInputHandler;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Prodotto.*;
-import jakarta.persistence.Entity;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
-@Entity
+@Component
 public class Distributore extends Azienda implements ICreaPacchetto {
 
     public Distributore(String nome, String email, String password, Geolocalizzazione sede) {
         super(nome, email, password, sede);
+    }
+
+    public Distributore() {
+        super();
     }
 
     public void creaPacchetto() {
