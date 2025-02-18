@@ -1,31 +1,34 @@
 package cs.unicam.it.Eventi;
 
+import cs.unicam.it.Handler.HandlerEventi;
 import cs.unicam.it.Mappa.Geolocalizzazione;
-import cs.unicam.it.Prodotto.Descrizione;
-import org.springframework.stereotype.Component;
+import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
 
-@Component
+@Entity
 public class EventoFiliera {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private static int nextID = 1;
     private String nome;
-    private Descrizione descrizione;
+    private String descrizione;
+    @ElementCollection
     private List<String> aziendePartecipanti;
+    @Enumerated(EnumType.STRING)
     private TipologiaEvento tipologia;
     private Date data;
+    @OneToOne
+    @JoinColumn(name = "luogo_evento_id")
     private Geolocalizzazione luogoEvento;
+    @ManyToOne
+    @JoinColumn(name = "handler_eventi_id")
+    private HandlerEventi handlerEventi;
 
-    public EventoFiliera() {
-        this.id = nextID++;
-    }
-
-    public EventoFiliera(String nome, Descrizione descrizione, TipologiaEvento tipologia, Date data,
+    public EventoFiliera(String nome, String descrizione, TipologiaEvento tipologia, Date data,
                          Geolocalizzazione luogoEvento, List<String> aziendePartecipanti) {
-        this.id = nextID++;
         this.nome = nome;
         this.descrizione = descrizione;
         this.tipologia = tipologia;
@@ -34,13 +37,17 @@ public class EventoFiliera {
         this.aziendePartecipanti = aziendePartecipanti;
     }
 
+    public EventoFiliera() {
+
+    }
+
     public int getId() { return id; }
 
     public String getNome() {
         return nome;
     }
 
-    public Descrizione getDescrizione() {
+    public String getDescrizione() {
         return descrizione;
     }
 
@@ -62,6 +69,10 @@ public class EventoFiliera {
 
     public void aggiungiAziendaPartecipante(String azienda) {
         aziendePartecipanti.add(azienda);
+    }
+
+    public void setHandlerEventi(HandlerEventi handlerEventi) {
+        this.handlerEventi = handlerEventi;
     }
 
 }

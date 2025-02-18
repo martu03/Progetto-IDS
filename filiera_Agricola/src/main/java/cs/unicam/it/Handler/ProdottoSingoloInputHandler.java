@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
 public class ProdottoSingoloInputHandler extends ProdottoInputHandler {
 
     private static ProdottoSingoloInputHandler instance = null;

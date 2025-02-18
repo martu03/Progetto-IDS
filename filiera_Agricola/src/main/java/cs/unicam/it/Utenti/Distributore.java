@@ -4,12 +4,15 @@ import cs.unicam.it.Handler.HandlerProdottiCuratore;
 import cs.unicam.it.Handler.PacchettoInputHandler;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Prodotto.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
-@Component
+@Entity
+@DiscriminatorValue("Distributore")
 public class Distributore extends Azienda implements ICreaPacchetto {
 
     public Distributore(String nome, String email, String password, Geolocalizzazione sede) {
@@ -32,7 +35,7 @@ public class Distributore extends Azienda implements ICreaPacchetto {
     private ProdottoPacchetto creaPacchettoBase(PacchettoInputHandler inputHandler){
         String nome = inputHandler.chiediNome(); // Chiedi il nome del prodotto
         int quantita = inputHandler.chiediQuantita(); // Chiedi la quantità
-        Descrizione descrizione = inputHandler.chiediDescrizione(); // Chiedi la descrizione
+        String descrizione = inputHandler.chiediDescrizione(); // Chiedi la descrizione
         Categoria categoria = inputHandler.chiediCategoria(); // Chiedi la categoria
         Certificazione certificazione = inputHandler.chiediCertificazione(); // Chiedi la certificazione
         List<Prodotto> prodotti = inputHandler.chiediListaProdotti();// Chiedi la lista di prodotti

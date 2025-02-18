@@ -4,16 +4,14 @@ import cs.unicam.it.Utenti.Azienda;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-@Component
 public class PacchettoBuilder {
 
     private static PacchettoBuilder instance;
     private String nome;
     private int quantita;
-    private Descrizione descrizione;
+    private String descrizione;
     private Categoria categoria;
     private Certificazione certificazione;
     private Azienda azienda;
@@ -51,7 +49,7 @@ public class PacchettoBuilder {
         return this;
     }
 
-    public PacchettoBuilder setDescrizione(Descrizione descrizione) {
+    public PacchettoBuilder setDescrizione(String descrizione) {
         this.descrizione = descrizione;
         return this;
     }

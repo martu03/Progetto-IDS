@@ -1,4 +1,4 @@
-package cs.unicam.it.Gestori;
+package cs.unicam.it.Utenti;
 
 public enum Ruolo {
 

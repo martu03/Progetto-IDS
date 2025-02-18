@@ -4,9 +4,6 @@ import cs.unicam.it.Prodotto.Categoria;
 import cs.unicam.it.Prodotto.Certificazione;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
-@Component
 public abstract class ProdottoInputHandler extends InputHandler {
 
     public Categoria chiediCategoria() {

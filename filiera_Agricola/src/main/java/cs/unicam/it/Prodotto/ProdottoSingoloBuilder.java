@@ -1,17 +1,15 @@
 package cs.unicam.it.Prodotto;
 
 import cs.unicam.it.Utenti.Azienda;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
 public class ProdottoSingoloBuilder {
 
     private static ProdottoSingoloBuilder instance;
     private String nome;
     private int quantita;
-    private Descrizione descrizione;
+    private String descrizione;
     private Categoria categoria;
     private double prezzo;
     private Certificazione certificazione;
@@ -51,7 +49,7 @@ public class ProdottoSingoloBuilder {
         return this;
     }
 
-    public ProdottoSingoloBuilder setDescrizione(Descrizione descrizione) {
+    public ProdottoSingoloBuilder setDescrizione(String descrizione) {
         this.descrizione = descrizione;
         return this;
     }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class PacchettoInputHandler extends ProdottoInputHandler {
 
     private static PacchettoInputHandler instance = null;

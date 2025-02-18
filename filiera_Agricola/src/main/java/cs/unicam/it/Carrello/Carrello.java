@@ -3,16 +3,23 @@ package cs.unicam.it.Carrello;
 import cs.unicam.it.Handler.HandlerCarrelli;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Prodotto;
+import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Entity
 public class Carrello {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(nullable = false)
     private Timestamp timestamp;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "carrello_id") // Chiave esterna per la relazione con ItemCarrello
     private final List<ItemCarrello> prodottiCarrello = new ArrayList<>();
 
     public Carrello() {

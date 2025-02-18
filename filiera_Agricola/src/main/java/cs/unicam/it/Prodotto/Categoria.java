@@ -1,25 +1,15 @@
 package cs.unicam.it.Prodotto;
 
-// Enumerazione delle categorie di prodotti
 public enum Categoria {
 
-    LIQUIDI("Liquidi"),
-    CARNE("Carne"),
-    DOLCI("Dolci"),
-    PRODOTTI_DA_FORNO("Prodotti da forno"),
-    LATTICINI("Latticini"),
-    FRUTTA("Frutta"),
-    VERDURA("Verdura"),
-    PESCE("Pesce"),
-    PACCHETTO("Pacchetto");
+    LIQUIDI,
+    CARNE,
+    DOLCI,
+    PRODOTTI_DA_FORNO,
+    LATTICINI,
+    FRUTTA,
+    VERDURA,
+    PESCE,
+    PACCHETTO;
 
-    private final String displayCategoria;
-
-    Categoria(String displayCategoria) {
-        this.displayCategoria = displayCategoria;
-    }
-
-    public String getNomeCategoria() {
-        return displayCategoria;
-    }
 }

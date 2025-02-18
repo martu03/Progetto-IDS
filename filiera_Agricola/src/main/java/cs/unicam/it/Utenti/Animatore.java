@@ -7,15 +7,17 @@ import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Handler.EventoInputHandler;
 import cs.unicam.it.Handler.HandlerEventi;
 import cs.unicam.it.Mappa.Mappa;
-import cs.unicam.it.Prodotto.Descrizione;
-import org.springframework.stereotype.Service;
+import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
 
-@Service
+@Entity
+@DiscriminatorValue("Animatore")
 public class Animatore extends UtenteLog {
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "handler_eventi_id")
     private HandlerEventi handlerEventi;
 
     public Animatore(String nome, String email, String password) {
@@ -41,7 +43,7 @@ public class Animatore extends UtenteLog {
     private EventoFiliera creaEventoBase(EventoInputHandler eventoInputHandler) {
         String nome = eventoInputHandler.chiediNome();
         Date dataEvento = eventoInputHandler.chiediData();
-        Descrizione descrizione = eventoInputHandler.chiediDescrizione();
+        String descrizione = eventoInputHandler.chiediDescrizione();
         Geolocalizzazione luogoEvento = eventoInputHandler.chiediGeolocalizzazione();
         TipologiaEvento tipologiaEvento = eventoInputHandler.chiediTipologia();
         List<String> partecipanti = eventoInputHandler.chiediPartecipanti();

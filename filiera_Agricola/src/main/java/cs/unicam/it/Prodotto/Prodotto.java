@@ -1,22 +1,33 @@
 package cs.unicam.it.Prodotto;
 
 import cs.unicam.it.Utenti.Azienda;
+import jakarta.persistence.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
-//classe che rappresenta un prodotto generico
+@Entity // Indica che questa classe è una tabella nel database
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Strategia di ereditarietà
+@DiscriminatorColumn(name = "tipo_prodotto") // Colonna discriminante per distinguere i tipi di prodotto
+@Component
 public abstract class Prodotto {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private static int nextID = 1;
     private String nome;
     private int quantita;
-    private Descrizione descrizione;
+    private String descrizione;
+    @Enumerated(EnumType.STRING)
     private Categoria categoria;
     private Certificazione certificazione;
+    @OneToMany(mappedBy = "prodotto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Recensione> recensioni;
     private Date scadenza;
+    @ManyToOne(fetch = FetchType.LAZY) // Relazione molti-a-uno con Azienda
+    @JoinColumn(name = "azienda_id", nullable = false) // Chiave esterna per Azienda
     private Azienda azienda;
     private double prezzo;
 
@@ -37,7 +48,7 @@ public abstract class Prodotto {
         return quantita;
     }
 
-    public Descrizione getDescrizione() {
+    public String getDescrizione() {
         return descrizione;
     }
 
@@ -65,7 +76,7 @@ public abstract class Prodotto {
         this.quantita = quantita;
     }
 
-    public void setDescrizione(Descrizione descrizione) {
+    public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
 
@@ -84,8 +95,6 @@ public abstract class Prodotto {
     public void setAzienda(Azienda azienda) { this.azienda = azienda;}
 
     public void setPrezzo(double prezzo) { this.prezzo = prezzo; }
-
-
 
     public boolean verificaDisponibilita(int quantitaRichiesta) {
         return quantitaRichiesta <= quantita;

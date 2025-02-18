@@ -4,13 +4,21 @@ import cs.unicam.it.Handler.HandlerProdottiCuratore;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Certificazione;
 import cs.unicam.it.Prodotto.Prodotto;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-@Component
+@Entity
+@DiscriminatorValue("Curatore")
 public class Curatore extends UtenteLog {
+
+    @ElementCollection
+    private List<Integer> idDaRimuovere;
 
     public Curatore(String nome, String email, String password) {
         super(nome, email, password);
@@ -59,7 +67,8 @@ public class Curatore extends UtenteLog {
     }
 
     public void validaParziale() {
-        int[] idDaRimuovere = getIdDaRimuovere();
+        List<Integer> idDaRimuovereList = getIdDaRimuovere();
+        int[] idDaRimuovere = idDaRimuovereList.stream().mapToInt(Integer::intValue).toArray();
 
         List<Prodotto> prodottiDaValidare = HandlerProdottiCuratore.getInstance().getProdottiDaValidare();
 
@@ -75,14 +84,14 @@ public class Curatore extends UtenteLog {
         validaProdotti(prodottiDaValidare);
     }
 
-    private int[] getIdDaRimuovere() {
+    private List<Integer> getIdDaRimuovere() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Inserisci gli ID dei prodotti da rimuovere (separati da spazi): ");
         String input = scanner.nextLine();
         String[] inputArray = input.split(" ");
-        int[] idDaRimuovere = new int[inputArray.length];
-        for (int i = 0; i < inputArray.length; i++) {
-            idDaRimuovere[i] = Integer.parseInt(inputArray[i]);
+        List<Integer> idDaRimuovere = new ArrayList<>();
+        for (String s : inputArray) {
+            idDaRimuovere.add(Integer.parseInt(s));
         }
         return idDaRimuovere;
     }

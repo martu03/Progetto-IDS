@@ -2,9 +2,7 @@ package cs.unicam.it.Utenti;
 
 import cs.unicam.it.Facade.SistemaFacade;
 import cs.unicam.it.Mappa.Mappa;
-import org.springframework.stereotype.Service;
 
-@Service
 public class UtenteGenerico {
 
     private SistemaFacade sistemaFacade;

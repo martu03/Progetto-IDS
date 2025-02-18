@@ -2,9 +2,9 @@ package cs.unicam.it.Facade;
 
 import cs.unicam.it.Esterni.PagoPa;
 import cs.unicam.it.Eventi.EventoBuilder;
-import cs.unicam.it.Gestori.GestorePiattaforma;
-import cs.unicam.it.Gestori.HandlerGestorePiattoforma;
-import cs.unicam.it.Gestori.Ruolo;
+import cs.unicam.it.Utenti.GestorePiattaforma;
+import cs.unicam.it.Handler.HandlerGestorePiattaforma;
+import cs.unicam.it.Utenti.Ruolo;
 import cs.unicam.it.Handler.*;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Mappa.Mappa;
@@ -12,16 +12,15 @@ import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.PacchettoBuilder;
 import cs.unicam.it.Prodotto.ProdottoSingoloBuilder;
 import cs.unicam.it.Utenti.*;
-import org.springframework.stereotype.Service;
 
 import java.util.Scanner;
 
-@Service
+
 public class SistemaFacade {
 
     // GESTORE
     private final GestorePiattaforma gestorePiattaforma;
-    private final HandlerGestorePiattoforma handlerGestorePiattoforma;
+    private final HandlerGestorePiattaforma handlerGestorePiattaforma;
 
     // ANIMATORE
     private final Animatore animatore;
@@ -57,7 +56,7 @@ public class SistemaFacade {
     // Costruttore con Autowired per l'iniezione delle dipendenze
     public SistemaFacade(
             GestorePiattaforma gestorePiattaforma,
-            HandlerGestorePiattoforma handlerGestorePiattoforma,
+            HandlerGestorePiattaforma handlerGestorePiattaforma,
             EventoBuilder eventoBuilder,
             EventoInputHandler eventoInputHandler,
             HandlerEventi handlerEventi,
@@ -75,7 +74,7 @@ public class SistemaFacade {
             Mappa mappa
     ) {
         this.gestorePiattaforma = gestorePiattaforma;
-        this.handlerGestorePiattoforma = handlerGestorePiattoforma;
+        this.handlerGestorePiattaforma = handlerGestorePiattaforma;
 
         this.animatore = new Animatore("Animatore", "animatore@example.com", "password123");
         this.eventoBuilder = eventoBuilder;

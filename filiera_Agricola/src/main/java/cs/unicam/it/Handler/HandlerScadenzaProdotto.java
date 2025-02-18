@@ -10,7 +10,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-@Service
 public class HandlerScadenzaProdotto {
 
     private Timer timer;

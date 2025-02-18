@@ -1,11 +1,9 @@
 package cs.unicam.it.Handler;
 
-import cs.unicam.it.Prodotto.Descrizione;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
-@Component
 public abstract class InputHandler {
 
     private static InputHandler instance;
@@ -28,9 +26,9 @@ public abstract class InputHandler {
         return scanner.nextLine().trim();
     }
 
-    public Descrizione chiediDescrizione() {
+    public String chiediDescrizione() {
         System.out.print("Inserisci la descrizione: ");
-        return new Descrizione(scanner.nextLine().trim());
+        return scanner.nextLine().trim();
     }
 
     public abstract void gestisciInput();

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Scanner;
 
-@Component
 public class HandlerAcquisti {
 
     private static HandlerAcquisti instance;

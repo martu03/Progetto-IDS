@@ -1,10 +1,16 @@
 package cs.unicam.it.Mappa;
 
-import org.springframework.stereotype.Component;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-@Component
+@Entity
 public class Geolocalizzazione {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private double latitudine;
     private double longitudine;
     private String indirizzo;

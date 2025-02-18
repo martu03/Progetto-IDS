@@ -1,18 +1,22 @@
 package cs.unicam.it.Utenti;
 
 import cs.unicam.it.Carrello.Carrello;
-import cs.unicam.it.Gestori.GestorePiattaforma;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Handler.HandlerAcquisti;
 import cs.unicam.it.Handler.HandlerCarrelli;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Recensione;
-import org.springframework.stereotype.Service;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 
-@Service
+@Entity
+@DiscriminatorValue("Acquirente")
 public class Acquirente extends UtenteLog {
 
+    @OneToOne
     private Carrello carrello;
+    @OneToOne
     private Geolocalizzazione indirizzoSpedizione;
 
     public Acquirente(String nome, String email, String password, Geolocalizzazione indirizzoSpedizione) {

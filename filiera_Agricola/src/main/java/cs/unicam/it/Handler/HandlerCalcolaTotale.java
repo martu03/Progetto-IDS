@@ -4,7 +4,6 @@ import cs.unicam.it.Carrello.Carrello;
 import cs.unicam.it.Carrello.ItemCarrello;
 import org.springframework.stereotype.Component;
 
-@Component
 public class HandlerCalcolaTotale {
 
     private static HandlerCalcolaTotale instance;

@@ -1,16 +1,19 @@
-package cs.unicam.it.Gestori;
+package cs.unicam.it.Utenti;
 
-import cs.unicam.it.Utenti.UtenteLog;
-import org.springframework.stereotype.Service;
+import cs.unicam.it.Handler.HandlerGestorePiattaforma;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-@Service
+@Entity
+@DiscriminatorValue("GestorePiattaforma")
 public class GestorePiattaforma extends UtenteLog {
 
-    private HandlerGestorePiattoforma handlerGestorePiattaforma;
     private static GestorePiattaforma instance;
 
     public GestorePiattaforma() {
@@ -19,7 +22,7 @@ public class GestorePiattaforma extends UtenteLog {
 
     private GestorePiattaforma(String nome, String email, String password) {
         super(nome, email, password);
-        this.handlerGestorePiattaforma = new HandlerGestorePiattoforma();
+        setHandlerGestorePiattaforma(new HandlerGestorePiattaforma());
     }
 
     // Ottiene l'istanza del gestore piattaforma
@@ -32,22 +35,22 @@ public class GestorePiattaforma extends UtenteLog {
 
     // Aggiunge un utente in attesa di approvazione
     public void aggiungiUtenteInAttesa(UtenteLog utente) {
-        handlerGestorePiattaforma.aggiungiUtenteInAttesa(utente);
+        getHandlerGestorePiattaforma().aggiungiUtenteInAttesa(utente);
     }
 
     public void approvaUtenti() {
-        if (handlerGestorePiattaforma.getUtentiInAttesa().isEmpty()) {
+        if (getHandlerGestorePiattaforma().getUtentiInAttesa().isEmpty()) {
             System.out.println("Non ci sono utenti in attesa di approvazione.");
             return;
         }
 
-        handlerGestorePiattaforma.visualizzaUtentiInAttesa();
+        getHandlerGestorePiattaforma().visualizzaUtentiInAttesa();
 
         // Chiedi la scelta dell'utente
         int scelta = getSceltaUtente();
         switch (scelta) {
             case 1: // APPROVA TUTTI GLI UTENTI
-                approvaUtenti(handlerGestorePiattaforma.getUtentiInAttesa());
+                approvaUtenti(getHandlerGestorePiattaforma().getUtentiInAttesa());
                 System.out.println("Tutti gli utenti sono stati approvati e registrati sulla piattaforma.");
                 break;
             case 2: // NON APPROVA NESSUN UTENTE
@@ -63,12 +66,12 @@ public class GestorePiattaforma extends UtenteLog {
         }
 
         // Pulisci la lista degli utenti in attesa dopo l'approvazione
-        handlerGestorePiattaforma.svuotaUtentiInAttesa();
+        getHandlerGestorePiattaforma().svuotaUtentiInAttesa();
     }
 
     private void approvaUtenti(List<UtenteLog> utentiApprovati) {
         for (UtenteLog utente : utentiApprovati) {
-            handlerGestorePiattaforma.aggiungiUtenteRegistrato(utente);
+            getHandlerGestorePiattaforma().aggiungiUtenteRegistrato(utente);
         }
     }
 
@@ -94,8 +97,8 @@ public class GestorePiattaforma extends UtenteLog {
             if (id == 0) {
                 break;
             }
-            if (id > 0 && id <= handlerGestorePiattaforma.getUtentiInAttesa().size()) {
-                utentiDaApprovare.add(handlerGestorePiattaforma.getUtentiInAttesa().get(id - 1));
+            if (id > 0 && id <= getHandlerGestorePiattaforma().getUtentiInAttesa().size()) {
+                utentiDaApprovare.add(getHandlerGestorePiattaforma().getUtentiInAttesa().get(id - 1));
             } else {
                 System.out.println("ID utente non valido.");
             }
@@ -105,12 +108,12 @@ public class GestorePiattaforma extends UtenteLog {
 
     // Rimuove un utente dalla lista degli utenti registrati
     public void rimuoviUtente(UtenteLog utente) {
-        handlerGestorePiattaforma.rimuoviUtente(utente);
+        getHandlerGestorePiattaforma().rimuoviUtente(utente);
     }
 
     // Verifica le credenziali di un utente tra gli utenti registrati
     public boolean verificaCredenziali(String email, String password) {
-        return handlerGestorePiattaforma.verificaCredenziali(email, password);
+        return getHandlerGestorePiattaforma().verificaCredenziali(email, password);
     }
 
 }

@@ -1,18 +1,16 @@
 package cs.unicam.it.Eventi;
 
 import cs.unicam.it.Mappa.Geolocalizzazione;
-import cs.unicam.it.Prodotto.Descrizione;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
-@Component
 public class EventoBuilder {
 
     private static EventoBuilder instance;
     private String nome;
-    private Descrizione descrizione;
+    private String descrizione;
     private TipologiaEvento tipologiaEvento;
     private Date dataEvento;
     private Geolocalizzazione luogoEvento;
@@ -40,7 +38,7 @@ public class EventoBuilder {
         return this;
     }
 
-    public EventoBuilder setDescrizione(Descrizione descrizione) {
+    public EventoBuilder setDescrizione(String descrizione) {
         this.descrizione = descrizione;
         return this;
     }

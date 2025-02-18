@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Component
 public class EventoInputHandler extends InputHandler {
 
     private static EventoInputHandler instance;
@@ -31,8 +30,7 @@ public class EventoInputHandler extends InputHandler {
         String dataString = scanner.nextLine().trim();
         SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date data = formatoData.parse(dataString);
-            return data;
+            return formatoData.parse(dataString);
         } catch (ParseException e) {
             System.out.println("Formato data non valido. Riprova.");
             return chiediData();
@@ -54,23 +52,20 @@ public class EventoInputHandler extends InputHandler {
         System.out.println("Inserisci la tipologia:");
         TipologiaEvento[] tipologie = TipologiaEvento.values();
         for (int i = 0; i < tipologie.length; i++) {
-            System.out.println((i + 1) + ". " + tipologie[i].getNomeTipologia());
+            System.out.println((i + 1) + ". " + tipologie[i].name());
         }
         int scelta = scanner.nextInt();
         scanner.nextLine();
-        switch (scelta) {
-            case 1:
-                return TipologiaEvento.valueOf(tipologie[0].name());
-            case 2:
-                return TipologiaEvento.valueOf(tipologie[1].name());
-            case 3:
-                return TipologiaEvento.valueOf(tipologie[2].name());
-            case 4:
-                return TipologiaEvento.valueOf(tipologie[3].name());
-            default:
+        return switch (scelta) {
+            case 1 -> TipologiaEvento.valueOf(tipologie[0].name());
+            case 2 -> TipologiaEvento.valueOf(tipologie[1].name());
+            case 3 -> TipologiaEvento.valueOf(tipologie[2].name());
+            case 4 -> TipologiaEvento.valueOf(tipologie[3].name());
+            default -> {
                 System.out.println("Scelta non valida. Riprova.");
-                return chiediTipologia();
-        }
+                yield chiediTipologia();
+            }
+        };
     }
 
     public List<String> chiediPartecipanti() {

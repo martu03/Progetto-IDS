@@ -1,17 +1,23 @@
-package cs.unicam.it.Gestori;
+package cs.unicam.it.Handler;
 
 import cs.unicam.it.Utenti.UtenteLog;
-import org.springframework.stereotype.Component;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class HandlerGestorePiattoforma {
+@Entity
+public class HandlerGestorePiattaforma {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @OneToMany(mappedBy = "handlerGestorePiattaforma", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UtenteLog> utentiRegistrati; // Lista di utenti registrati
+    @OneToMany(mappedBy = "handlerGestorePiattaforma", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UtenteLog> utentiInAttesa;// Lista di utenti in attesa di approvazione
 
-    public HandlerGestorePiattoforma() {
+    public HandlerGestorePiattaforma() {
         this.utentiRegistrati = new ArrayList<>();
         this.utentiInAttesa = new ArrayList<>();
     }

@@ -1,17 +1,22 @@
 package cs.unicam.it.Utenti;
 
-import cs.unicam.it.Gestori.GestorePiattaforma;
 import cs.unicam.it.Handler.*;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Prodotto.*;
-import org.springframework.stereotype.Service;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 
 import java.util.Date;
 
-@Service
+@Entity
+@DiscriminatorValue("Azienda")
 public abstract class Azienda extends UtenteLog {
 
+    @OneToOne
     private Geolocalizzazione sede;
+    @Transient
     protected HandlerProdottiInVendita handlerProdottiInVendita;
 
     public Azienda(String nome, String email, String password, Geolocalizzazione sede) {
@@ -46,7 +51,7 @@ public abstract class Azienda extends UtenteLog {
         String nome = inputHandler.chiediNome(); // Chiedi il nome del prodotto
         int quantita = inputHandler.chiediQuantita(); // Chiedi la quantità
         double prezzo = inputHandler.chiediPrezzo(); // Chiedi il prezzo
-        Descrizione descrizione = inputHandler.chiediDescrizione(); // Chiedi la descrizione
+        String descrizione = inputHandler.chiediDescrizione(); // Chiedi la descrizione
         Categoria categoria = inputHandler.chiediCategoria(); // Chiedi la categoria
         Certificazione certificazione = inputHandler.chiediCertificazione(); // Chiedi la certificazione
         Date scadenza = inputHandler.chiediScadenza(); // Chiedi la data di scadenza
@@ -54,7 +59,7 @@ public abstract class Azienda extends UtenteLog {
         return buildProdottoSingolo(nome, quantita, prezzo, descrizione, categoria, certificazione, scadenza);
     }
 
-    private ProdottoSingolo buildProdottoSingolo(String nome, int quantita, double prezzo, Descrizione descrizione, Categoria categoria, Certificazione certificazione, Date scadenza) {
+    private ProdottoSingolo buildProdottoSingolo(String nome, int quantita, double prezzo, String descrizione, Categoria categoria, Certificazione certificazione, Date scadenza) {
         ProdottoSingoloBuilder builder = ProdottoSingoloBuilder.getInstance();
         return builder.setNome(nome)
                 .setQuantita(quantita)
