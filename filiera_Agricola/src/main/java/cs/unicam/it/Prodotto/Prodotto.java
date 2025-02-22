@@ -1,22 +1,19 @@
 package cs.unicam.it.Prodotto;
 
-import cs.unicam.it.Utenti.Azienda;
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity // Indica che questa classe è una tabella nel database
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Strategia di ereditarietà
-@DiscriminatorColumn(name = "tipo_prodotto") // Colonna discriminante per distinguere i tipi di prodotto
-@Component
+@DiscriminatorColumn(name = "tipo_prodotto", discriminatorType = DiscriminatorType.STRING)
+// Colonna discriminante per distinguere i tipi di prodotto
 public abstract class Prodotto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private static int nextID = 1;
     private String nome;
     private int quantita;
     private String descrizione;
@@ -26,13 +23,9 @@ public abstract class Prodotto {
     @OneToMany(mappedBy = "prodotto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Recensione> recensioni;
     private Date scadenza;
-    @ManyToOne(fetch = FetchType.LAZY) // Relazione molti-a-uno con Azienda
-    @JoinColumn(name = "azienda_id", nullable = false) // Chiave esterna per Azienda
-    private Azienda azienda;
     private double prezzo;
 
     public Prodotto() {
-        this.id = nextID++;
         recensioni = List.of();
     }
 
@@ -64,10 +57,6 @@ public abstract class Prodotto {
         return scadenza;
     }
 
-    public Azienda getAzienda() {
-        return azienda;
-    }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -92,9 +81,11 @@ public abstract class Prodotto {
         this.scadenza = scadenza;
     }
 
-    public void setAzienda(Azienda azienda) { this.azienda = azienda;}
+    public abstract double getPrezzo();
 
-    public void setPrezzo(double prezzo) { this.prezzo = prezzo; }
+    public void setPrezzo(double prezzo) {
+        this.prezzo = prezzo;
+    }
 
     public boolean verificaDisponibilita(int quantitaRichiesta) {
         return quantitaRichiesta <= quantita;
@@ -111,6 +102,4 @@ public abstract class Prodotto {
     public void aggiungiRecensione(Recensione recensione) {
         recensioni.add(recensione);
     }
-
-    public abstract double getPrezzo();
 }

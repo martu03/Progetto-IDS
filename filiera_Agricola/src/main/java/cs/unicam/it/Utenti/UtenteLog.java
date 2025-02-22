@@ -1,26 +1,21 @@
 package cs.unicam.it.Utenti;
 
-import cs.unicam.it.Handler.HandlerGestorePiattaforma;
 import jakarta.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorColumn(name = "log_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class UtenteLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "utente_log_seq")
+    @SequenceGenerator(name = "utente_log_seq", sequenceName = "utente_log_seq", allocationSize = 1)
     private int ID;
-    private static int nextID = 0; //variabile statica per l'ID
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "handlerGestorePiattaforma")
-    private HandlerGestorePiattaforma handlerGestorePiattaforma;
     private String nome;
     private String email;
     private String password;
 
     public UtenteLog(String nome, String email, String password) {
-        this.ID = nextID++;
         this.nome = nome;
         this.email = email;
         this.password = password;
@@ -49,10 +44,6 @@ public abstract class UtenteLog {
         this.ID = ID;
     }
 
-    public static void setNextID(int nextID) {
-        UtenteLog.nextID = nextID;
-    }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -63,13 +54,5 @@ public abstract class UtenteLog {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public HandlerGestorePiattaforma getHandlerGestorePiattaforma() {
-        return handlerGestorePiattaforma;
-    }
-
-    public void setHandlerGestorePiattaforma(HandlerGestorePiattaforma handlerGestorePiattaforma) {
-        this.handlerGestorePiattaforma = handlerGestorePiattaforma;
     }
 }

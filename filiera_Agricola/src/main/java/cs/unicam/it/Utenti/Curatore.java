@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Scanner;
 
 @Entity
-@DiscriminatorValue("Curatore")
 public class Curatore extends UtenteLog {
 
     @ElementCollection
@@ -76,7 +75,6 @@ public class Curatore extends UtenteLog {
             for (Prodotto prodotto : prodottiDaValidare) {
                 if (prodotto.getId() == id) {
                     prodottiDaValidare.remove(prodotto);
-                    prodotto.getAzienda().rimuoviProdotto(id);
                     break;
                 }
             }
@@ -116,7 +114,6 @@ public class Curatore extends UtenteLog {
     private void notificaAziendaNonValidazione(List<Prodotto> prodotti) {
         for (Prodotto prodotto : prodotti) {
             System.out.println("Il prodotto " + prodotto.getNome() + " non è stato validato.");
-            prodotto.getAzienda().rimuoviProdotto(prodotto.getId());
         }
     }
 

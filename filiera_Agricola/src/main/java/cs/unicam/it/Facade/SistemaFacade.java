@@ -3,7 +3,6 @@ package cs.unicam.it.Facade;
 import cs.unicam.it.Esterni.PagoPa;
 import cs.unicam.it.Eventi.EventoBuilder;
 import cs.unicam.it.Utenti.GestorePiattaforma;
-import cs.unicam.it.Handler.HandlerGestorePiattaforma;
 import cs.unicam.it.Utenti.Ruolo;
 import cs.unicam.it.Handler.*;
 import cs.unicam.it.Mappa.Geolocalizzazione;
@@ -20,7 +19,6 @@ public class SistemaFacade {
 
     // GESTORE
     private final GestorePiattaforma gestorePiattaforma;
-    private final HandlerGestorePiattaforma handlerGestorePiattaforma;
 
     // ANIMATORE
     private final Animatore animatore;
@@ -56,7 +54,6 @@ public class SistemaFacade {
     // Costruttore con Autowired per l'iniezione delle dipendenze
     public SistemaFacade(
             GestorePiattaforma gestorePiattaforma,
-            HandlerGestorePiattaforma handlerGestorePiattaforma,
             EventoBuilder eventoBuilder,
             EventoInputHandler eventoInputHandler,
             HandlerEventi handlerEventi,
@@ -74,7 +71,6 @@ public class SistemaFacade {
             Mappa mappa
     ) {
         this.gestorePiattaforma = gestorePiattaforma;
-        this.handlerGestorePiattaforma = handlerGestorePiattaforma;
 
         this.animatore = new Animatore("Animatore", "animatore@example.com", "password123");
         this.eventoBuilder = eventoBuilder;
@@ -168,7 +164,7 @@ public class SistemaFacade {
         System.out.println("Seleziona il tuo ruolo:");
         Ruolo[] ruoli = Ruolo.values();
         for (int i = 0; i < ruoli.length; i++) {
-            System.out.println((i + 1) + ". " + ruoli[i].getNomeRuolo());
+            System.out.println((i + 1) + ". " + ruoli[i].name());
         }
 
         int sceltaRuolo;
@@ -194,7 +190,7 @@ public class SistemaFacade {
         System.out.print("Inserisci la longitudine: ");
         double longitudine = Double.parseDouble(scanner.nextLine());
 
-        return new Geolocalizzazione(latitudine, longitudine, "Indirizzo di prova");
+        return new Geolocalizzazione(latitudine, longitudine);
     }
 
     private UtenteLog creaUtente(String nome, String email, String password, Ruolo ruolo, Geolocalizzazione geolocalizzazione) {

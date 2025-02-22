@@ -1,12 +1,8 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
-import cs.unicam.it.Carrello.ItemCarrello;
 import cs.unicam.it.Esterni.PagoPa;
-import cs.unicam.it.Prodotto.Prodotto;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class HandlerAcquisti {

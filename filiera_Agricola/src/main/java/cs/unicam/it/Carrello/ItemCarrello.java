@@ -2,7 +2,6 @@ package cs.unicam.it.Carrello;
 
 import cs.unicam.it.Prodotto.Prodotto;
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 @Entity
 public class ItemCarrello {

@@ -4,7 +4,6 @@ import cs.unicam.it.Eventi.EventoFiliera;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Utenti.Animatore;
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;

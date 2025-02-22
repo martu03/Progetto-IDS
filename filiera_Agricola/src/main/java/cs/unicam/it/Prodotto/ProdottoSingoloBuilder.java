@@ -34,7 +34,6 @@ public class ProdottoSingoloBuilder {
         prodotto.setCategoria(categoria);
         prodotto.setCertificazione(certificazione);
         prodotto.setScadenza(scadenza);
-        prodotto.setAzienda(azienda);
         prodotto.setPrezzo(prezzo);
         return prodotto;
     }

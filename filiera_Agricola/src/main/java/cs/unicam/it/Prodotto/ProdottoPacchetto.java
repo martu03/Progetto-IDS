@@ -1,38 +1,53 @@
 package cs.unicam.it.Prodotto;
 
-import org.springframework.stereotype.Component;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class ProdottoPacchetto extends Prodotto {
 
-    private double prezzo;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Prodotto> prodotti;
+    private double prezzo;
 
     public ProdottoPacchetto() {
         super();
-        this.prezzo = 0;
+        this.prodotti = new ArrayList<>();
     }
 
-    //metodo per calcolare il prezzo totale del pacchetto
     @Override
     public double getPrezzo() {
         double totale = 0;
         for (Prodotto prodotto : prodotti) {
-            totale += prodotto.getPrezzo();
+            totale += prodotto.getPrezzo() * prodotto.getQuantita();
         }
         return totale;
     }
 
+    @Override
     public void setPrezzo(double prezzo) {
         this.prezzo = prezzo;
     }
 
-    //metodo per aggiungere prodotti al pacchetto
+    public double getPrezzoTotale() {
+        return getPrezzo() * getQuantita();
+    }
+
+    public void setPrezzoTotale(double prezzo) {
+        this.prezzo = prezzo;
+    }
+
     public void setProdotti(List<Prodotto> prodotti) {
-        for (Prodotto prodotto : prodotti) {
-            prodotti.add(prodotto);
-        }
+        this.prodotti = prodotti;
+    }
+
+    public void addProdotto(Prodotto prodotto) {
+        this.prodotti.add(prodotto);
     }
 
     public List<Prodotto> getChild() {

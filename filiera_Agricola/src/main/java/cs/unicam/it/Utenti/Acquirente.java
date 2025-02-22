@@ -6,22 +6,21 @@ import cs.unicam.it.Handler.HandlerAcquisti;
 import cs.unicam.it.Handler.HandlerCarrelli;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Recensione;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorValue("Acquirente")
 public class Acquirente extends UtenteLog {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL) // Aggiungi cascade per gestire il salvataggio automatico del carrello
+    @JoinColumn(name = "CARRELLO_ID")
     private Carrello carrello;
-    @OneToOne
-    private Geolocalizzazione indirizzoSpedizione;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "Indirizzo")
+    private Geolocalizzazione indirizzo;
 
-    public Acquirente(String nome, String email, String password, Geolocalizzazione indirizzoSpedizione) {
+    public Acquirente(String nome, String email, String password, Geolocalizzazione indirizzo) {
         super(nome, email, password);
-        this.indirizzoSpedizione = indirizzoSpedizione;
+        this.indirizzo = indirizzo;
         this.carrello = new Carrello();
     }
 
@@ -34,8 +33,8 @@ public class Acquirente extends UtenteLog {
         return carrello;
     }
 
-    public Geolocalizzazione getIndirizzoSpedizione() {
-        return indirizzoSpedizione;
+    public Geolocalizzazione getIndirizzo() {
+        return indirizzo;
     }
 
     public void aggiungiProdottoAlCarrello(int IDProdotto, int quantita) {

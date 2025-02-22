@@ -4,7 +4,6 @@ import cs.unicam.it.Handler.HandlerCarrelli;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Prodotto;
 import jakarta.persistence.*;
-import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

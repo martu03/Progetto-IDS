@@ -34,7 +34,6 @@ public class PacchettoBuilder {
         pacchetto.setDescrizione(descrizione);
         pacchetto.setCategoria(categoria);
         pacchetto.setCertificazione(certificazione);
-        pacchetto.setAzienda(azienda);
         pacchetto.setProdotti(prodotti);
         return pacchetto;
     }

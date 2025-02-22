@@ -34,7 +34,7 @@ public class HandlerScadenzaProdotto {
                         // Controlla se il prodotto è scaduto
                         if (differenza >= 0) {
                             notificaAzienda(prodotto, "scaduto");
-                            prodotto.getAzienda().rimuoviProdotto(prodotto.getId());
+                            Marketplace.getInstance().rimuoviProdotto(prodotto.getId());
                         } else {
                             // Calcola i giorni rimanenti alla scadenza
                             long giorniRimanenti = TimeUnit.MILLISECONDS.toDays(Math.abs(differenza));

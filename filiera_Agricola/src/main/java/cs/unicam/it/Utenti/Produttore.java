@@ -1,12 +1,13 @@
 package cs.unicam.it.Utenti;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import org.springframework.stereotype.Component;
 
 @Entity
-@DiscriminatorValue("Produttore")
+@JsonTypeName("produttore")
 public class Produttore extends Azienda {
 
     public Produttore(String nome, String email, String password, Geolocalizzazione sede) {

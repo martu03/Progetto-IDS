@@ -1,7 +1,6 @@
 package cs.unicam.it.Esterni;
 
 import cs.unicam.it.Carrello.Carrello;
-import org.springframework.stereotype.Component;
 
 public class PagoPa {
 

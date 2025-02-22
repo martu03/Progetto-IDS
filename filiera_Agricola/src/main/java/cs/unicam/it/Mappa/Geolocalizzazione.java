@@ -13,12 +13,10 @@ public class Geolocalizzazione {
     private int id;
     private double latitudine;
     private double longitudine;
-    private String indirizzo;
 
-    public Geolocalizzazione(double latitudine, double longitudine, String indirizzo) {
+    public Geolocalizzazione(double latitudine, double longitudine) {
         this.latitudine = latitudine;
         this.longitudine = longitudine;
-        this.indirizzo = indirizzo;
     }
 
     public Geolocalizzazione() {
@@ -40,11 +38,4 @@ public class Geolocalizzazione {
         this.longitudine = longitudine;
     }
 
-    public String getIndirizzo() {
-        return indirizzo;
-    }
-
-    public void setIndirizzo(String indirizzo) {
-        this.indirizzo = indirizzo;
-    }
 }

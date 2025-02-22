@@ -1,7 +1,6 @@
 package cs.unicam.it.Eventi;
 
 import cs.unicam.it.Mappa.Geolocalizzazione;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;

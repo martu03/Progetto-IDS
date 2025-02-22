@@ -1,48 +1,58 @@
 package cs.unicam.it.Utenti;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cs.unicam.it.Handler.*;
 import cs.unicam.it.Mappa.Geolocalizzazione;
+import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.*;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@DiscriminatorValue("Azienda")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "azienda_type", discriminatorType = DiscriminatorType.STRING)
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Produttore.class, name = "produttore"),
+        @JsonSubTypes.Type(value = Trasformatore.class, name = "trasformatore"),
+        @JsonSubTypes.Type(value = Distributore.class, name = "distributore")
+})
 public abstract class Azienda extends UtenteLog {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Geolocalizzazione sede;
-    @Transient
-    protected HandlerProdottiInVendita handlerProdottiInVendita;
+    @ElementCollection
+    private List<Integer> idProdottiInVendita;
+    @ElementCollection
+    private List<Integer> idProdottiPubblicati;
 
     public Azienda(String nome, String email, String password, Geolocalizzazione sede) {
         super(nome, email, password);
         this.sede = sede;
-        this.handlerProdottiInVendita = new HandlerProdottiInVendita();
+        idProdottiInVendita = List.of();
+        idProdottiPubblicati = List.of();
     }
 
     public Azienda() {
         super();
-        this.handlerProdottiInVendita = new HandlerProdottiInVendita();
     }
 
     public Geolocalizzazione getSede() {
         return sede;
     }
 
-    public void visualizzaProdottiInVendita() {
-        handlerProdottiInVendita.visualizzaProdottiInVendita();
-    }
-
     public void creaProdotto() {
         ProdottoSingoloInputHandler inputHandler = ProdottoSingoloInputHandler.getInstance();
         ProdottoSingolo prodotto = creaProdottoBase(inputHandler); // Crea il prodotto base
 
-        handlerProdottiInVendita.aggiungiProdotto(prodotto);
+        idProdottiInVendita.add(prodotto.getId());
         HandlerProdottiCuratore.getInstance().aggiungiProdotto(prodotto);
         System.out.println("Prodotto " + prodotto.getNome() + " creato con successo.");
     }
@@ -73,18 +83,27 @@ public abstract class Azienda extends UtenteLog {
     }
 
     public void rimuoviProdotto(int prodottoId) {
-        handlerProdottiInVendita.rimuoviProdotto(prodottoId);
+        if (!idProdottiInVendita.contains(prodottoId)) {
+            System.out.println("Prodotto non trovato nella lista dei prodotti creati.");
+            return;
+        }
+        idProdottiInVendita.remove(prodottoId);
+        Marketplace.getInstance().rimuoviProdotto(prodottoId);
         System.out.println("Il prodotto " + prodottoId + " è stato rimosso dal marketplace.");
     }
 
     public void modificaQuantita(int IDProdotto, int nuovaQuantita) {
-        Prodotto prodotto = handlerProdottiInVendita.getProdottoById(IDProdotto);
-        if(prodotto == null) {
+        if (!idProdottiInVendita.contains(IDProdotto)) {
+            System.out.println("Prodotto non trovato nella lista dei prodotti creati.");
+            return;
+        }
+        Prodotto prodotto = Marketplace.getInstance().getProdottoById(IDProdotto);
+        if (prodotto == null) {
             System.out.println("Prodotto non trovato nella lista dei prodotti creati.");
             return;
         }
 
-        if(nuovaQuantita < 0 || nuovaQuantita == 0) {
+        if (nuovaQuantita < 0 || nuovaQuantita == 0) {
             rimuoviProdotto(IDProdotto);
             System.out.println("Quantita' uguale a 0 -> Prodotto rimosso dal marketplace.");
             return;
@@ -99,7 +118,11 @@ public abstract class Azienda extends UtenteLog {
     }
 
     public void pubblicaSuSocial(int IDProdotto) {
-        Prodotto prodotto = handlerProdottiInVendita.getProdottoById(IDProdotto);
+        if (!idProdottiInVendita.contains(IDProdotto)) {
+            System.out.println("Prodotto non trovato nella lista dei prodotti creati.");
+            return;
+        }
+        Prodotto prodotto = Marketplace.getInstance().getProdottoById(IDProdotto);
 
         // Controllo se il prodotto esiste
         if (prodotto == null) {
@@ -108,18 +131,21 @@ public abstract class Azienda extends UtenteLog {
         }
 
         // Controllo se il prodotto è già stato pubblicato sui social
-        if (handlerProdottiInVendita.isProdottoPubblicato(IDProdotto)) {
+        if (idProdottiPubblicati.contains(IDProdotto)) {
             System.out.println("Il prodotto è già stato pubblicato sui social.");
             return;
         }
 
         // Pubblica il prodotto sui social
-        handlerProdottiInVendita.aggiungiProdottoConSocial(prodotto);
+        idProdottiPubblicati.add(prodotto.getId());
         System.out.println("Il prodotto " + prodotto.getNome() + " è stato pubblicato sui social.");
     }
 
-    public void visualizzaProdottiConSocial() {
-        handlerProdottiInVendita.visualizzaProdottiConSocial();
+    public List<Integer> getIdProdottiInVendita() {
+        return idProdottiInVendita;
     }
 
+    public List<Integer> getIdProdottiPubblicati() {
+        return idProdottiPubblicati;
+    }
 }

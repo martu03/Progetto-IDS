@@ -1,5 +1,6 @@
 package cs.unicam.it.Utenti;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import cs.unicam.it.Handler.HandlerProdottiCuratore;
 import cs.unicam.it.Handler.PacchettoInputHandler;
 import cs.unicam.it.Mappa.Geolocalizzazione;
@@ -12,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("Distributore")
+@JsonTypeName("distributore")
 public class Distributore extends Azienda implements ICreaPacchetto {
 
     public Distributore(String nome, String email, String password, Geolocalizzazione sede) {
@@ -28,7 +29,7 @@ public class Distributore extends Azienda implements ICreaPacchetto {
         ProdottoPacchetto pacchetto = creaPacchettoBase(inputHandler);
         pacchetto.setPrezzo(pacchetto.getPrezzo());
         pacchetto.setScadenza(calcolaScadenzaMinima(pacchetto));
-        this.handlerProdottiInVendita.aggiungiProdotto(pacchetto);
+        getIdProdottiInVendita().add(pacchetto.getId());
         HandlerProdottiCuratore.getInstance().aggiungiProdotto(pacchetto);
     }
 

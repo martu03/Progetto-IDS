@@ -48,24 +48,21 @@ public abstract class ProdottoInputHandler extends InputHandler {
         System.out.println("Inserisci certificazione, scegliendo tra queste disponibili:");
         Certificazione[] certificazioni = Certificazione.values();
         for (int i = 0; i < certificazioni.length; i++) {
-            System.out.println((i + 1) + ". " + certificazioni[i].getCertificationName());
+            System.out.println((i + 1) + ". " + certificazioni[i].name());
         }
         int scelta = scanner.nextInt();
         scanner.nextLine();
         if (scelta > 0 && scelta <= certificazioni.length) {
-            switch (scelta) {
-                case 1:
-                    return Certificazione.valueOf(certificazioni[0].name());
-                case 2:
-                    return Certificazione.valueOf(certificazioni[1].name());
-                case 3:
-                    return Certificazione.valueOf(certificazioni[2].name());
-                case 4:
-                    return Certificazione.valueOf(certificazioni[3].name());
-                default:
+            return switch (scelta) {
+                case 1 -> Certificazione.valueOf(certificazioni[0].name());
+                case 2 -> Certificazione.valueOf(certificazioni[1].name());
+                case 3 -> Certificazione.valueOf(certificazioni[2].name());
+                case 4 -> Certificazione.valueOf(certificazioni[3].name());
+                default -> {
                     System.out.println("Scelta non valida. Riprova.");
-                    return chiediCertificazione();
-            }
+                    yield chiediCertificazione();
+                }
+            };
         } else {
             System.out.println("Scelta non valida. Riprova.");
             return chiediCertificazione();

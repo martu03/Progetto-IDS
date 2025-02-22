@@ -1,28 +1,32 @@
 package cs.unicam.it.Utenti;
 
-import cs.unicam.it.Handler.HandlerGestorePiattaforma;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 @Entity
-@DiscriminatorValue("GestorePiattaforma")
 public class GestorePiattaforma extends UtenteLog {
 
     private static GestorePiattaforma instance;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "utenti_registrati")
+    private List<UtenteLog> utentiRegistrati; // Lista di utenti registrati
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "utenti_in_attesa")
+    private List<UtenteLog> utentiInAttesa; // Lista di utenti in attesa di approvazione
 
     public GestorePiattaforma() {
         super();
+        this.utentiRegistrati = new ArrayList<>();
+        this.utentiInAttesa = new ArrayList<>();
     }
 
     private GestorePiattaforma(String nome, String email, String password) {
         super(nome, email, password);
-        setHandlerGestorePiattaforma(new HandlerGestorePiattaforma());
+        this.utentiRegistrati = new ArrayList<>();
+        this.utentiInAttesa = new ArrayList<>();
     }
 
     // Ottiene l'istanza del gestore piattaforma
@@ -35,22 +39,54 @@ public class GestorePiattaforma extends UtenteLog {
 
     // Aggiunge un utente in attesa di approvazione
     public void aggiungiUtenteInAttesa(UtenteLog utente) {
-        getHandlerGestorePiattaforma().aggiungiUtenteInAttesa(utente);
+        if (!utentiInAttesa.contains(utente)) {
+            utentiInAttesa.add(utente);
+            System.out.println("Utente " + utente.getNome() + " aggiunto in attesa di approvazione.");
+        } else {
+            System.out.println("L'utente è già in attesa di approvazione.");
+        }
+    }
+
+    // Aggiunge un utente registrato
+    public void aggiungiUtenteRegistrato(UtenteLog utente) {
+        if (!utentiRegistrati.contains(utente)) {
+            utentiRegistrati.add(utente);
+            System.out.println("Utente " + utente.getNome() + " registrato sulla piattaforma.");
+        } else {
+            System.out.println("L'utente è già registrato sulla piattaforma.");
+        }
+    }
+
+    // Ottiene la lista degli utenti registrati
+    public List<UtenteLog> getUtentiRegistrati() {
+        return utentiRegistrati;
+    }
+
+    // Ottiene la lista degli utenti in attesa di approvazione
+    public List<UtenteLog> getUtentiInAttesa() {
+        return utentiInAttesa;
+    }
+
+    public void visualizzaUtentiInAttesa() {
+        System.out.println("Utenti in attesa di approvazione:");
+        for (UtenteLog utente : utentiInAttesa) {
+            System.out.println("Account:" + utente.getID() + " " + utente.getNome());
+        }
     }
 
     public void approvaUtenti() {
-        if (getHandlerGestorePiattaforma().getUtentiInAttesa().isEmpty()) {
+        if (utentiInAttesa.isEmpty()) {
             System.out.println("Non ci sono utenti in attesa di approvazione.");
             return;
         }
 
-        getHandlerGestorePiattaforma().visualizzaUtentiInAttesa();
+        visualizzaUtentiInAttesa();
 
         // Chiedi la scelta dell'utente
         int scelta = getSceltaUtente();
         switch (scelta) {
             case 1: // APPROVA TUTTI GLI UTENTI
-                approvaUtenti(getHandlerGestorePiattaforma().getUtentiInAttesa());
+                approvaUtenti(utentiInAttesa);
                 System.out.println("Tutti gli utenti sono stati approvati e registrati sulla piattaforma.");
                 break;
             case 2: // NON APPROVA NESSUN UTENTE
@@ -66,12 +102,12 @@ public class GestorePiattaforma extends UtenteLog {
         }
 
         // Pulisci la lista degli utenti in attesa dopo l'approvazione
-        getHandlerGestorePiattaforma().svuotaUtentiInAttesa();
+        svuotaUtentiInAttesa();
     }
 
     private void approvaUtenti(List<UtenteLog> utentiApprovati) {
         for (UtenteLog utente : utentiApprovati) {
-            getHandlerGestorePiattaforma().aggiungiUtenteRegistrato(utente);
+            aggiungiUtenteRegistrato(utente);
         }
     }
 
@@ -97,8 +133,8 @@ public class GestorePiattaforma extends UtenteLog {
             if (id == 0) {
                 break;
             }
-            if (id > 0 && id <= getHandlerGestorePiattaforma().getUtentiInAttesa().size()) {
-                utentiDaApprovare.add(getHandlerGestorePiattaforma().getUtentiInAttesa().get(id - 1));
+            if (id > 0 && id <= utentiInAttesa.size()) {
+                utentiDaApprovare.add(utentiInAttesa.get(id - 1));
             } else {
                 System.out.println("ID utente non valido.");
             }
@@ -106,14 +142,27 @@ public class GestorePiattaforma extends UtenteLog {
         approvaUtenti(utentiDaApprovare);
     }
 
+    // Svuota la lista degli utenti in attesa
+    public void svuotaUtentiInAttesa() {
+        utentiInAttesa.clear();
+    }
+
     // Rimuove un utente dalla lista degli utenti registrati
     public void rimuoviUtente(UtenteLog utente) {
-        getHandlerGestorePiattaforma().rimuoviUtente(utente);
+        if (utentiRegistrati.remove(utente)) {
+            System.out.println("Utente " + utente.getNome() + " rimosso dalla piattaforma.");
+        } else {
+            System.out.println("L'utente non è registrato sulla piattaforma.");
+        }
     }
 
     // Verifica le credenziali di un utente tra gli utenti registrati
     public boolean verificaCredenziali(String email, String password) {
-        return getHandlerGestorePiattaforma().verificaCredenziali(email, password);
+        for (UtenteLog utente : utentiRegistrati) {
+            if (utente.getEmail().equals(email) && utente.getPassword().equals(password)) {
+                return true;
+            }
+        }
+        return false;
     }
-
 }

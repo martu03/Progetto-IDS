@@ -1,7 +1,6 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;

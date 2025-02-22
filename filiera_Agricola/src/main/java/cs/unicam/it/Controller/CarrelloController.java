@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// TODO RIVEDERE
 @RestController
 @RequestMapping("/api/carrelli")
 public class CarrelloController {

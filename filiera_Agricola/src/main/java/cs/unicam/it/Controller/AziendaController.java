@@ -25,31 +25,38 @@ public class AziendaController {
     }
 
     // GET /api/aziende/{id}
+    // Ottiene un'azienda specifica tramite ID
     @GetMapping("/{id}")
-    public ResponseEntity<Azienda> getAziendaById(@PathVariable Integer id) {
+    public ResponseEntity<Azienda> getAziendaById(@PathVariable int id) {
         Optional<Azienda> aziendaOptional = aziendaRepository.findById(id);
-        // Restituisce 200 OK con l'azienda
-        // Restituisce 404 Not Found
-        return aziendaOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return aziendaOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build()); // Restituisce 404 Not Found se non trovata
     }
 
-    // POST /api/aziende
-    @PostMapping
+    @PostMapping("/crea-azienda")
     public ResponseEntity<Azienda> createAzienda(@RequestBody Azienda azienda) {
-        Azienda savedAzienda = aziendaRepository.save(azienda);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedAzienda); // Restituisce 201 Created
+        try {
+            // Salva l'azienda nel database
+            Azienda savedAzienda = aziendaRepository.save(azienda);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedAzienda);
+        } catch (Exception e) {
+            // Gestisci eventuali errori
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     // PUT /api/aziende/{id}
+    // Aggiorna un'azienda esistente
     @PutMapping("/{id}")
-    public ResponseEntity<Azienda> updateAzienda(@PathVariable Integer id, @RequestBody Azienda aziendaDetails) {
+    public ResponseEntity<Azienda> updateAzienda(@PathVariable int id, @RequestBody Azienda aziendaDetails) {
         Optional<Azienda> aziendaOptional = aziendaRepository.findById(id);
+
         if (aziendaOptional.isPresent()) {
             Azienda azienda = aziendaOptional.get();
             azienda.setNome(aziendaDetails.getNome());
-            azienda.setEmail(aziendaDetails.getEmail());
             azienda.setPassword(aziendaDetails.getPassword());
-            // Aggiungi altri setter necessari
+            // Aggiungi altri setter necessari per gli attributi aggiuntivi
+
             Azienda updatedAzienda = aziendaRepository.save(azienda);
             return ResponseEntity.ok(updatedAzienda); // Restituisce 200 OK con l'azienda aggiornata
         } else {
@@ -58,13 +65,53 @@ public class AziendaController {
     }
 
     // DELETE /api/aziende/{id}
+    // Elimina un'azienda specifica
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAzienda(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteAzienda(@PathVariable int id) {
         if (aziendaRepository.existsById(id)) {
             aziendaRepository.deleteById(id);
             return ResponseEntity.noContent().build(); // Restituisce 204 No Content
         } else {
             return ResponseEntity.notFound().build(); // Restituisce 404 Not Found
+        }
+    }
+
+    // PUT /api/aziende/{id}/modifica-quantita/{prodottoId}
+    @PutMapping("/{id}/modifica-quantita/{prodottoId}")
+    public ResponseEntity<Void> modificaQuantita(@PathVariable int id, @PathVariable int prodottoId, @RequestParam int nuovaQuantita) {
+        Optional<Azienda> aziendaOptional = aziendaRepository.findById(id);
+        if (aziendaOptional.isPresent()) {
+            Azienda azienda = aziendaOptional.get();
+            azienda.modificaQuantita(prodottoId, nuovaQuantita);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // DELETE /api/aziende/{id}/rimuovi-prodotto/{prodottoId}
+    @DeleteMapping("/{id}/rimuovi-prodotto/{prodottoId}")
+    public ResponseEntity<Void> rimuoviProdotto(@PathVariable int id, @PathVariable int prodottoId) {
+        Optional<Azienda> aziendaOptional = aziendaRepository.findById(id);
+        if (aziendaOptional.isPresent()) {
+            Azienda azienda = aziendaOptional.get();
+            azienda.rimuoviProdotto(prodottoId);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // POST /api/aziende/{id}/pubblica-su-social/{prodottoId}
+    @PostMapping("/{id}/pubblica-su-social/{prodottoId}")
+    public ResponseEntity<Void> pubblicaSuSocial(@PathVariable int id, @PathVariable int prodottoId) {
+        Optional<Azienda> aziendaOptional = aziendaRepository.findById(id);
+        if (aziendaOptional.isPresent()) {
+            Azienda azienda = aziendaOptional.get();
+            azienda.pubblicaSuSocial(prodottoId);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }

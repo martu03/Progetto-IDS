@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("Animatore")
 public class Animatore extends UtenteLog {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
