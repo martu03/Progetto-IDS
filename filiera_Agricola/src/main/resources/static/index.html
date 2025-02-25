@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <!-- Include Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Link a Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+    <title>Filiera Agricola</title>
+
+    <style>
+        @media (max-width: 768px) {
+            .d-flex.flex-row {
+                flex-direction: column !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid" style="height: 80vh;">
+    <h1 class="text-center fw-bold my-4">Filiera Agricola</h1>
+    <div class="d-flex flex-row gap-3 h-100">
+        <div id="map" class="flex-grow-1 rounded-3 shadow-sm">
+        </div>
+    </div>
+</div>
+
+<!-- Script per inizializzare la mappa -->
+<script>
+    // Inizializza la mappa
+    const map = L.map('map').setView([43.1381, 13.0684], 14); // Coordinate di Camerino, MC come punto di partenza
+
+    var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 19,
+        minZoom: 8
+    }).addTo(map);
+
+    // Definisci l'icona personalizzata
+    const customIcon = L.icon({
+        iconUrl: '/markerLogo.png', // Percorso corretto dell'immagine del marker
+        iconSize: [38, 38], // Dimensioni dell'icona
+        iconAnchor: [19, 38], // Punto dell'icona che corrisponde alla posizione del marker
+        popupAnchor: [0, -38] // Punto da cui si aprirà il popup rispetto all'icona
+    });
+
+    // Funzione per aggiungere un marker alla mappa con popup
+    async function addMarker(lat, lng) {
+        console.log(`Adding marker at: ${lat}, ${lng}`);
+        let marker = L.marker([lat, lng], { icon: customIcon }).addTo(map);
+        let address = await reverseGeocode(lat, lng);
+        let popupContent = `Indirizzo: ${address}`;
+        marker.bindPopup(popupContent);
+    }
+
+    // Funzione per ottenere l'indirizzo da coordinate (Reverse Geocoding)
+    async function reverseGeocode(lat, lng) {
+        const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.display_name;
+        } catch (error) {
+            console.error("Errore durante il reverse geocoding:", error);
+            return "Indirizzo non disponibile";
+        }
+    }
+
+    // Funzione per caricare i punti geografici dall'API
+    function loadPointsFromApi() {
+        fetch('/api/mappa/punti', {
+            method: 'GET'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Errore durante il caricamento dei punti.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Dati ricevuti dall'API:", data);
+                data.forEach(location => {
+                    console.log("Aggiungendo marker per:", location);
+                    addMarker(location.latitudine, location.longitudine, location.nomeEvento, location.tipologia, location.data);
+                });
+            })
+            .catch(error => {
+                console.error("Error loading data:", error);
+                alert("Impossibile caricare i punti dalla mappa.");
+            });
+    }
+
+    // Chiama la funzione quando la pagina viene caricata
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("Document loaded, calling loadPointsFromApi...");
+        loadPointsFromApi();
+    });
+</script>
+
+</body>
+</html>

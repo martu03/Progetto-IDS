@@ -43,17 +43,19 @@ public class AziendaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        ProdottoSingolo prodottoSingolo = new ProdottoSingolo();
+        ProdottoSingoloBuilder prodottoSingoloBuilder = ProdottoSingoloBuilder.getInstance();
 
-        prodottoSingolo.setNome(prodottoSingoloRequest.getNome());
-        prodottoSingolo.setQuantita(prodottoSingoloRequest.getQuantita());
-        prodottoSingolo.setDescrizione(prodottoSingoloRequest.getDescrizione());
-        prodottoSingolo.setCategoria(prodottoSingoloRequest.getCategoria());
-        prodottoSingolo.setCertificazione(prodottoSingoloRequest.getCertificazione());
-        prodottoSingolo.setScadenza(prodottoSingoloRequest.getScadenza());
-        prodottoSingolo.setPrezzoUnitario(prodottoSingoloRequest.getPrezzo());
-        prodottoSingolo.setPrezzoTotale(prodottoSingoloRequest.getPrezzo() * prodottoSingoloRequest.getQuantita());
-        prodottoSingolo.setStato(Stato.IN_ATTESA);
+        prodottoSingoloBuilder.setNome(prodottoSingoloRequest.getNome())
+                .setQuantita(prodottoSingoloRequest.getQuantita())
+                .setDescrizione(prodottoSingoloRequest.getDescrizione())
+                .setCategoria(prodottoSingoloRequest.getCategoria())
+                .setCertificazione(prodottoSingoloRequest.getCertificazione())
+                .setScadenza(prodottoSingoloRequest.getScadenza())
+                .setPrezzoUnitario(prodottoSingoloRequest.getPrezzo())
+                .setPrezzoTotale(prodottoSingoloRequest.getPrezzo() * prodottoSingoloRequest.getQuantita())
+                .setStato((Stato.IN_ATTESA));
+
+        ProdottoSingolo prodottoSingolo = prodottoSingoloBuilder.build();
 
         handlerProdottiCuratore.aggiungiProdotto(prodottoSingolo);
         azienda1.getIdProdottiCreati().add(prodottoSingolo.getId());
@@ -70,29 +72,36 @@ public class AziendaController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente non autorizzato o non è un azienda.");
         }
 
-        ProdottoPacchetto pacchetto = new ProdottoPacchetto();
-        // Impostazione dei campi del pacchetto
-        pacchetto.setNome(pacchettoRequest.getNome());
-        pacchetto.setQuantita(pacchettoRequest.getQuantita());
-        pacchetto.setDescrizione(pacchettoRequest.getDescrizione());
-        pacchetto.setCategoria(pacchettoRequest.getCategoria());
-        pacchetto.setCertificazione(pacchettoRequest.getCertificazione());
-        pacchetto.setStato(Stato.IN_ATTESA);
+        PacchettoBuilder pacchettoBuilder = PacchettoBuilder.getInstance();
+
+        pacchettoBuilder.setNome(pacchettoRequest.getNome())
+                .setQuantita(pacchettoRequest.getQuantita())
+                .setDescrizione(pacchettoRequest.getDescrizione())
+                .setCategoria(pacchettoRequest.getCategoria())
+                .setCertificazione(pacchettoRequest.getCertificazione())
+                .setStato(Stato.IN_ATTESA);
+
+        ProdottoPacchetto pacchetto = pacchettoBuilder.build();
+
+        ProdottoSingoloBuilder prodottoSingoloBuilder = ProdottoSingoloBuilder.getInstance();
 
         // Aggiungi prodotti singoli al pacchetto
         List<ProdottoSingoloRequest> prodottiSingoli = pacchettoRequest.getProdottiSingoli();
         if (prodottiSingoli != null) {
             for (ProdottoSingoloRequest prodottoSingoloRequest : prodottiSingoli) {
-                ProdottoSingolo prodottoSingolo = new ProdottoSingolo();
-                prodottoSingolo.setNome(prodottoSingoloRequest.getNome());
-                prodottoSingolo.setQuantita(prodottoSingoloRequest.getQuantita());
-                prodottoSingolo.setDescrizione(prodottoSingoloRequest.getDescrizione());
-                prodottoSingolo.setCategoria(Categoria.COMPONENTE_PACCHETTO);
-                prodottoSingolo.setCertificazione(prodottoSingoloRequest.getCertificazione());
-                prodottoSingolo.setScadenza(prodottoSingoloRequest.getScadenza());
-                prodottoSingolo.setPrezzoUnitario(prodottoSingoloRequest.getPrezzo());
-                prodottoSingolo.setPrezzoTotale(prodottoSingoloRequest.getPrezzo() * prodottoSingoloRequest.getQuantita());
-                prodottoSingolo.setStato(Stato.IN_ATTESA);
+
+                prodottoSingoloBuilder.setNome(prodottoSingoloRequest.getNome())
+                        .setQuantita(prodottoSingoloRequest.getQuantita())
+                        .setDescrizione(prodottoSingoloRequest.getDescrizione())
+                        .setCategoria(Categoria.COMPONENTE_PACCHETTO)
+                        .setCertificazione(prodottoSingoloRequest.getCertificazione())
+                        .setScadenza(prodottoSingoloRequest.getScadenza())
+                        .setPrezzoUnitario(prodottoSingoloRequest.getPrezzo())
+                        .setPrezzoTotale(prodottoSingoloRequest.getPrezzo() * prodottoSingoloRequest.getQuantita())
+                        .setPrezzoTotale(prodottoSingoloRequest.getPrezzo() * prodottoSingoloRequest.getQuantita())
+                        .setStato((Stato.IN_ATTESA));
+
+                ProdottoSingolo prodottoSingolo = prodottoSingoloBuilder.build();
                 pacchetto.addProdotto(prodottoSingolo);
             }
         }

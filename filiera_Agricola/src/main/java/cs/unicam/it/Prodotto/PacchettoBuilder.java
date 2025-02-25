@@ -1,8 +1,5 @@
 package cs.unicam.it.Prodotto;
 
-import cs.unicam.it.Utenti.Azienda;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +11,8 @@ public class PacchettoBuilder {
     private String descrizione;
     private Categoria categoria;
     private Certificazione certificazione;
-    private Azienda azienda;
     private List<Prodotto> prodotti = new ArrayList<>();
+    private Stato stato;
 
     private PacchettoBuilder() {}
 
@@ -35,6 +32,7 @@ public class PacchettoBuilder {
         pacchetto.setCategoria(categoria);
         pacchetto.setCertificazione(certificazione);
         pacchetto.setProdotti(prodotti);
+        pacchetto.setStato(stato);
         return pacchetto;
     }
 
@@ -63,13 +61,13 @@ public class PacchettoBuilder {
         return this;
     }
 
-    public PacchettoBuilder setAzienda(Azienda azienda) {
-        this.azienda = azienda;
+    public PacchettoBuilder setProdotti(List<Prodotto> prodotti) {
+        this.prodotti = prodotti;
         return this;
     }
 
-    public PacchettoBuilder setProdotti(List<Prodotto> prodotti) {
-        this.prodotti = prodotti;
+    public PacchettoBuilder setStato(Stato stato) {
+        this.stato = stato;
         return this;
     }
 }

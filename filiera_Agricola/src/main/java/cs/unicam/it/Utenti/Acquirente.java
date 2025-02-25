@@ -2,11 +2,6 @@ package cs.unicam.it.Utenti;
 
 import cs.unicam.it.Carrello.Carrello;
 import cs.unicam.it.Mappa.Geolocalizzazione;
-import cs.unicam.it.Handler.HandlerAcquisti;
-import cs.unicam.it.Handler.HandlerCarrelli;
-import cs.unicam.it.Marketplace.Marketplace;
-import cs.unicam.it.Prodotto.Prodotto;
-import cs.unicam.it.Prodotto.Recensione;
 import jakarta.persistence.*;
 
 @Entity

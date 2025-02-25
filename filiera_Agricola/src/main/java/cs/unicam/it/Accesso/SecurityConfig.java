@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/", "/favicon.ico", "/marker", "/markerLogo.png", "/api/mappa/**", "/index.html").permitAll()
                         .requestMatchers("/api/utenti/**").hasAnyRole("ACQUIRENTE", "GESTORE", "CURATORE", "ANIMATORE", "PRODUTTORE", "TRASFORMATORE", "DISTRIBUTORE")
                         .requestMatchers("/api/gestore/**").hasRole("GESTORE")
                         .requestMatchers("/api/curatore/**").hasRole("CURATORE")

@@ -1,7 +1,5 @@
 package cs.unicam.it.Prodotto;
 
-import cs.unicam.it.Utenti.Azienda;
-
 import java.util.Date;
 
 public class ProdottoSingoloBuilder {
@@ -11,10 +9,11 @@ public class ProdottoSingoloBuilder {
     private int quantita;
     private String descrizione;
     private Categoria categoria;
-    private double prezzo;
+    private double prezzoUnitario;
+    private double prezzoTotale;
     private Certificazione certificazione;
     private Date scadenza;
-    private Azienda azienda;
+    private Stato stato;
 
     private ProdottoSingoloBuilder() {}
 
@@ -34,7 +33,9 @@ public class ProdottoSingoloBuilder {
         prodotto.setCategoria(categoria);
         prodotto.setCertificazione(certificazione);
         prodotto.setScadenza(scadenza);
-        prodotto.setPrezzoUnitario(prezzo);
+        prodotto.setPrezzoUnitario(prezzoUnitario);
+        prodotto.setPrezzoTotale(prezzoTotale);
+        prodotto.setStato(stato);
         return prodotto;
     }
 
@@ -58,8 +59,13 @@ public class ProdottoSingoloBuilder {
         return this;
     }
 
-    public ProdottoSingoloBuilder setPrezzo(double prezzo) {
-        this.prezzo = prezzo;
+    public ProdottoSingoloBuilder setPrezzoUnitario(double prezzoUnitario) {
+        this.prezzoUnitario = prezzoUnitario;
+        return this;
+    }
+
+    public ProdottoSingoloBuilder setPrezzoTotale(double prezzoTotale) {
+        this.prezzoTotale = prezzoTotale;
         return this;
     }
 
@@ -73,8 +79,8 @@ public class ProdottoSingoloBuilder {
         return this;
     }
 
-    public ProdottoSingoloBuilder setAzienda(Azienda azienda) {
-        this.azienda = azienda;
+    public ProdottoSingoloBuilder setStato(Stato stato) {
+        this.stato = stato;
         return this;
     }
 }

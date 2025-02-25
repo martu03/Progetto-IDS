@@ -21,6 +21,12 @@ public class Geolocalizzazione {
 
     public Geolocalizzazione() {
     }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public int getId() {
+        return id;
+    }
 
     public double getLatitudine() {
         return latitudine;

@@ -52,7 +52,6 @@ public class Distributore extends Azienda implements ICreaPacchetto {
                 .setDescrizione(descrizione)
                 .setCategoria(categoria)
                 .setCertificazione(certificazione)
-                .setAzienda(this)
                 .setProdotti(prodotti)
                 .build();
     }

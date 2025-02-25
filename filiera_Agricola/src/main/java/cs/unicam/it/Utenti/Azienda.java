@@ -75,10 +75,8 @@ public abstract class Azienda extends UtenteLog {
                 .setQuantita(quantita)
                 .setDescrizione(descrizione)
                 .setCategoria(categoria)
-                .setPrezzo(prezzo)
                 .setCertificazione(certificazione)
                 .setScadenza(scadenza)
-                .setAzienda(this)
                 .build();
     }
 

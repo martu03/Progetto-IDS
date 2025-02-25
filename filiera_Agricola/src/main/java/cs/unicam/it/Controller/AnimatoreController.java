@@ -2,6 +2,7 @@ package cs.unicam.it.Controller;
 
 import cs.unicam.it.Eventi.EventoFiliera;
 import cs.unicam.it.Handler.HandlerEventi;
+import cs.unicam.it.Mappa.GeolocalizzazioneRepository;
 import cs.unicam.it.Repository.EventoRepository;
 import cs.unicam.it.Repository.UtenteLogRepository;
 import cs.unicam.it.Request.EventoRequest;
@@ -25,7 +26,7 @@ public class AnimatoreController {
     @Autowired
     private HandlerEventi handlerEventi;
     @Autowired
-    private EventoRepository eventoRepository;
+    private GeolocalizzazioneRepository geolocalizzazioneRepository;
 
     @PostMapping("/crea-evento")
     public ResponseEntity<EventoFiliera> creaEvento(@RequestBody EventoRequest eventoRequest) {
@@ -45,6 +46,7 @@ public class AnimatoreController {
         evento.setAziendePartecipanti(nomiAziende);
 
         handlerEventi.aggiungiEvento(evento);
+        geolocalizzazioneRepository.save(evento.getLuogoEvento());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(evento);
     }
