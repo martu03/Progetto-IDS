@@ -1,11 +1,18 @@
 package cs.unicam.it.Utenti;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "log_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class UtenteLog {
+public abstract class UtenteLog implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "utente_log_seq")
@@ -14,11 +21,17 @@ public abstract class UtenteLog {
     private String nome;
     private String email;
     private String password;
+    private boolean approvato;
 
-    public UtenteLog(String nome, String email, String password) {
+    @Enumerated(EnumType.STRING)
+    private Ruolo ruolo;
+
+    public UtenteLog(String nome, String email, String password, Ruolo ruolo) {
         this.nome = nome;
         this.email = email;
         this.password = password;
+        this.approvato = false;
+        this.ruolo = ruolo;
     }
 
     public UtenteLog() {
@@ -54,5 +67,53 @@ public abstract class UtenteLog {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    public void setRuolo(Ruolo ruolo) {
+        this.ruolo = ruolo;
+    }
+
+    public Ruolo getRuolo() {
+        return ruolo;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_" + ruolo.name()));
+    }
+
+    //DA CAPIRE SE QUELLI DI SOTTO SERVONO
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public boolean isApprovato() {
+        return approvato;
+    }
+
+    public void setApprovato(boolean approvato) {
+        this.approvato = approvato;
     }
 }

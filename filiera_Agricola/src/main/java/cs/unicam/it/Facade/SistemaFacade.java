@@ -113,15 +113,15 @@ public class SistemaFacade {
         return marketplace;
     }
 
-    public boolean login(String email, String password) {
-        if (gestorePiattaforma.verificaCredenziali(email, password)) {
-            System.out.println("Login avvenuto con successo!");
-            return true;
-        } else {
-            System.out.println("Accesso non valido.");
-            return false;
-        }
-    }
+//    public boolean login(String email, String password) {
+//        if (gestorePiattaforma.verificaCredenziali(email, password,)) {
+//            System.out.println("Login avvenuto con successo!");
+//            return true;
+//        } else {
+//            System.out.println("Accesso non valido.");
+//            return false;
+//        }
+//    }
 
     public UtenteLog registraUtente() {
         Scanner scanner = new Scanner(System.in);

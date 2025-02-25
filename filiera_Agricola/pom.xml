@@ -16,11 +16,13 @@
     <name>filiera_Agricola</name>
     <url>https://maven.apache.org/</url>
 
+    <!-- Configurazione delle proprietà -->
     <properties>
-        <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source> <!-- Spring Boot 3.x richiede almeno Java 17 -->
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+    <!-- Build Configuration -->
     <build>
         <plugins>
             <!-- Plugin per compilare il codice -->
@@ -34,16 +36,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin per eseguire il progetto -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.5.0</version>
-                <configuration>
-                    <mainClass>App</mainClass> <!-- Specifica il nome completo della classe con il main -->
-                </configuration>
-            </plugin>
-
             <!-- Plugin Maven per Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -52,46 +44,86 @@
         </plugins>
     </build>
 
+    <!-- Dipendenze del Progetto -->
     <dependencies>
-        <!-- Dipendenza JUnit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version> <!-- Versione specificata da te -->
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
-        <dependency>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.5.0</version>
-        </dependency>
-
+        <!-- Dipendenza principale per Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
+        <!-- Dipendenza per Spring Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Dipendenza per Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- Dipendenze per JWT -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Dipendenza per Hibernate/JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+        <!-- Dipendenza per H2 Database -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Dipendenze per Testing -->
+        <!-- JUnit 5 (Jupiter) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.0</version> <!-- Versione compatibile con Spring Boot 3.x -->
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Dipendenza per Spring Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
+        <!-- Dipendenze opzionali -->
+        <!-- Spring Validation -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+        <!-- OpenAPI/Swagger (opzionale) -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.2.0</version>
+        </dependency>
     </dependencies>
 </project>

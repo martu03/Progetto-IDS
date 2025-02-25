@@ -6,7 +6,16 @@ public enum Ruolo {
     ANIMATORE,
     CURATORE,
     DISTRIBUTORE,
-    GESTORE_PIATTAFORMA,
+    GESTORE,
     PRODUTTORE,
-    TRASFORMATORE;
+    TRASFORMATORE,
+    AZIENDA;
+
+    public static Ruolo fromAuthority(String authority) {
+        try {
+            return Ruolo.valueOf(authority);
+        } catch (IllegalArgumentException e) {
+            return null; // Ruolo non valido
+        }
+    }
 }

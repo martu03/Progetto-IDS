@@ -19,7 +19,7 @@ public class Acquirente extends UtenteLog {
     private Geolocalizzazione indirizzo;
 
     public Acquirente(String nome, String email, String password, Geolocalizzazione indirizzo) {
-        super(nome, email, password);
+        super(nome, email, password, Ruolo.ACQUIRENTE);
         this.indirizzo = indirizzo;
         this.carrello = new Carrello();
     }
@@ -62,10 +62,10 @@ public class Acquirente extends UtenteLog {
         Recensione recensione = new Recensione(titolo, descrizione, voto, this);
         Marketplace.getInstance().getProdottoById(IDProdotto).aggiungiRecensione(recensione);
     }
-
-    public void eliminaAccount() {
-        System.out.println("Richiesta di eliminazione account da parte dell'acquirente: " + this.getNome());
-        GestorePiattaforma.getInstance().rimuoviUtente(this);
-    }
+//TODO
+//    public void eliminaAccount() {
+//        System.out.println("Richiesta di eliminazione account da parte dell'acquirente: " + this.getNome());
+//        GestorePiattaforma.getInstance().rimuoviUtente(this);
+//    }
 
 }

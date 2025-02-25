@@ -20,7 +20,7 @@ public class Animatore extends UtenteLog {
     private HandlerEventi handlerEventi;
 
     public Animatore(String nome, String email, String password) {
-        super(nome, email, password);
+        super(nome, email, password, Ruolo.ANIMATORE);
         handlerEventi = new HandlerEventi();
     }
 

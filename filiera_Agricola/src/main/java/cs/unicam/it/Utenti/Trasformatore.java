@@ -12,6 +12,7 @@ public class Trasformatore extends Azienda {
 
     public Trasformatore(String nome, String email, String password, Geolocalizzazione sede) {
         super(nome, email, password, sede);
+        super.setRuolo(Ruolo.TRASFORMATORE);
     }
 
     public Trasformatore() {

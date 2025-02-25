@@ -12,6 +12,7 @@ public class Produttore extends Azienda {
 
     public Produttore(String nome, String email, String password, Geolocalizzazione sede) {
         super(nome, email, password, sede);
+        super.setRuolo(Ruolo.PRODUTTORE);
     }
 
     public Produttore() {

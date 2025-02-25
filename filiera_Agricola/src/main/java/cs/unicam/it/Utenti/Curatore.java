@@ -20,7 +20,8 @@ public class Curatore extends UtenteLog {
     private List<Integer> idDaRimuovere;
 
     public Curatore(String nome, String email, String password) {
-        super(nome, email, password);
+
+        super(nome, email, password, Ruolo.CURATORE);
     }
 
     public Curatore() {

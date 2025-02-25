@@ -18,11 +18,14 @@ public class Distributore extends Azienda implements ICreaPacchetto {
 
     public Distributore(String nome, String email, String password, Geolocalizzazione sede) {
         super(nome, email, password, sede);
+        super.setRuolo(Ruolo.DISTRIBUTORE);
     }
 
     public Distributore() {
         super();
     }
+
+
 
     public void creaPacchetto() {
         PacchettoInputHandler inputHandler = PacchettoInputHandler.getInstance();

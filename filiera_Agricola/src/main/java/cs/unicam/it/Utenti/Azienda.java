@@ -26,6 +26,7 @@ import java.util.List;
 })
 public abstract class Azienda extends UtenteLog {
 
+
     @OneToOne(cascade = CascadeType.ALL)
     private Geolocalizzazione sede;
     @ElementCollection
@@ -34,7 +35,7 @@ public abstract class Azienda extends UtenteLog {
     private List<Integer> idProdottiPubblicati;
 
     public Azienda(String nome, String email, String password, Geolocalizzazione sede) {
-        super(nome, email, password);
+        super(nome, email, password, Ruolo.AZIENDA);
         this.sede = sede;
         idProdottiInVendita = List.of();
         idProdottiPubblicati = List.of();
@@ -111,11 +112,11 @@ public abstract class Azienda extends UtenteLog {
         prodotto.setQuantita(nuovaQuantita);
         System.out.println("Quantità del prodotto modificata.");
     }
-
-    public void eliminaAccount() {
-        System.out.println("Richiesta di eliminazione account da parte dell'azienda: " + this.getNome());
-        GestorePiattaforma.getInstance().rimuoviUtente(this);
-    }
+//TODO
+//    public void eliminaAccount() {
+//        System.out.println("Richiesta di eliminazione account da parte dell'azienda: " + this.getNome());
+//        GestorePiattaforma.getInstance(passwordEncoder).rimuoviUtente(this);
+//    }
 
     public void pubblicaSuSocial(int IDProdotto) {
         if (!idProdottiInVendita.contains(IDProdotto)) {
