@@ -10,6 +10,7 @@ public enum Categoria {
     FRUTTA,
     VERDURA,
     PESCE,
-    PACCHETTO;
+    PACCHETTO,
+    COMPONENTE_PACCHETTO;
 
 }

@@ -1,7 +1,9 @@
 package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
+import cs.unicam.it.Service.CarrelloService;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,10 +11,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class HandlerScadenzaCarrello {
 
     private static HandlerScadenzaCarrello instance;
     private Timer timer;
+    private CarrelloService carrelloService = new CarrelloService();
 
     private HandlerScadenzaCarrello() {
         timer = new Timer();
@@ -41,7 +45,7 @@ public class HandlerScadenzaCarrello {
                     // Controlla se il carrello è scaduto
                     if (elapsedTime >= TimeUnit.MINUTES.toMillis(timeoutMinuti)) {
                         //CARRELLO SCADUTO
-                        carrello.svuota();
+                        carrelloService.svuotaCarrello(carrello);
                         HandlerCarrelli.getInstance().getCarrelliAttivi().remove(carrello);
                         System.out.println("Carrello scaduto!");
                     }

@@ -2,12 +2,15 @@ package cs.unicam.it.Handler;
 
 import cs.unicam.it.Carrello.Carrello;
 import cs.unicam.it.Esterni.PagoPa;
+import cs.unicam.it.Service.CarrelloService;
 
 import java.util.Scanner;
 
 public class HandlerAcquisti {
 
     private static HandlerAcquisti instance;
+
+    private CarrelloService carrelloService = new CarrelloService();
 
     private HandlerAcquisti() {
     }
@@ -31,7 +34,7 @@ public class HandlerAcquisti {
         // Effettua il pagamento tramite Pagopa
         if (PagoPa.getInstance().effettuaPagamento(carrello, totale)) {
             // Svuota il carrello dopo la conferma
-            carrello.svuota();
+            carrelloService.svuotaCarrello(carrello);
             System.out.println("Acquisto completato con successo.");
             return true;
         } else {

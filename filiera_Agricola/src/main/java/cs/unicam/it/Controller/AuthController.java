@@ -1,23 +1,20 @@
-package cs.unicam.it.Accesso;
+package cs.unicam.it.Controller;
 
-import cs.unicam.it.Repository.GestorePiattaformaRepository;
+import cs.unicam.it.Accesso.AuthResponse;
+import cs.unicam.it.Accesso.JwtUtil;
+import cs.unicam.it.Repository.UtenteLogRepository;
+import cs.unicam.it.Request.LoginRequest;
+import cs.unicam.it.Request.RegistrationRequest;
+import cs.unicam.it.Request.SetupGestoreRequest;
 import cs.unicam.it.Utenti.*;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,26 +23,15 @@ public class AuthController {
 
     @Autowired
     private UtenteLogRepository utenteLogRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private JwtUtil jwtUtil;
-
-    @Autowired
-    private GestorePiattaformaRepository gestorePiattaformaRepository;
-    @GetMapping("/test")
-    public ResponseEntity<List<UtenteLog>> test() {
-        return ResponseEntity.ok(utenteLogRepository.findAll());
-    }
 
     @PostMapping("/setup/gestore")
     public ResponseEntity<String> setupGestore(@RequestBody SetupGestoreRequest request) {
         // Controlla se il gestore piattaforma è già stato configurato
-        if (gestorePiattaformaRepository.count() > 0) {
+        if (!utenteLogRepository.findGestori().isEmpty()) {
             return ResponseEntity.badRequest().body("Il gestore piattaforma è già stato configurato.");
         }
         // Crea il gestore piattaforma
@@ -56,9 +42,8 @@ public class AuthController {
                 Ruolo.GESTORE
         );
 
-
         // Salva il gestore nel repository (facoltativo)
-        gestorePiattaformaRepository.save(gestore);
+        utenteLogRepository.save(gestore);
 
         return ResponseEntity.ok("Gestore piattaforma configurato con successo.");
     }
@@ -75,7 +60,6 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Campi mancanti o invalidi.");
         }
 
-        // Verifica se l'email è già registrata
         if (utenteLogRepository.existsByEmail(request.getEmail())) {
             return ResponseEntity.badRequest().body("Email già registrata.");
         }
@@ -85,54 +69,41 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Ruolo non valido.");
         }
 
-        if (Ruolo.GESTORE.equals(Ruolo.valueOf(request.getRole()))) {
-            return ResponseEntity.badRequest().body("Il ruolo GESTORE non può essere registrato tramite questa procedura.");
+        if ((Ruolo.CURATORE.equals(role) && !utenteLogRepository.findCuratori().isEmpty()) ||
+                (Ruolo.ANIMATORE.equals(role) && !utenteLogRepository.findAnimatori().isEmpty()) ||
+                Ruolo.GESTORE.equals(role)) {
+            return ResponseEntity.badRequest().body("Ruolo non valido o già configurato.");
         }
 
-        // Crea l'utente in base al ruolo
         UtenteLog user = createUser(request, role);
         if (user == null) {
             return ResponseEntity.badRequest().body("Tipo di utente non valido.");
         }
 
-        GestorePiattaforma gestore = gestorePiattaformaRepository.findAll().get(0);
-        gestore.aggiungiUtenteInAttesa(user);
+        user.setApprovato(false);
         utenteLogRepository.save(user); // Salva l'utente nel database
+        System.out.println("Password codificata: " + user.getPassword());
 
         return ResponseEntity.ok("Utente registrato in attesa di approvazione.");
     }
 
     private UtenteLog createUser(RegistrationRequest request, Ruolo ruolo) {
-        switch (ruolo) {
-            case ACQUIRENTE:
-                return new Acquirente(request.getNome(), request.getEmail(), request.getPassword(), request.getIndirizzo());
-            case ANIMATORE:
-                return new Animatore(request.getNome(), request.getEmail(), request.getPassword());
-            case CURATORE:
-                return new Curatore(request.getNome(), request.getEmail(), request.getPassword());
-            case DISTRIBUTORE:
-                // Implementa la creazione di DISTRIBUTORE
-                break;
-            case PRODUTTORE:
-                // Implementa la creazione di PRODUTTORE
-                break;
-            case TRASFORMATORE:
-                // Implementa la creazione di TRASFORMATORE
-                break;
-            case AZIENDA:
-                // Implementa la creazione di AZIENDA
-                break;
-            default:
-                return null;
-        }
-        return null;
+        return switch (ruolo) {
+            case CURATORE ->
+                    new Curatore(request.getNome(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
+            case ANIMATORE ->
+                    new Animatore(request.getNome(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
+            case ACQUIRENTE ->
+                    new Acquirente(request.getNome(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getIndirizzo());
+            case PRODUTTORE ->
+                    new Produttore(request.getNome(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getSede());
+            case TRASFORMATORE ->
+                    new Trasformatore(request.getNome(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getSede());
+            case DISTRIBUTORE ->
+                    new Distributore(request.getNome(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getSede());
+            default -> null;
+        };
     }
-
-    private String encodePassword(String rawPassword) {
-        return passwordEncoder.encode(rawPassword);
-    }
-
-
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -145,13 +116,18 @@ public class AuthController {
             }
             UtenteLog user = userOptional.get();
 
+            // Verifica se l'utente è approvato
+            if (!user.isApprovato()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente non approvato");
+            }
+
             // Verifica la password
             if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Password errata");
             }
 
             // Genera il token JWT
-            String token = jwtUtil.generateToken(user.getEmail(), user.getRuolo() );
+            String token = jwtUtil.generateToken(user.getEmail(), user.getRuolo());
 
             // Restituisci il token
             return ResponseEntity.ok(new AuthResponse(token));

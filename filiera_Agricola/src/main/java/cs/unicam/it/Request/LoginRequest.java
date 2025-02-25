@@ -1,4 +1,4 @@
-package cs.unicam.it.Accesso;
+package cs.unicam.it.Request;
 
 // DTO per richiesta di login
 public class LoginRequest {

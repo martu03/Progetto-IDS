@@ -2,8 +2,6 @@ package cs.unicam.it.Utenti;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +9,6 @@ import java.util.Scanner;
 
 @Entity
 public class GestorePiattaforma extends UtenteLog {
-
-
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
@@ -22,21 +18,15 @@ public class GestorePiattaforma extends UtenteLog {
     @JsonIgnore
     private List<UtenteLog> utentiInAttesa; // Lista di utenti in attesa di approvazione
 
-
+    public GestorePiattaforma() {
+    }
 
     public GestorePiattaforma(String nome, String email, String password, Ruolo ruolo) {
         super(nome, email, password, Ruolo.GESTORE);
         this.setApprovato(true);
         this.utentiRegistrati = new ArrayList<>();
         this.utentiInAttesa = new ArrayList<>();
-
-
     }
-
-    public GestorePiattaforma() {
-
-    }
-
 
     // Aggiunge un utente in attesa di approvazione
     public void aggiungiUtenteInAttesa(UtenteLog utente) {
@@ -157,17 +147,13 @@ public class GestorePiattaforma extends UtenteLog {
         }
     }
 
-    public boolean verificaCredenziali(String email, String password, PasswordEncoder passwordEncoder) {
-        System.out.println("Verifica credenziali per: " + email);
+    // Verifica le credenziali di un utente tra gli utenti registrati
+    public boolean verificaCredenziali(String email, String password) {
         for (UtenteLog utente : utentiRegistrati) {
-            if (utente.getEmail().equals(email) && passwordEncoder.matches(password, utente.getPassword())) {
-                return true; // Credenziali corrette
+            if (utente.getEmail().equals(email) && utente.getPassword().equals(password)) {
+                return true;
             }
         }
-        return false; // Credenziali sbagliate
+        return false;
     }
-
-
-
-
 }

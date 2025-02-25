@@ -1,7 +1,7 @@
 package cs.unicam.it.Accesso;
 
 // DTO per risposta di login
-class AuthResponse {
+public class AuthResponse {
 
         private String token;
 

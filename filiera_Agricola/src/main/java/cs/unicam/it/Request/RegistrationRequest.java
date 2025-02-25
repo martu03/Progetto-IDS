@@ -1,11 +1,11 @@
-package cs.unicam.it.Accesso;
+package cs.unicam.it.Request;
 
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 // DTO per richiesta di registrazione
-class RegistrationRequest {
+public class RegistrationRequest {
     @NotBlank(message = "Il nome è obbligatorio.")
     private String nome;
 
@@ -67,3 +67,5 @@ class RegistrationRequest {
     public String getNome() { return nome; }
 
     }
+
+

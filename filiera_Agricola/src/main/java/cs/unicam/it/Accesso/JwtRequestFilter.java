@@ -1,5 +1,6 @@
 package cs.unicam.it.Accesso;
 
+import cs.unicam.it.Utenti.Ruolo;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +27,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain) throws jakarta.servlet.ServletException, IOException {
 
         //va a prenddere il token
-        final String authorizationHeader = request.getHeader("Authorization");
+        String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
         String jwt = null;
@@ -34,16 +35,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // va ancora a prendere il token
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtUtil.validateToken(jwt) ? jwtUtil.extractUsername(jwt) : null;
+//            username = jwtUtil.validateToken(jwt) ? jwtUtil.extractUsername(jwt) : null;
+            username = jwtUtil.extractUsername(jwt);
         }
 
         //Se l'utente è già autenticato, il filtro non deve ripetere il processo di autenticazione.
         //Se l'utente non è autenticato, il filtro procede a impostare l'autenticazione.
         // Se il token è valido e l'autenticazione non è già impostata, autentica l'utente
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if (jwtUtil.validateToken(jwt)) {
-                UserDetails userDetails =  userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails =  userDetailsService.loadUserByUsername(username);
 
+            if (jwtUtil.validateToken(jwt)) {
+                Ruolo ruolo = jwtUtil.extractRole(jwt);
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -2,14 +2,14 @@ package cs.unicam.it.Utenti;
 
 public enum Ruolo {
 
-    ACQUIRENTE,
-    ANIMATORE,
-    CURATORE,
-    DISTRIBUTORE,
     GESTORE,
+    CURATORE,
+    ANIMATORE,
+    ACQUIRENTE,
+    AZIENDA,
     PRODUTTORE,
     TRASFORMATORE,
-    AZIENDA;
+    DISTRIBUTORE;
 
     public static Ruolo fromAuthority(String authority) {
         try {

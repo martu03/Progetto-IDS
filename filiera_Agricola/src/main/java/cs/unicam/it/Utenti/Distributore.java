@@ -5,9 +5,7 @@ import cs.unicam.it.Handler.HandlerProdottiCuratore;
 import cs.unicam.it.Handler.PacchettoInputHandler;
 import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Prodotto.*;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
@@ -25,14 +23,12 @@ public class Distributore extends Azienda implements ICreaPacchetto {
         super();
     }
 
-
-
     public void creaPacchetto() {
         PacchettoInputHandler inputHandler = PacchettoInputHandler.getInstance();
         ProdottoPacchetto pacchetto = creaPacchettoBase(inputHandler);
-        pacchetto.setPrezzo(pacchetto.getPrezzo());
+        pacchetto.setPrezzoUnitario(pacchetto.getPrezzoUnitario());
         pacchetto.setScadenza(calcolaScadenzaMinima(pacchetto));
-        getIdProdottiInVendita().add(pacchetto.getId());
+        getIdProdottiCreati().add(pacchetto.getId());
         HandlerProdottiCuratore.getInstance().aggiungiProdotto(pacchetto);
     }
 

@@ -2,7 +2,6 @@ package cs.unicam.it.Marketplace;
 
 import cs.unicam.it.Prodotto.Categoria;
 import cs.unicam.it.Prodotto.Prodotto;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ public class Marketplace {
 
     public void visualizzaProdottiMarketplace() {
         inventarioMarketplace.forEach(prodotto ->
-                System.out.println("Nome prodotto: " + prodotto.getNome() + " - Prezzo: " + prodotto.getPrezzo()));
+                System.out.println("Nome prodotto: " + prodotto.getNome() + " - Prezzo: " + prodotto.getPrezzoUnitario()));
     }
 
 }

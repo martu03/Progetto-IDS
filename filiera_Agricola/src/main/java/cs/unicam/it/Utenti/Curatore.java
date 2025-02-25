@@ -4,10 +4,8 @@ import cs.unicam.it.Handler.HandlerProdottiCuratore;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Certificazione;
 import cs.unicam.it.Prodotto.Prodotto;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,6 @@ public class Curatore extends UtenteLog {
     private List<Integer> idDaRimuovere;
 
     public Curatore(String nome, String email, String password) {
-
         super(nome, email, password, Ruolo.CURATORE);
     }
 
@@ -29,7 +26,7 @@ public class Curatore extends UtenteLog {
     }
 
     public void valida() {
-        HandlerProdottiCuratore.getInstance().visualizzaProdotti();
+        HandlerProdottiCuratore.getInstance().visualizzaProdottiDaValidare();
         int scelta = getSceltaUtente();
 
         switch (scelta) {

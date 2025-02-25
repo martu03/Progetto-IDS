@@ -1,4 +1,4 @@
-package cs.unicam.it.Accesso;
+package cs.unicam.it.Request;
 
 public class SetupGestoreRequest {
     private String nome;

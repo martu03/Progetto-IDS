@@ -18,7 +18,7 @@ public class JwtUtil {
     private String expirationString;
 
     private long expiration;
-
+   
     private SecretKey secretKey; // Usa SecretKey invece di una stringa
 
     @PostConstruct
@@ -67,5 +67,25 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    // Metodo per estrarre l'email dal token
+    public String extractEmail(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("sub", String.class);
+    }
+
+    public Ruolo extractRole(String token) {
+        String roleString = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("roles", String.class); // Estrai il ruolo come stringa
+        return Ruolo.valueOf(roleString); // Converti la stringa in enum
     }
 }

@@ -20,7 +20,7 @@ public class HandlerCalcolaTotale {
     public double calcolaTotale(Carrello carrello) {
         double totale = 0.0;
         for (ItemCarrello item : carrello.getProdottiCarrello()) {
-            totale += item.getProdotto().getPrezzo();
+            totale += item.getProdotto().getPrezzoUnitario();
         }
         return totale;
     }

@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorColumn(name = "log_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class UtenteLog implements UserDetails {
 
@@ -21,10 +21,9 @@ public abstract class UtenteLog implements UserDetails {
     private String nome;
     private String email;
     private String password;
-    private boolean approvato;
-
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
+    private boolean approvato;
 
     public UtenteLog(String nome, String email, String password, Ruolo ruolo) {
         this.nome = nome;
@@ -45,42 +44,45 @@ public abstract class UtenteLog implements UserDetails {
         return nome;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public String getPassword() {
+        return password;
     }
 
-
-    public void setRuolo(Ruolo ruolo) {
-        this.ruolo = ruolo;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Ruolo getRuolo() {
         return ruolo;
     }
 
+    public void setRuolo(Ruolo ruolo) {
+        this.ruolo = ruolo;
+    }
+
+    public boolean isApprovato() {
+        return approvato;
+    }
+
+    public void setApprovato(boolean approvato) {
+        this.approvato = approvato;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_" + ruolo.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + ruolo.name()));
     }
 
     //DA CAPIRE SE QUELLI DI SOTTO SERVONO
@@ -102,18 +104,5 @@ public abstract class UtenteLog implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public boolean isApprovato() {
-        return approvato;
-    }
-
-    public void setApprovato(boolean approvato) {
-        this.approvato = approvato;
     }
 }

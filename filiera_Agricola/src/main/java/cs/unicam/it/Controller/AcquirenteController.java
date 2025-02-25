@@ -1,13 +1,21 @@
 package cs.unicam.it.Controller;
 
+import cs.unicam.it.Accesso.GetUtenteByToken;
+import cs.unicam.it.Accesso.JwtUtil;
+import cs.unicam.it.Prodotto.Categoria;
+import cs.unicam.it.Prodotto.Prodotto;
+import cs.unicam.it.Repository.ItemCarrelloRepository;
+import cs.unicam.it.Repository.ProdottoRepository;
+import cs.unicam.it.Repository.UtenteLogRepository;
+import cs.unicam.it.Request.AggiungiProdottoRequest;
+import cs.unicam.it.Service.AcquirenteService;
 import cs.unicam.it.Utenti.Acquirente;
-import cs.unicam.it.Repository.AcquirenteRepository;
+import cs.unicam.it.Utenti.UtenteLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -15,66 +23,106 @@ import java.util.Optional;
 public class AcquirenteController {
 
     @Autowired
-    private AcquirenteRepository acquirenteRepository;
+    private UtenteLogRepository utenteLogRepository;
+    @Autowired
+    private AcquirenteService acquirenteService;
+    @Autowired
+    private ProdottoRepository prodottoRepository;
+    @Autowired
+    private ItemCarrelloRepository itemCarrelloRepository;
+    @Autowired
+    private GetUtenteByToken getUtenteByToken;
 
-    // GET /api/acquirenti
-    @GetMapping
-    public ResponseEntity<List<Acquirente>> getAllAcquirenti() {
-        List<Acquirente> acquirenti = acquirenteRepository.findAll();
-        return ResponseEntity.ok(acquirenti); // Restituisce 200 OK con la lista delle aziende
-    }
+    // Aggiunge un prodotto al carrello dell'acquirente
+    @PostMapping("/aggiungi-prodotto-al-carrello")
+    public ResponseEntity<String> aggiungiProdottoAlCarrello(@RequestHeader("Authorization") String authorizationHeader, @RequestBody AggiungiProdottoRequest request) {
+        UtenteLog acquirente = getUtenteByToken.getCurrentUtente(authorizationHeader);
 
-    // GET /api/acquirenti/{id}
-    // Ottiene un acquirente specifico tramite ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Acquirente> getAcquirenteById(@PathVariable int id) {
-        Optional<Acquirente> acquirenteOptional = acquirenteRepository.findById(id);
-        return acquirenteOptional.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build()); // Restituisce 404 Not Found se non trovato
-    }
+        if (!(acquirente instanceof Acquirente acquirente1)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente non autorizzato o non è un acquirente.");
+        }
 
-    @PostMapping("/crea-acquirente")
-    public ResponseEntity<Acquirente> createAcquirente(@RequestBody Acquirente acquirente) {
+        Prodotto prodotto = prodottoRepository.findById(request.getIdProdotto()).orElse(null);
+
+        if (prodotto == null) {
+            return ResponseEntity.badRequest().body("Prodotto non trovato.");
+        } else if (prodottoRepository.findProdottoByCategoria(Categoria.COMPONENTE_PACCHETTO).contains(prodotto)) {
+            return ResponseEntity.badRequest().body("Impossibile aggiungere un componente di un pacchetto al carrello.");
+        }
+
         try {
-            // Salva l'acquirente nel database
-            // Se il carrello è già inizializzato, verrà salvato automaticamente grazie a CascadeType.ALL
-            Acquirente savedAcquirente = acquirenteRepository.save(acquirente);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedAcquirente);
+            acquirenteService.aggiungiProdottoAlCarrello(acquirente.getID(), request.getIdProdotto(), request.getQuantita());
+            return ResponseEntity.ok("Prodotto aggiunto al carrello con successo.");
         } catch (Exception e) {
-            // Gestisci eventuali errori
-            e.printStackTrace(); // Oppure registra l'errore in modo appropriato
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'aggiunta del prodotto: " + e.getMessage());
         }
     }
 
-    // PUT /api/acquirenti/{id}
-    // Aggiorna un acquirente esistente
-    @PutMapping("/{id}")
-    public ResponseEntity<Acquirente> updateAcquirente(@PathVariable int id, @RequestBody Acquirente acquirenteDetails) {
-        Optional<Acquirente> acquirenteOptional = acquirenteRepository.findById(id);
+    // Rimuove un prodotto dal carrello dell'acquirente
+    @DeleteMapping("/rimuovi-prodotto-dal-carello/{prodottoId}")
+    public ResponseEntity<?> rimuoviProdottoDalCarrello(@RequestHeader("Authorization") String authorizationHeader, @PathVariable int prodottoId) {
+        System.out.println("Inizio metodo rimuoviProdottoDalCarrello. Prodotto ID: " + prodottoId);
 
-        if (acquirenteOptional.isPresent()) {
-            Acquirente acquirente = acquirenteOptional.get();
-            acquirente.setNome(acquirenteDetails.getNome());
-            acquirente.setPassword(acquirenteDetails.getPassword());
-            // Aggiungi altri setter necessari per gli attributi aggiuntivi
+        UtenteLog acquirente = getUtenteByToken.getCurrentUtente(authorizationHeader);
+        System.out.println("Utente ottenuto dal token: " + acquirente);
 
-            Acquirente updatedAcquirente = acquirenteRepository.save(acquirente);
-            return ResponseEntity.ok(updatedAcquirente); // Restituisce 200 OK con l'acquirente aggiornato
-        } else {
-            return ResponseEntity.notFound().build(); // Restituisce 404 Not Found
+        if (!(acquirente instanceof Acquirente acquirente1)) {
+            System.out.println("Utente non autorizzato o non è un acquirente.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente non autorizzato o non è un acquirente.");
+        }
+
+        System.out.println("Utente autorizzato. ID Acquirente: " + acquirente1.getID());
+
+        try {
+            acquirenteService.rimuoviProdottoDalCarrello(acquirente1.getID(), prodottoId);
+            System.out.println("Prodotto rimosso dal carrello con successo. Prodotto ID: " + prodottoId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            System.out.println("Errore durante la rimozione del prodotto dal carrello: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la rimozione del prodotto: " + e.getMessage());
         }
     }
 
-    // DELETE /api/acquirenti/{id}
-    // Elimina un acquirente specifico
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAcquirente(@PathVariable int id) {
-        if (acquirenteRepository.existsById(id)) {
-            acquirenteRepository.deleteById(id);
-            return ResponseEntity.noContent().build(); // Restituisce 204 No Content
-        } else {
-            return ResponseEntity.notFound().build(); // Restituisce 404 Not Found
+    // Svuota il carrello dell'acquirente
+    @DeleteMapping("/svuota-carrello")
+    public ResponseEntity<?> svuotaCarrello(@RequestHeader("Authorization") String authorizationHeader) {
+        UtenteLog acquirente = getUtenteByToken.getCurrentUtente(authorizationHeader);
+
+        if (!(acquirente instanceof Acquirente acquirente1)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente non autorizzato o non è un acquirente.");
         }
+
+        acquirenteService.svuotaCarrello(acquirente1.getID());
+        return ResponseEntity.ok().build();
+    }
+
+    // Conferma l'acquisto
+    @PostMapping("/conferma-acquisto")
+    public ResponseEntity<String> confermaAcquisto(@RequestHeader("Authorization") String authorizationHeader) {
+        UtenteLog acquirente = getUtenteByToken.getCurrentUtente(authorizationHeader);
+
+        if (!(acquirente instanceof Acquirente acquirente1)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente non autorizzato o non è un acquirente.");
+        }
+
+        if (acquirente1.getCarrello().getProdottiCarrello().isEmpty()) {
+            return ResponseEntity.badRequest().body("Il carrello è vuoto. Impossibile completare il pagamento.");
+        }
+
+        acquirenteService.confermaAcquisto(acquirente1.getID());
+        return ResponseEntity.ok("Pagamento avvenuto con successo.");
+    }
+
+    // GET /api/acquirenti/{id}/carrello
+    // Restituisce il carrello dell'acquirente
+    @GetMapping("/carrello")
+    public ResponseEntity<?> getCarrello(@RequestHeader("Authorization") String authorizationHeader) {
+        UtenteLog acquirente = getUtenteByToken.getCurrentUtente(authorizationHeader);
+
+        if (!(acquirente instanceof Acquirente acquirente1)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Utente non autorizzato o non è un acquirente.");
+        }
+
+        return ResponseEntity.ok(acquirente1.getCarrello());
     }
 }

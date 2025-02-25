@@ -23,7 +23,6 @@ public class SistemaFacade {
     // ANIMATORE
     private final Animatore animatore;
     private final EventoBuilder eventoBuilder;
-    private final EventoInputHandler eventoInputHandler;
     private final HandlerEventi handlerEventi;
 
     // CURATORE
@@ -55,7 +54,6 @@ public class SistemaFacade {
     public SistemaFacade(
             GestorePiattaforma gestorePiattaforma,
             EventoBuilder eventoBuilder,
-            EventoInputHandler eventoInputHandler,
             HandlerEventi handlerEventi,
             PacchettoInputHandler pacchettoInputHandler,
             ProdottoSingoloInputHandler prodottoSingoloInputHandler,
@@ -74,7 +72,6 @@ public class SistemaFacade {
 
         this.animatore = new Animatore("Animatore", "animatore@example.com", "password123");
         this.eventoBuilder = eventoBuilder;
-        this.eventoInputHandler = eventoInputHandler;
         this.handlerEventi = handlerEventi;
 
         this.curatore = new Curatore("Curatore", "curatore@example.com", "password123");
@@ -113,15 +110,15 @@ public class SistemaFacade {
         return marketplace;
     }
 
-//    public boolean login(String email, String password) {
-//        if (gestorePiattaforma.verificaCredenziali(email, password,)) {
-//            System.out.println("Login avvenuto con successo!");
-//            return true;
-//        } else {
-//            System.out.println("Accesso non valido.");
-//            return false;
-//        }
-//    }
+    public boolean login(String email, String password) {
+        if (gestorePiattaforma.verificaCredenziali(email, password)) {
+            System.out.println("Login avvenuto con successo!");
+            return true;
+        } else {
+            System.out.println("Accesso non valido.");
+            return false;
+        }
+    }
 
     public UtenteLog registraUtente() {
         Scanner scanner = new Scanner(System.in);

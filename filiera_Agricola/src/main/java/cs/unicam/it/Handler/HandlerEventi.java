@@ -2,36 +2,46 @@ package cs.unicam.it.Handler;
 
 import cs.unicam.it.Eventi.EventoFiliera;
 import cs.unicam.it.Mappa.Geolocalizzazione;
-import cs.unicam.it.Utenti.Animatore;
+import cs.unicam.it.Repository.EventoRepository;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
+@Service
 public class HandlerEventi {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @OneToMany(mappedBy = "handlerEventi", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EventoFiliera> eventi = new ArrayList<>();
-    @OneToOne(mappedBy = "handlerEventi", cascade = CascadeType.ALL)
-    private Animatore animatore;
+    @Autowired
+    private EventoRepository eventoRepository;
 
-    public List<EventoFiliera> getEventi() {
-        return new ArrayList<>(eventi);
+    private static HandlerEventi instance;
+
+    private HandlerEventi() {
+    }
+
+    public static HandlerEventi getInstance() {
+        if (instance == null) {
+            instance = new HandlerEventi();
+        }
+        return instance;
+    }
+
+    public void visualizzaEventi() {
+        System.out.println("Eventi in programma:");
+        for (EventoFiliera evento : eventoRepository.findAll()) {
+            System.out.println("Nome: " + evento.getNome() + ", Data: " + evento.getData());
+        }
     }
 
     public void aggiungiEvento(EventoFiliera evento) {
-        eventi.add(evento);
-        evento.setHandlerEventi(this); // Imposta il riferimento inverso
-        System.out.println("Evento " + evento.getNome() + " creato.");
+        eventoRepository.save(evento);
     }
 
     public boolean verificaDisponibilita(Geolocalizzazione luogo, Date data) {
-        for (EventoFiliera evento : eventi) {
+        for (EventoFiliera evento : eventoRepository.findAll()) {
             if (evento.getData().equals(data) && evento.getLuogoEvento().equals(luogo))
                 return false;
         }
@@ -44,12 +54,12 @@ public class HandlerEventi {
             System.out.println("Evento non trovato.");
             return;
         }
-        eventi.remove(evento);
+        eventoRepository.delete(evento);
         System.out.println("Evento " + evento.getNome() + " eliminato.");
     }
 
     public EventoFiliera getEventoById(int id) {
-        for (EventoFiliera evento : eventi) {
+        for (EventoFiliera evento : eventoRepository.findAll()) {
             if (evento.getId() == id) {
                 return evento;
             }

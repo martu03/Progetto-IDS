@@ -5,15 +5,17 @@ import cs.unicam.it.Mappa.Geolocalizzazione;
 import cs.unicam.it.Handler.HandlerAcquisti;
 import cs.unicam.it.Handler.HandlerCarrelli;
 import cs.unicam.it.Marketplace.Marketplace;
+import cs.unicam.it.Prodotto.Prodotto;
 import cs.unicam.it.Prodotto.Recensione;
 import jakarta.persistence.*;
 
 @Entity
 public class Acquirente extends UtenteLog {
 
-    @OneToOne(cascade = CascadeType.ALL) // Aggiungi cascade per gestire il salvataggio automatico del carrello
-    @JoinColumn(name = "CARRELLO_ID")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CARRELLO_ID", referencedColumnName = "ID", unique = true)
     private Carrello carrello;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Indirizzo")
     private Geolocalizzazione indirizzo;
@@ -37,32 +39,37 @@ public class Acquirente extends UtenteLog {
         return indirizzo;
     }
 
-    public void aggiungiProdottoAlCarrello(int IDProdotto, int quantita) {
-        if (carrello.getProdottiCarrello().isEmpty()) {
-            HandlerCarrelli.getInstance().aggiungiCarrello(carrello);
-        }
-        carrello.aggiungiProdotto(IDProdotto, quantita);
+    public void setIndirizzo(Geolocalizzazione indirizzo) {
+        this.indirizzo = indirizzo;
     }
 
-    public void rimuoviProdottoDalCarrello(int IDProdotto) {
-        carrello.rimuoviProdotto(IDProdotto);
+    public void setCarrello(Carrello carrello) {
+        this.carrello = carrello;
     }
 
-    public void modificaQuantitaProdotto(int IDProdotto, int quantita) {
-        carrello.modificaQuantita(IDProdotto, quantita);
-    }
-
-    public void confermaAcquisto() {
-        if (HandlerAcquisti.getInstance().confermaAcquisto(carrello)) {
-            HandlerCarrelli.getInstance().rimuoviCarrello(carrello);
-        }
-    }
-
-    public void aggiungiRecensioneAProdotto(int IDProdotto, String titolo, String descrizione, int voto) {
-        Recensione recensione = new Recensione(titolo, descrizione, voto, this);
-        Marketplace.getInstance().getProdottoById(IDProdotto).aggiungiRecensione(recensione);
-    }
-//TODO
+//    public void aggiungiProdottoAlCarrello(Prodotto prodotto, int quantita) {
+//        carrello.aggiungiProdotto(prodotto, quantita);
+//    }
+//
+//    public void rimuoviProdottoDalCarrello(int IDProdotto) {
+//        carrello.rimuoviProdotto(IDProdotto);
+//    }
+//
+//    public void modificaQuantitaProdotto(int IDProdotto, int quantita) {
+//        carrello.modificaQuantita(IDProdotto, quantita);
+//    }
+//
+//    public void confermaAcquisto() {
+//        if (HandlerAcquisti.getInstance().confermaAcquisto(carrello)) {
+//            HandlerCarrelli.getInstance().rimuoviCarrello(carrello);
+//        }
+//    }
+//
+//    public void aggiungiRecensioneAProdotto(int IDProdotto, String titolo, String descrizione, int voto) {
+//        Recensione recensione = new Recensione(titolo, descrizione, voto, this);
+//        Marketplace.getInstance().getProdottoById(IDProdotto).aggiungiRecensione(recensione);
+//    }
+//
 //    public void eliminaAccount() {
 //        System.out.println("Richiesta di eliminazione account da parte dell'acquirente: " + this.getNome());
 //        GestorePiattaforma.getInstance().rimuoviUtente(this);

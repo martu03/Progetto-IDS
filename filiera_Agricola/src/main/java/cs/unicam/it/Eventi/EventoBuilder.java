@@ -13,7 +13,7 @@ public class EventoBuilder {
     private TipologiaEvento tipologiaEvento;
     private Date dataEvento;
     private Geolocalizzazione luogoEvento;
-    private List<String> aziendePartecipanti;
+    private List<String > aziendePartecipanti;
 
     private EventoBuilder() {
     }

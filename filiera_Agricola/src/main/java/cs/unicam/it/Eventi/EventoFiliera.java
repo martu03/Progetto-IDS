@@ -20,12 +20,9 @@ public class EventoFiliera {
     @Enumerated(EnumType.STRING)
     private TipologiaEvento tipologia;
     private Date data;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "luogo_evento_id")
     private Geolocalizzazione luogoEvento;
-    @ManyToOne
-    @JoinColumn(name = "handler_eventi_id")
-    private HandlerEventi handlerEventi;
 
     public EventoFiliera(String nome, String descrizione, TipologiaEvento tipologia, Date data,
                          Geolocalizzazione luogoEvento, List<String> aziendePartecipanti) {
@@ -38,41 +35,61 @@ public class EventoFiliera {
     }
 
     public EventoFiliera() {
-
     }
 
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getDescrizione() {
         return descrizione;
     }
 
-    public List<String> getPartecipanti() {
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public List<String> getAziendePartecipanti() {
         return aziendePartecipanti;
+    }
+
+    public void setAziendePartecipanti(List<String> aziendePartecipanti) {
+        this.aziendePartecipanti = aziendePartecipanti;
     }
 
     public TipologiaEvento getTipologia() {
         return tipologia;
     }
 
+    public void setTipologia(TipologiaEvento tipologia) {
+        this.tipologia = tipologia;
+    }
+
     public Date getData() {
         return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
     }
 
     public Geolocalizzazione getLuogoEvento() {
         return luogoEvento;
     }
 
-    public void aggiungiAziendaPartecipante(String azienda) {
-        aziendePartecipanti.add(azienda);
+    public void setLuogoEvento(Geolocalizzazione luogoEvento) {
+        this.luogoEvento = luogoEvento;
     }
-
-    public void setHandlerEventi(HandlerEventi handlerEventi) {
-        this.handlerEventi = handlerEventi;
-    }
-
 }

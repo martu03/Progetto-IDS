@@ -10,7 +10,7 @@ public class ItemCarrello {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne(fetch = FetchType.LAZY) // Relazione con Prodotto
-    @JoinColumn(name = "prodotto_id", nullable = false) // Chiave esterna per Prodotto
+    @JoinColumn(name = "PRODOTTO_ID", nullable = false) // Chiave esterna per Prodotto
     private Prodotto prodotto;
     private int quantita;
 

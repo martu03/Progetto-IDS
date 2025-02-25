@@ -26,18 +26,17 @@ import java.util.List;
 })
 public abstract class Azienda extends UtenteLog {
 
-
     @OneToOne(cascade = CascadeType.ALL)
     private Geolocalizzazione sede;
     @ElementCollection
-    private List<Integer> idProdottiInVendita;
+    private List<Integer> idProdottiCreati;
     @ElementCollection
     private List<Integer> idProdottiPubblicati;
 
     public Azienda(String nome, String email, String password, Geolocalizzazione sede) {
         super(nome, email, password, Ruolo.AZIENDA);
         this.sede = sede;
-        idProdottiInVendita = List.of();
+        idProdottiCreati = List.of();
         idProdottiPubblicati = List.of();
     }
 
@@ -53,7 +52,7 @@ public abstract class Azienda extends UtenteLog {
         ProdottoSingoloInputHandler inputHandler = ProdottoSingoloInputHandler.getInstance();
         ProdottoSingolo prodotto = creaProdottoBase(inputHandler); // Crea il prodotto base
 
-        idProdottiInVendita.add(prodotto.getId());
+        idProdottiCreati.add(prodotto.getId());
         HandlerProdottiCuratore.getInstance().aggiungiProdotto(prodotto);
         System.out.println("Prodotto " + prodotto.getNome() + " creato con successo.");
     }
@@ -84,17 +83,17 @@ public abstract class Azienda extends UtenteLog {
     }
 
     public void rimuoviProdotto(int prodottoId) {
-        if (!idProdottiInVendita.contains(prodottoId)) {
+        if (!idProdottiCreati.contains(prodottoId)) {
             System.out.println("Prodotto non trovato nella lista dei prodotti creati.");
             return;
         }
-        idProdottiInVendita.remove(prodottoId);
+        idProdottiCreati.remove(prodottoId);
         Marketplace.getInstance().rimuoviProdotto(prodottoId);
         System.out.println("Il prodotto " + prodottoId + " è stato rimosso dal marketplace.");
     }
 
     public void modificaQuantita(int IDProdotto, int nuovaQuantita) {
-        if (!idProdottiInVendita.contains(IDProdotto)) {
+        if (!idProdottiCreati.contains(IDProdotto)) {
             System.out.println("Prodotto non trovato nella lista dei prodotti creati.");
             return;
         }
@@ -112,14 +111,14 @@ public abstract class Azienda extends UtenteLog {
         prodotto.setQuantita(nuovaQuantita);
         System.out.println("Quantità del prodotto modificata.");
     }
-//TODO
+
 //    public void eliminaAccount() {
 //        System.out.println("Richiesta di eliminazione account da parte dell'azienda: " + this.getNome());
-//        GestorePiattaforma.getInstance(passwordEncoder).rimuoviUtente(this);
+//        GestorePiattaforma.getInstance().rimuoviUtente(this);
 //    }
 
     public void pubblicaSuSocial(int IDProdotto) {
-        if (!idProdottiInVendita.contains(IDProdotto)) {
+        if (!idProdottiCreati.contains(IDProdotto)) {
             System.out.println("Prodotto non trovato nella lista dei prodotti creati.");
             return;
         }
@@ -142,8 +141,12 @@ public abstract class Azienda extends UtenteLog {
         System.out.println("Il prodotto " + prodotto.getNome() + " è stato pubblicato sui social.");
     }
 
-    public List<Integer> getIdProdottiInVendita() {
-        return idProdottiInVendita;
+    public List<Integer> getIdProdottiCreati() {
+        return idProdottiCreati;
+    }
+
+    public void setIdProdottiCreati(List<Integer> idProdottiInVendita) {
+        this.idProdottiCreati = idProdottiInVendita;
     }
 
     public List<Integer> getIdProdottiPubblicati() {

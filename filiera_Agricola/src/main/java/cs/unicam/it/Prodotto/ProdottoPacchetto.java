@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,7 +14,6 @@ public class ProdottoPacchetto extends Prodotto {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Prodotto> prodotti;
-    private double prezzo;
 
     public ProdottoPacchetto() {
         super();
@@ -21,25 +21,32 @@ public class ProdottoPacchetto extends Prodotto {
     }
 
     @Override
-    public double getPrezzo() {
+    public double getPrezzoTotale() {
+        return this.getPrezzoUnitario() * getQuantita();
+    }
+
+    @Override
+    public double getPrezzoUnitario() {
         double totale = 0;
         for (Prodotto prodotto : prodotti) {
-            totale += prodotto.getPrezzo() * prodotto.getQuantita();
+            totale += prodotto.getPrezzoTotale();
         }
         return totale;
     }
 
     @Override
-    public void setPrezzo(double prezzo) {
-        this.prezzo = prezzo;
+    public Date getScadenza() {
+        return calcolaScadenzaMinima();
     }
 
-    public double getPrezzoTotale() {
-        return getPrezzo() * getQuantita();
-    }
-
-    public void setPrezzoTotale(double prezzo) {
-        this.prezzo = prezzo;
+    private Date calcolaScadenzaMinima() {
+        Date scadenza = null;
+        for (Prodotto prodotto : prodotti) {
+            if (scadenza == null || prodotto.getScadenza().before(scadenza)) {
+                scadenza = prodotto.getScadenza();
+            }
+        }
+        return scadenza;
     }
 
     public void setProdotti(List<Prodotto> prodotti) {

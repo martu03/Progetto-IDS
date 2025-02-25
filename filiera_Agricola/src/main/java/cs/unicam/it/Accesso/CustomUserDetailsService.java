@@ -1,4 +1,5 @@
 package cs.unicam.it.Accesso;
+import cs.unicam.it.Repository.UtenteLogRepository;
 import cs.unicam.it.Utenti.UtenteLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;

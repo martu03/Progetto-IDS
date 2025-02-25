@@ -13,9 +13,9 @@ public class UtenteGenerico {
     }
 
     // Effettua il login
-//    public void effettuaLogin(String email, String password) {
-//        sistemaFacade.login(email, password);
-//    }
+    public void effettuaLogin(String email, String password) {
+        sistemaFacade.login(email, password);
+    }
 
     // Visualizza la mappa
     public void visualizzaMappa() {

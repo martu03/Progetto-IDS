@@ -3,7 +3,6 @@ package cs.unicam.it.Handler;
 import cs.unicam.it.Marketplace.Marketplace;
 import cs.unicam.it.Prodotto.Prodotto;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Timer;
@@ -55,9 +54,9 @@ public class HandlerScadenzaProdotto {
     }
 
     private void applicaOfferta(Prodotto prodotto) {
-        double offerta = (prodotto.getPrezzo() * 20)/100;
-        double nuovoPrezzo = prodotto.getPrezzo() - offerta;
-        prodotto.setPrezzo(nuovoPrezzo);
+        double offerta = (prodotto.getPrezzoUnitario() * 20)/100;
+        double nuovoPrezzo = prodotto.getPrezzoUnitario() - offerta;
+        prodotto.setPrezzoUnitario(nuovoPrezzo);
         System.out.println("Il prodotto " + prodotto.getNome() + " è ora in offerta con un prezzo di " + nuovoPrezzo);
     }
 
